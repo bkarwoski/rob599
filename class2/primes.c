@@ -9,6 +9,9 @@ int main(void) {
         fprintf(stderr, "Invalid input. Please enter a number.\n");
         return 1;
     }
+    if(number == 1){
+        return 0;
+    }
     printf("Prime factors:\n");
 
 int temp = 2;
