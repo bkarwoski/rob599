@@ -8,6 +8,20 @@ int main(void) {
         fprintf(stderr, "Invalid input. Please enter a number.\n");
         return 1;
     }
+    printf("Prime factors:\n");
+
+int temp = 2;
+    while(temp < number){ //update to sqrt
+        if(number % temp == 0){
+            printf("%d\n", temp);
+            number = number / temp;
+        }
+        else{
+            temp = temp + 1;
+        }
+    }
+    printf("%d\n", number);
+
 
     return 0;
 }
