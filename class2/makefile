@@ -5,4 +5,4 @@
 #	gcc -o $@ $^ -std=c11
 
 primes: primes.c
-	gcc -o $@ $^ -std=c11
+	gcc -o $@ $^ -std=c11 -lm

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 int main(void) {
     printf("Enter a number to factorize:\n");
@@ -11,7 +12,7 @@ int main(void) {
     printf("Prime factors:\n");
 
 int temp = 2;
-    while(temp < number){ //update to sqrt
+    while(temp < sqrt(number)){ //update to sqrt
         if(number % temp == 0){
             printf("%d\n", temp);
             number = number / temp;
