@@ -6,18 +6,17 @@ int main(void)
     {
         if (i % 3 == 0)
         {
-            printf("fizz");
-            if (i % 5 == 0)
-            {
-                printf("buzz");
-            }
-            printf("\n");
+            printf("fizz"); 
         }
-        else
+        if (i % 5 == 0){
+            printf("buzz");
+        }
+        if (i % 3 != 0 && i % 5 != 0)
         {
-            printf("%d\n",i);
+            printf("%d",i);
         }
+        printf("\n");
     }
-
+printf("\n");
     return 0;
 }
