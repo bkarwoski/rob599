@@ -4,8 +4,11 @@ if [[ $startup_path == *"/bash" ]]; then
     echo "Please run: source $0"
     exit 1
 fi
+if ! echo $startup_path | grep "scripts" > /dev/null; then
+    startup_path=$startup_path/scripts
+fi
 
-if ! grep "/usr/bin/modulecmd" ~/.profile > /dev/null; then
+if ! grep "/usr/bin/modulecmd" ~/.profile > /dev/null || test $1; then
     profileAddition="
 if [ -f /usr/bin/modulecmd ] ; then
     module load gcc/7.1.0
