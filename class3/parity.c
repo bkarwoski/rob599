@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
         //printf("%d\n", argv[1][j] & 1);
         char let = argv[1][j];
         while (let > 0) {
-           if (let & 1) {
+            if (let & 1) {
                 counter++;
             }
             let = let >>  1;
