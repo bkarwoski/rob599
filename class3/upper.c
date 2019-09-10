@@ -4,8 +4,8 @@ int main(int argc, char *argv[])
 {
     if (argc == 1)
     {
-        //   fprintf("usage: ./upper <text> \n");
-        return 0;
+        printf("usage: ./upper <text>\n");
+        return 1;
     }
     printf("input is: %s\n", argv[1]);
 
