@@ -20,13 +20,13 @@ int main(int argc, char *argv[]) {
             if (let & 1) {
                 counter++;
             }
-            let = let >>  1;
+            let = let >> 1;
         }
     }
     //printf("counter = %d\n", counter);
     int parity = counter % 2;
     printf("%d\n", parity);
 
-return 0;
+    return 0;
 }
 
