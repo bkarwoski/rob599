@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     {
         for (int j = 0; j < strlen(argv[i]); j++)
         {
-if(argv[i][j] > 91){
+if(argv[i][j] > 96 && argv[i][j] < 123){
     argv[i][j] -= 32;
 }
             printf("%c", argv[i][j]);
