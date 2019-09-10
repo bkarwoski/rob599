@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 if(argv[i][j] > 91){
     argv[i][j] -= 32;
 }
-            printf("%c\n", argv[i][j]);
+            printf("%c", argv[i][j]);
         }
     }
 
