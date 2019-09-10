@@ -20,6 +20,6 @@ if(argv[i][j] > 91){
             printf("%c", argv[i][j]);
         }
     }
-
+printf("\n");
     return 0;
 }
