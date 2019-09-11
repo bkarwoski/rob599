@@ -17,7 +17,7 @@ int main(void) {
     trit_encodings[0][4] = ' ';
 
     for (int i = 1; i < 243; i++) {
-        strncpy(trit_encodings[i], trit_encodings[i-1], 6);
+        strncpy(trit_encodings[i], trit_encodings[i - 1], 6);
         for (int j = 0; j <= 4; j++) {
             if (trit_encodings[i][j] == ' ') {
                 trit_encodings[i][j] = ':';
@@ -37,7 +37,7 @@ int main(void) {
     FILE *img;
     img = fopen("img.bin", "rb");
 
-    for(int i = 0; i < 40; i++) {
+    for (int i = 0; i < 40; i++) {
         for (int j = 0; j < 18; j++) {
             char c = fgetc(img);
             printf("%s", trit_encodings[(uint8_t)c]);
