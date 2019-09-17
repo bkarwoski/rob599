@@ -58,6 +58,7 @@ for(int i = 0; i < poly1.numPoints; i++) {
     pointCheck += fscanf(fp, "%lf", &poly1.yPoints[i]);
 }
 if(pointCheck != (2 *poly1.numPoints)) {
+    fprintf(stderr, "a polygons.csv number is invalid\n");
     return 1;
 }
 
@@ -74,6 +75,7 @@ for(int i = 0; i < poly2.numPoints; i++) {
     pointCheck += fscanf(fp, "%lf", &poly2.yPoints[i]);
 }
 if(pointCheck != (2 *poly1.numPoints)) {
+    fprintf(stderr, "a polygons.csv number is invalid\n");
     return 1;
 }
 fclose(fp);
