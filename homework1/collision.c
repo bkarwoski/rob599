@@ -39,6 +39,7 @@ if (!fp) {
     fprintf(stderr, "polygons.csv is missing\n");
     return 1;
 }
+
 fgets(tmp, 100, fp);
 
 fscanf(fp, "%lf", &poly1.xShift);
@@ -54,6 +55,7 @@ for (int i = 0; i < poly1.numPoints; i++) {
 for (int i = 0; i < poly1.numPoints; i++) {
     pointCheck += fscanf(fp, "%lf", &poly1.yPoints[i]);
 }
+
 if (pointCheck != (2 * poly1.numPoints)) {
     fprintf(stderr, "a polygons.csv number is invalid\n");
     return 1;
@@ -68,13 +70,16 @@ pointCheck = 0;
 for (int i = 0; i < poly2.numPoints; i++) {
     pointCheck += fscanf(fp, "%lf", &poly2.xPoints[i]);
 }
+
 for (int i = 0; i < poly2.numPoints; i++) {
     pointCheck += fscanf(fp, "%lf", &poly2.yPoints[i]);
 }
-if (pointCheck != (2 *poly1.numPoints)) {
+
+if (pointCheck != (2 * poly1.numPoints)) {
     fprintf(stderr, "a polygons.csv number is invalid\n");
     return 1;
 }
+
 fclose(fp);
 
 if (poly1.numPoints > 16 || poly2.numPoints > 16) {
