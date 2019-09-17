@@ -18,7 +18,7 @@ void shift(poly_t *polyX) {
     float s = sin(polyX->rot);
     double newX = 0;
     double newY = 0;
-    for (int i = 0; i < polyX->numPoints; i++){
+    for (int i = 0; i < polyX->numPoints; i++) {
         newX = polyX->xPoints[i] * c - polyX->yPoints[i] * s;
         newY = polyX->xPoints[i] * s + polyX->yPoints[i] * c;
 
