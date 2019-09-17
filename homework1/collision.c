@@ -14,6 +14,24 @@ typedef struct poly {
 
 } poly_t;
 
+void shift(poly_t *polyX) {
+    float c = cos(polyX->rot);
+    float s = sin(polyX->rot);
+    double newX = 0;
+    double newY = 0;
+    for(int i = 0; i < polyX->numPoints; i++){
+        newX = polyX->xPoints[i] * c - polyX->yPoints[i] * s;
+        newY = polyX->xPoints[i] * s + polyX->yPoints[i] * c;
+
+        newX += polyX->xShift;
+        newY += polyX->yShift;
+
+        polyX->xPoints[i] = newX;
+        polyX->yPoints[i] = newY;
+    }
+
+}
+
 int main(){
 
 char tmp[100];
@@ -49,10 +67,16 @@ for(int i = 0; i < poly2.numPoints; i++) {
 for(int i = 0; i < poly2.numPoints; i++) {
     fscanf(fp, "%lf", &poly2.yPoints[i]);
 }
-
-//printf("%f\n,", poly2.yPoints[2]);
-
 fclose(fp);
-return 0;
+if(poly1.numPoints > 16 || poly2.numPoints > 16) {
+    printf("too many points!\n");
+    return 1;
+}
 
+shift(&poly1);
+shift(&poly2);
+//printf("%f\n,", poly1.xPoints[2]);
+
+
+return 0;
 }
