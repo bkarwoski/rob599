@@ -23,7 +23,7 @@ int main(void) {
 
     printf("%p\n", (void *)&char2);
     printf("%p\n", (void *)&int2);
-    printf("%p\n", (void *)&char2 - (void *)&int2);
+    printf("%ld\n", (long)&char2 - (long)&int2);
     printf("%p\n", (void *)&floats);
     printf("%p\n", (void *)&floats[0]);
     printf("%p\n", (void *)&floats[1]);
