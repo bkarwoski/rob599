@@ -39,7 +39,7 @@ poly_t poly1 = { 0 };
 poly_t poly2 = { 0 };
 FILE *fp = fopen("polygons.csv", "r");
 if(fp == NULL) {
-    printf("file does not exist\n");
+    fprintf(stderr, "polygons.csv is missing\n");
     return 1;
 }
 fgets(tmp, 100, fp); //clear first line
