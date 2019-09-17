@@ -49,11 +49,16 @@ fscanf(fp, "%lf", &poly1.yShift);
 fscanf(fp, "%lf", &poly1.rot);
 poly1.rot *= DEGTORAD;
 fscanf(fp, "%d", &poly1.numPoints);
+int pointCheck = 0;
 for(int i = 0; i < poly1.numPoints; i++) {
-    fscanf(fp, "%lf", &poly1.xPoints[i]);
+    pointCheck += fscanf(fp, "%lf", &poly1.xPoints[i]);
 }
+
 for(int i = 0; i < poly1.numPoints; i++) {
-    fscanf(fp, "%lf", &poly1.yPoints[i]);
+    pointCheck += fscanf(fp, "%lf", &poly1.yPoints[i]);
+}
+if(pointCheck != (2 *poly1.numPoints)) {
+    return 1;
 }
 
 fscanf(fp, "%lf", &poly2.xShift);
@@ -61,11 +66,15 @@ fscanf(fp, "%lf", &poly2.yShift);
 fscanf(fp, "%lf", &poly2.rot);
 poly2.rot *= DEGTORAD;
 fscanf(fp, "%d", &poly2.numPoints);
+pointCheck = 0;
 for(int i = 0; i < poly2.numPoints; i++) {
-    fscanf(fp, "%lf", &poly2.xPoints[i]);
+    pointCheck += fscanf(fp, "%lf", &poly2.xPoints[i]);
 }
 for(int i = 0; i < poly2.numPoints; i++) {
-    fscanf(fp, "%lf", &poly2.yPoints[i]);
+    pointCheck += fscanf(fp, "%lf", &poly2.yPoints[i]);
+}
+if(pointCheck != (2 *poly1.numPoints)) {
+    return 1;
 }
 fclose(fp);
 if(poly1.numPoints > 16 || poly2.numPoints > 16) {
