@@ -8,9 +8,7 @@ int main(void) {
     char char2;
     int int2;
     float floats[3];
-   // int variable = 10;
-   // printf("%p\n", (void *)&variable);
-   // return 0;
+
     printf("%p\n", (void *)&char1);
     printf("%p\n", (void *)&int1);
     printf("%ld\n", (long)&char1 - (long)&int1);
@@ -28,5 +26,5 @@ int main(void) {
     printf("%p\n", (void *)&floats[0]);
     printf("%p\n", (void *)&floats[1]);
     printf("%p\n", (void *)&floats[2]);
-return 0;
+    return 0;
 }
