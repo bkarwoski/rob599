@@ -27,5 +27,8 @@ int main(void) {
     printf("%p\n", (void *)&floats[1]);
     printf("%p\n", (void *)&floats[2]);
     printf("%ld\n", (long)floats[1] - (long)floats[0]);
+    void *mem = malloc(1);
+    printf("%p\n", mem);
+    free(mem);
     return 0;
 }
