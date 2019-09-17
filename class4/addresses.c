@@ -18,6 +18,8 @@ int main(void) {
     printf("%p\n", (void *)&doubles[0]);
     printf("%p\n", (void *)&doubles[1]);
     printf("%p\n", (void *)&doubles[2]);
+    printf("%p\n", doubles[1]-doubles[0]);
+    printf("%p\n", (long)doubles[1]-(long)doubles[0]);
 
     printf("%p\n", (void *)&char2);
     printf("%p\n", (void *)&int2);
