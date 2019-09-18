@@ -56,7 +56,22 @@ int main(int argc, char *argv[]) {
             }
         }
     } else {
-        //decrypt
+        for (int i = 0; text[i] != '\0'; i++) {
+            if ((text[i] >= 'a') && (text[i] <= 'z')) {
+                text[i] -= (fpass[i % pass_len] - 'a');
+                if (text[i] < 'a') {
+                    text[i] += 26;
+                }
+
+            }
+            if ((text[i] >= 'A') && (text[i] <= 'Z')) {
+                text[i] -= (fpass[i % pass_len] - 'a');
+                if (text[i] < 'A') {
+                    text[i] += 26;
+                }
+
+            }
+        }
     }
     printf("%s\n", text);
     return 0;
