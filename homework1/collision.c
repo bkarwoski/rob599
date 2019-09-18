@@ -14,6 +14,14 @@ typedef struct poly {
 
 } poly_t;
 
+bool isZero (double *vec[2]) {
+    if ((vec[0] == 0) && vec[1] == 0) {
+        return true;
+    } else 
+        { return false;
+    }
+}
+
 void shift(poly_t *polyX) {
     float c = cos(polyX->rot);
     float s = sin(polyX->rot);
@@ -33,9 +41,32 @@ void shift(poly_t *polyX) {
 
 bool intersects(double x1, double y1, double x2, double y2,
                 double x3, double y3, double x4, double y4) {
-    
+    double vec1[2] = {x2 - x1, y2 - y1};
+    double t11[2] = {x3 - x1, y3 - y1};
+    double t12[2] = {x2 - x1, y4 - y3};
+    double cv1t11 = vec1[0] * t11[1] - vec1[1] * t11[0];
+    double cv1t12 = vec1[0] * t12[1] - vec1[1] * t12[0];
+    bool neg1 = (cv1t11 * cv1t12 <= 0);
+
+    double vec2[2] = {x4 - x3, y4 - y3};
+    double t21[2] = {x1 - x3, y1 - y3};
+    double t22[2] = {x2 - x3, y2 - y3};
+    double cv2t21 = vec2[0] * t21[1] - vec2[1] * t21[0];
+    double cv2t22 = vec2[0] * t22[1] - vec2[1] * t22[0];
+    bool neg2 = (cv2t21 * cv2t22 <= 0);
+
+    if (neg1 && neg2) {
+        if (!(cv1t11 || cv1t12 || cv2t21 || cv2t22)) {
+            if (isZero(&t11) || isZero(&t12) || isZero(&t21) || isZero(&t22)) {
+                return true;
+            }
+        }
+        return true;
+    }
     return false;
 }
+//verma rhea
+
 
 bool contains(double x1, double y1, poly_t *polyX) {
 
@@ -143,15 +174,14 @@ int main(void) {
                 break;
 
             }
-
+            
         }
     }
     if (!collides) {
         collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
                     contains(poly2.xPoints[0], poly2.yPoints[0], &poly1));
     }
-    //printf("%f\n,", poly1.xPoints[2]);
-    collides = true;
+
     if (collides) {
         printf("collision!\n");
     } else {
