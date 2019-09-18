@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     }
     char *text = argv[3];
    // printf("    orig password is %s\n", opass);
-   // printf("filtered password is %s\n", fpass);  
+   // printf("filtered password is %s\n", fpass);
    // printf("orig text is %s\n", text);
     if (encrpyt) {
         for (int i = 0; text[i] != '\0'; i++) {
@@ -45,14 +45,12 @@ int main(int argc, char *argv[]) {
                 if (text[i] > 'z') {
                     text[i] -= 26;
                 }
-
             }
             if ((text[i] >= 'A') && (text[i] <= 'Z')) {
                 text[i] += (fpass[i % pass_len] - 'a');
                 if (text[i] > 'Z') {
                     text[i] -= 26;
                 }
-
             }
         }
     } else {
@@ -62,14 +60,12 @@ int main(int argc, char *argv[]) {
                 if (text[i] < 'a') {
                     text[i] += 26;
                 }
-
             }
             if ((text[i] >= 'A') && (text[i] <= 'Z')) {
                 text[i] -= (fpass[i % pass_len] - 'a');
                 if (text[i] < 'A') {
                     text[i] += 26;
                 }
-
             }
         }
     }
