@@ -37,6 +37,11 @@ bool intersects(double x1, double y1, double x2, double y2,
     return false;
 }
 
+bool contains(double x1, double y1, poly_t *polyX) {
+
+    return false;
+}
+
 //bool contains(double x1, double y1) {
 //return false;
 //}
@@ -141,8 +146,12 @@ int main(void) {
 
         }
     }
+    if (!collides) {
+        collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
+                    contains(poly2.xPoints[0], poly2.yPoints[0], &poly1))
+    }
     //printf("%f\n,", poly1.xPoints[2]);
-
+    collides = true;
     if (collides) {
         printf("collision!\n");
     } else {
