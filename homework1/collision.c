@@ -148,7 +148,7 @@ int main(void) {
     }
     if (!collides) {
         collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
-                    contains(poly2.xPoints[0], poly2.yPoints[0], &poly1))
+                    contains(poly2.xPoints[0], poly2.yPoints[0], &poly1));
     }
     //printf("%f\n,", poly1.xPoints[2]);
     collides = true;
