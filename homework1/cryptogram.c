@@ -35,9 +35,9 @@ int main(int argc, char *argv[]) {
         pass_len = 1;
     }
     char *text = argv[3];
-   // printf("    orig password is %s\n", opass);
-   // printf("filtered password is %s\n", fpass);
-   // printf("orig text is %s\n", text);
+    // printf("    orig password is %s\n", opass);
+    // printf("filtered password is %s\n", fpass);
+    // printf("orig text is %s\n", text);
     if (encrpyt) {
         for (int i = 0; text[i] != '\0'; i++) {
             if ((text[i] >= 'a') && (text[i] <= 'z')) {
