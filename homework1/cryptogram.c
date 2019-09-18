@@ -41,16 +41,18 @@ int main(int argc, char *argv[]) {
     if (encrpyt) {
         for (int i = 0; text[i] != '\0'; i++) {
             if ((text[i] >= 'a') && (text[i] <= 'z')) {
-                text[i] += (fpass[i % pass_len] - 'a');
                 if (text[i] > 'z') {
                     text[i] -= 26;
                 }
+                text[i] += (fpass[i % pass_len] - 'a');
+                
             }
             if ((text[i] >= 'A') && (text[i] <= 'Z')) {
-                text[i] += (fpass[i % pass_len] - 'a');
                 if (text[i] > 'Z') {
                     text[i] -= 26;
                 }
+                text[i] += (fpass[i % pass_len] - 'a');
+                
             }
         }
     } else {
