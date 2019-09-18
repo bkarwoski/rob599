@@ -45,14 +45,12 @@ int main(int argc, char *argv[]) {
                     text[i] -= 26;
                 }
                 text[i] += (fpass[i % pass_len] - 'a');
-                
             }
             if ((text[i] >= 'A') && (text[i] <= 'Z')) {
                 if (text[i] > 'Z') {
                     text[i] -= 26;
                 }
                 text[i] += (fpass[i % pass_len] - 'a');
-                
             }
         }
     } else {
