@@ -34,15 +34,6 @@ void shift(poly_t *polyX) {
 void intersects(double x1, double y1, double x2, double y2,
                 double x3, double y3, double x4, double y4) {
     
-    //printf("%f\n", x1);
-    //printf("%f\n", y1);
-    //printf("%f\n", x2);
-    //printf("%f\n", y2);
-    //printf("%f\n", x3);
-    //printf("%f\n", y3);
-    //printf("%f\n", x4);
-    //printf("%f\n", y4);
-
     //  return false;
 }
 
@@ -59,6 +50,7 @@ int main(void) {
         fprintf(stderr, "polygons.csv is missing\n");
         return 1;
     }
+    bool collides = false;
 
     fgets(tmp, 100, fp);
 
@@ -141,13 +133,21 @@ int main(void) {
                 x4 = poly2.xPoints[j+1];
                 y4 = poly2.yPoints[j+1];
             }
-            intersects(x1, y1, x2, y2, x3, y3, x4, y4);
+            if (intersects(x1, y1, x2, y2, x3, y3, x4, y4)) {
+                collides = true;
+                break;
+
+            }
 
         }
     }
     //printf("%f\n,", poly1.xPoints[2]);
 
-
+    if (collides) {
+        printf("collision!\n");
+    } else {
+        printf("no collision\n");
+    }
 
     return 0;
 }
