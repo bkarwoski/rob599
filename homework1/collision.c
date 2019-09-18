@@ -32,8 +32,8 @@ void shift(poly_t *polyX) {
 
 int main(void) {
     char tmp[100];
-    poly_t poly1 = { 0 };
-    poly_t poly2 = { 0 };
+    poly_t poly1 = {0};
+    poly_t poly2 = {0};
     FILE *fp = fopen("polygons.csv", "r");
     if (!fp) {
         fprintf(stderr, "polygons.csv is missing\n");
