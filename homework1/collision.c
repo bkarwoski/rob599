@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 #define M_PI 3.14159265358979323846
 #define DEGTORAD (M_PI / 180)
 
@@ -29,6 +30,25 @@ void shift(poly_t *polyX) {
         polyX->yPoints[i] = newY;
     }
 }
+
+void intersects(double x1, double y1, double x2, double y2,
+                double x3, double y3, double x4, double y4) {
+    
+    //printf("%f\n", x1);
+    //printf("%f\n", y1);
+    //printf("%f\n", x2);
+    //printf("%f\n", y2);
+    //printf("%f\n", x3);
+    //printf("%f\n", y3);
+    //printf("%f\n", x4);
+    //printf("%f\n", y4);
+
+    //  return false;
+}
+
+//bool contains(double x1, double y1) {
+//return false;
+//}
 
 int main(void) {
     char tmp[100];
@@ -89,7 +109,45 @@ int main(void) {
 
     shift(&poly1);
     shift(&poly2);
+
+    double x1 = 0;
+    double y1 = 0;
+    double x2 = 0;
+    double y2 = 0;
+    double x3 = 0;
+    double y3 = 0;
+    double x4 = 0;
+    double y4 = 0;
+
+    for (int i = 0; i < poly1.numPoints; i++) {
+        x1 = poly1.xPoints[i];
+        y1 = poly1.yPoints[i];
+        if (1+i == poly1.numPoints) {
+            x2 = poly1.xPoints[0];
+            y2 = poly1.yPoints[0];
+        }
+        else {
+            x2 = poly1.xPoints[i+1];
+            y2 = poly1.yPoints[i+1];
+        }
+        for (int j = 0; j < poly2.numPoints; j++) {
+            x3 = poly2.xPoints[i];
+            y3 = poly2.yPoints[i];
+            if (1+j == poly2.numPoints) {
+                x4 = poly2.xPoints[0];
+                y4 = poly2.yPoints[0];
+            }
+            else {
+                x4 = poly2.xPoints[j+1];
+                y4 = poly2.yPoints[j+1];
+            }
+            intersects(x1, y1, x2, y2, x3, y3, x4, y4);
+
+        }
+    }
     //printf("%f\n,", poly1.xPoints[2]);
+
+
 
     return 0;
 }
