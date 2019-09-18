@@ -7,11 +7,11 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "usage: ./cryptogram <encrypt|decrypt> <password> <text>\n");
         return 1;
     }
-    bool encrpyt;
+    bool encrypt;
     if (strcmp(argv[1], "encrypt") == 0) {
-        encrpyt = 1;
+        encrypt = 1;
     } else if (strcmp(argv[1], "decrypt") == 0) {
-        encrpyt = 0;
+        encrypt = 0;
     } else {
         fprintf(stderr, "expected command encrypt or decrypt.\n");
         return 1;
@@ -38,16 +38,16 @@ int main(int argc, char *argv[]) {
     // printf("    orig password is %s\n", opass);
     // printf("filtered password is %s\n", fpass);
     // printf("orig text is %s\n", text);
-    if (encrpyt) {
+    if (encrypt) {
         for (int i = 0; text[i] != '\0'; i++) {
             if ((text[i] >= 'a') && (text[i] <= 'z')) {
-                if (text[i] > 'z') {
+                if (text[i] + (fpass[i % pass_len] - 'a') > 'z') {
                     text[i] -= 26;
                 }
                 text[i] += (fpass[i % pass_len] - 'a');
             }
             if ((text[i] >= 'A') && (text[i] <= 'Z')) {
-                if (text[i] > 'Z') {
+                if (text[i] + (fpass[i % pass_len] - 'a') > 'Z') {
                     text[i] -= 26;
                 }
                 text[i] += (fpass[i % pass_len] - 'a');
