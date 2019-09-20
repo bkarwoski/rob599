@@ -56,10 +56,10 @@ bool intersects(double x1, double y1, double x2, double y2,
     bool neg2 = (cv2t21 * cv2t22 <= 0);
 
     if (neg1 && neg2) {
-        return true;
+        //return true;
     } else if (!((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0)) && 
                    (cv1t11 * cv1t12 == 0) || (cv2t21 * cv2t22 == 0)) {
-        return true;
+        //return true;
     }
     
    return false;
@@ -190,8 +190,8 @@ int main(void) {
         }
     }
     if (!collides) {
-       // collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
-        //            contains(poly2.xPoints[0], poly2.yPoints[0], &poly1));
+       collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
+                   contains(poly2.xPoints[0], poly2.yPoints[0], &poly1));
     }
 
     if (collides) {
