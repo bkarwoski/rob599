@@ -58,7 +58,7 @@ bool intersects(double x1, double y1, double x2, double y2,
     if (neg1 && neg2) {
         if (!(cv1t11 || cv1t12 || cv2t21 || cv2t22)) {
             //if (isZero(&t11) || isZero(&t12) || isZero(&t21) || isZero(&t22)) {
-            return true;
+            return false;
             //}
         }
         return true;
