@@ -57,8 +57,8 @@ bool intersects(double x1, double y1, double x2, double y2,
 
     if (neg1 && neg2) {
         return true;
-    } else if { (!((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 = 0)) && 
-                   (cv1t11 * cv1t12 == 0) || (cv2t21 * cv2t22 = 0)) {
+    } else if (!((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0)) && 
+                   (cv1t11 * cv1t12 == 0) || (cv2t21 * cv2t22 == 0)) {
         return true;
     }
     
