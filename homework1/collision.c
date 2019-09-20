@@ -65,7 +65,6 @@ bool intersects(double x1, double y1, double x2, double y2,
     }
     return false;
 }
-//verma rhea
 
 
 bool contains(double x1, double y1, poly_t *polyX) {

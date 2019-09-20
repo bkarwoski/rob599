@@ -5,22 +5,18 @@
 //https://eddmann.com/posts/implementing-a-dynamic-vector-array-in-c/
 
 typedef struct vector {
-    void **items;
+    int *items;
     int capacity;
     int size;
 } vector_t;
 
-void vector_make(vector *v) {
+void vector_make(vector_t *v) {
     v->capacity = 32;
     v->size = 0;
-    v->items = malloc(sizeof(void *) * v->capacity);
+    v->items = malloc(sizeof(int) * v->capacity);
 }
 
-int vector_size(vector *v) {
-    return v->size;
-}
-
-void vector_resize(vector *v, int capacity) {
+void vector_resize(vector_t *v, int capacity) {
     void **items = realloc(v->items, sizeof(void *) * capacity);
     if (items) {
         v->items = items;
@@ -28,12 +24,16 @@ void vector_resize(vector *v, int capacity) {
     }
 }
 
-void vector_add(vector *v, int index, void *item) {
+void vector_append(vector_t *v, void *item) {
     if (v->capacity == v->size) {
         vector_resize(v, v->capacity * 2);
         v->items[v->size++] = item;
 
     }
+}
+
+void vector_free(vector_t *v) {
+    free(v->items);
 }
 
 
@@ -47,13 +47,11 @@ int main(int argc, char *argv[]) {
     if (index == 0) {
         return 0;
     }
-    int capacity = 32;
-    int size = 3;
-    int *g = malloc(sizeof(int) * capacity);
-
-    g[0] = 1;
-    g[1] = 2;
-    g[2] = 2;
+    vector_t g;
+    vector_make(&g);
+    vector_append(&g, 1);
+    vector_append(&g, 2);
+    vector_append(&g, 2);
 
     while (1) {
         if (size == capacity) {
@@ -62,7 +60,7 @@ int main(int argc, char *argv[]) {
         }
 
     }
-    //printf("%d\n",g[1]);
+    printf("%d\n",g[1]);
 
     free(g);
     return 0;
