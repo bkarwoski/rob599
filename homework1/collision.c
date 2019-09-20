@@ -88,7 +88,7 @@ bool contains(double x, double y, poly_t *polyX) {
         if (crossInit == -9999) {
             crossInit = vec1[0] * t1[1] - vec1[1] * t1[0];
         }
-        cross = vec1[0] * t1[1] - vec1[1] * t1[0]; 
+        cross = vec1[0] * t1[1] - vec1[1] * t1[0];
         if ((cross * crossInit) < 0) {
             return false;
         }
