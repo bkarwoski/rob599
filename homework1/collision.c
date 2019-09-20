@@ -93,7 +93,8 @@ bool contains(double x, double y, poly_t *polyX) {
             return false;
         }
     }
-    return true;
+    //return true;
+    return false;
 }
 
 int main(void) {
