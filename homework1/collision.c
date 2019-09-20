@@ -72,8 +72,9 @@ bool contains(double x, double y, poly_t *polyX) {
     int x2 = 0;
     int y2 = 0;
     double cross = 0;
+    double crossInit = 0;
+    bool assigned = false;
     for (int i = 0; i < polyX->numPoints; i++) {
-        double crossInit = -9999;
         x1 = polyX->xPoints[i];
         y1 = polyX->yPoints[i];
         if (i + 1 == polyX->numPoints) {
@@ -85,16 +86,17 @@ bool contains(double x, double y, poly_t *polyX) {
         }
         double vec1[2] = {x2 - x1, y2 - y1};
         double t1[2] = {x - x1, y - y1};
-        if (crossInit == -9999) {
+        if (!assigned) {
             crossInit = vec1[0] * t1[1] - vec1[1] * t1[0];
+            assigned = true;
         }
         cross = vec1[0] * t1[1] - vec1[1] * t1[0];
         if ((cross * crossInit) < 0) {
             return false;
         }
     }
-    //return true;
-    return false;
+    return true;
+    //return false;
 }
 
 int main(void) {
