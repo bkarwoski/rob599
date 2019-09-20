@@ -17,7 +17,7 @@ typedef struct poly {
 /*bool isZero (double *vec[]) {
     if ((vec[0] == 0) && vec[1] == 0) {
         return true;
-    } else 
+    } else
         { return false;
     }
 }*/
@@ -58,7 +58,7 @@ bool intersects(double x1, double y1, double x2, double y2,
     if (neg1 && neg2) {
         if (!(cv1t11 || cv1t12 || cv2t21 || cv2t22)) {
             //if (isZero(&t11) || isZero(&t12) || isZero(&t21) || isZero(&t22)) {
-                return true;
+            return true;
             //}
         }
         return true;
@@ -76,32 +76,25 @@ bool contains(double x, double y, poly_t *polyX) {
         double crossInit = -9999;
         x1 = polyX->xPoints[i];
         y1 = polyX->yPoints[i];
-        if (i+1 == polyX->numPoints) {
+        if (i + 1 == polyX->numPoints) {
             x2 = polyX->xPoints[0];
             y2 = polyX->yPoints[0];
-        }
-        else {
-            x2 = polyX->xPoints[i+1];
-            y2 = polyX->yPoints[i+1];
+        } else {
+            x2 = polyX->xPoints[i + 1];
+            y2 = polyX->yPoints[i + 1];
         }
         double vec1[2] = {x2 - x1, y2 - y1};
         double t1[2] = {x - x1, y - y1};
         if (crossInit == -9999) {
             crossInit = vec1[0] * t1[1] - vec1[1] * t1[0];
-        } 
+        }
         cross = vec1[0] * t1[1] - vec1[1] * t1[0]; 
         if ((cross * crossInit) < 0) {
             return false;
         }
-
-
     }
     return true;
 }
-
-//bool contains(double x1, double y1) {
-//return false;
-//}
 
 int main(void) {
     char tmp[100];
@@ -125,16 +118,13 @@ int main(void) {
     for (int i = 0; i < poly1.numPoints; i++) {
         pointCheck += fscanf(fp, "%lf", &poly1.xPoints[i]);
     }
-
     for (int i = 0; i < poly1.numPoints; i++) {
         pointCheck += fscanf(fp, "%lf", &poly1.yPoints[i]);
     }
-
     if (pointCheck != (2 * poly1.numPoints)) {
         fprintf(stderr, "a polygons.csv number is invalid\n");
         return 1;
     }
-
     fscanf(fp, "%lf", &poly2.xShift);
     fscanf(fp, "%lf", &poly2.yShift);
     fscanf(fp, "%lf", &poly2.rot);
@@ -153,14 +143,12 @@ int main(void) {
         fprintf(stderr, "a polygons.csv number is invalid\n");
         return 1;
     }
-
     fclose(fp);
 
     if (poly1.numPoints > 16 || poly2.numPoints > 16) {
         printf("too many points!\n");
         return 1;
     }
-
     shift(&poly1);
     shift(&poly2);
 
@@ -176,31 +164,27 @@ int main(void) {
     for (int i = 0; i < poly1.numPoints; i++) {
         x1 = poly1.xPoints[i];
         y1 = poly1.yPoints[i];
-        if (1+i == poly1.numPoints) {
+        if (1 + i == poly1.numPoints) {
             x2 = poly1.xPoints[0];
             y2 = poly1.yPoints[0];
-        }
-        else {
-            x2 = poly1.xPoints[i+1];
-            y2 = poly1.yPoints[i+1];
+        } else {
+            x2 = poly1.xPoints[i + 1];
+            y2 = poly1.yPoints[i + 1];
         }
         for (int j = 0; j < poly2.numPoints; j++) {
             x3 = poly2.xPoints[i];
             y3 = poly2.yPoints[i];
-            if (1+j == poly2.numPoints) {
+            if (1 + j == poly2.numPoints) {
                 x4 = poly2.xPoints[0];
                 y4 = poly2.yPoints[0];
-            }
-            else {
-                x4 = poly2.xPoints[j+1];
-                y4 = poly2.yPoints[j+1];
+            } else {
+                x4 = poly2.xPoints[j + 1];
+                y4 = poly2.yPoints[j + 1];
             }
             if (intersects(x1, y1, x2, y2, x3, y3, x4, y4)) {
                 collides = true;
                 break;
-
             }
-            
         }
     }
     if (!collides) {
