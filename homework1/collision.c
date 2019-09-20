@@ -14,13 +14,13 @@ typedef struct poly {
 
 } poly_t;
 
-bool isZero (double *vec[2]) {
+/*bool isZero (double *vec[]) {
     if ((vec[0] == 0) && vec[1] == 0) {
         return true;
     } else 
         { return false;
     }
-}
+}*/
 
 void shift(poly_t *polyX) {
     float c = cos(polyX->rot);
@@ -57,19 +57,46 @@ bool intersects(double x1, double y1, double x2, double y2,
 
     if (neg1 && neg2) {
         if (!(cv1t11 || cv1t12 || cv2t21 || cv2t22)) {
-            if (isZero(&t11) || isZero(&t12) || isZero(&t21) || isZero(&t22)) {
+            //if (isZero(&t11) || isZero(&t12) || isZero(&t21) || isZero(&t22)) {
                 return true;
-            }
+            //}
         }
         return true;
     }
     return false;
 }
 
+bool contains(double x, double y, poly_t *polyX) {
+    int x1 = 0;
+    int y1 = 0;
+    int x2 = 0;
+    int y2 = 0;
+    double cross = 0;
+    for (int i = 0; i < polyX->numPoints; i++) {
+        double crossInit = -9999;
+        x1 = polyX->xPoints[i];
+        y1 = polyX->yPoints[i];
+        if (i+1 == polyX->numPoints) {
+            x2 = polyX->xPoints[0];
+            y2 = polyX->yPoints[0];
+        }
+        else {
+            x2 = polyX->xPoints[i+1];
+            y2 = polyX->yPoints[i+1];
+        }
+        double vec1[2] = {x2 - x1, y2 - y1};
+        double t1[2] = {x - x1, y - y1};
+        if (crossInit == -9999) {
+            crossInit = vec1[0] * t1[1] - vec1[1] * t1[0];
+        } 
+        cross = vec1[0] * t1[1] - vec1[1] * t1[0]; 
+        if ((cross * crossInit) < 0) {
+            return false;
+        }
 
-bool contains(double x1, double y1, poly_t *polyX) {
 
-    return false;
+    }
+    return true;
 }
 
 //bool contains(double x1, double y1) {
