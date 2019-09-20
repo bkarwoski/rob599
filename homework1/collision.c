@@ -41,7 +41,7 @@ void shift(poly_t *polyX) {
 
 bool intersects(double x1, double y1, double x2, double y2,
                 double x3, double y3, double x4, double y4) {
-    double vec1[2] = {x2 - x1, y2 - y1};
+  /*  double vec1[2] = {x2 - x1, y2 - y1};
     double t11[2] = {x3 - x1, y3 - y1};
     double t12[2] = {x2 - x1, y4 - y3};
     double cv1t11 = vec1[0] * t11[1] - vec1[1] * t11[0];
@@ -63,7 +63,7 @@ bool intersects(double x1, double y1, double x2, double y2,
         }
         return false;
     }
-    return false;
+   */ return false;
 }
 
 bool contains(double x, double y, poly_t *polyX) {
