@@ -14,7 +14,7 @@ typedef struct poly {
 
 } poly_t;
 
-/*bool isZero (double *vec[]) {
+/*bool isZero (double *vec) {
     if ((vec[0] == 0) && vec[1] == 0) {
         return true;
     } else
@@ -56,13 +56,12 @@ bool intersects(double x1, double y1, double x2, double y2,
     bool neg2 = (cv2t21 * cv2t22 <= 0);
 
     if (neg1 && neg2) {
-        if (!(cv1t11 || cv1t12 || cv2t21 || cv2t22)) {
-            //if (isZero(&t11) || isZero(&t12) || isZero(&t21) || isZero(&t22)) {
-            return false;
-            //}
-        }
-        return false;
+        return true;
+    } else if { (!((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 = 0)) && 
+                   (cv1t11 * cv1t12 == 0) || (cv2t21 * cv2t22 = 0)) {
+        return true;
     }
+    
    return false;
 }
 
