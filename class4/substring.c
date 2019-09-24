@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 char file_buffer[64*1024];
 
@@ -24,13 +25,23 @@ int main(int argc, char **argv) {
     int lineCount = atoi(argv[0]);
     char* key = argv[2];
     int keyLength = strlen(key);
+    int pos = 0;
+    char *output = '\0';
 
-    if (lineCount == 0) {
-     //   fgets()
-     //   if((strstr(temp, key)) != NULL) {
-        char *output = strstr(file_buffer, key);
-        output[keyLength] = '\0';
-        printf("%s\n", output);
+    while (true) {
+        if (lineCount == 0) {
+            output = strstr(&file_buffer[pos], key);
+            pos = output - file_buffer + 1;
+            //printf("pos: %d\n", pos);
+            if (output == NULL) {
+                break;
+            }
+            char tmp = output[keyLength];
+            output[keyLength] = '\0';
+            printf("%s\n", output);
+            output[keyLength] = tmp;
+        } else {
+        }
     }
 
     fclose(f);
