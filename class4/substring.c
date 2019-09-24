@@ -23,18 +23,15 @@ int main(int argc, char **argv) {
     }
     int lineCount = atoi(argv[0]);
     char* key = argv[2];
-    printf("sizeof(key) == %ld\n", sizeof(key));
-    printf("sizeof(key[0]) == %ld\n",sizeof(key[0]));
-    printf("sizeof(argv[2]) == %ld\n",sizeof(argv[2]));
-    int keyLength = (sizeof(key) / sizeof(key[0]));
+    printf("strlen(key) == %ld\n", strlen(key));
+    int keyLength = strlen(key);
 
     if (lineCount == 0) {
      //   fgets()
      //   if((strstr(temp, key)) != NULL) {
         char *output = strstr(file_buffer, key);
+        output[keyLength] = '\0';
         printf("%s\n", output);
-        printf("key: %s\n", key);
-        printf("key size: %d\n", keyLength);
     }
 
     fclose(f);
