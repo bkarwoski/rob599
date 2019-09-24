@@ -23,7 +23,6 @@ int main(int argc, char **argv) {
     }
     int lineCount = atoi(argv[0]);
     char* key = argv[2];
-    printf("strlen(key) == %ld\n", strlen(key));
     int keyLength = strlen(key);
 
     if (lineCount == 0) {
