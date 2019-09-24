@@ -1,5 +1,5 @@
 addresses: addresses.c
 	gcc -o $@ $^ -std=c11 -lm
 
-subtring: substring.c
+substring: substring.c
 	gcc -o $@ $^ -std=c11 -lm
