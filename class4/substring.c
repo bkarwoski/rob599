@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
             }
             char tmp = output[keyLength];
             output[keyLength] = '\0';
-            printf("%s\n", output);
+            printf("%s\n\n", output);
             output[keyLength] = tmp;
         } else {
         }
