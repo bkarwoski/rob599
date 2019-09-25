@@ -5,11 +5,11 @@
 
 char file_buffer[64*1024];
 
-char* getContext(int numLines, char* buf, char* pos) {
+char *getContext(int numLines, char *buf, char *pos) {
     char *tmp = pos;
     int index = pos - buf;
     //printf("init numLines == %d\n", numLines);
-    while(numLines != 0) {
+    while (numLines != 0) {
         //printf("numLines == %d\n", numLines);
         if (index == 0) {
             break;
@@ -19,7 +19,7 @@ char* getContext(int numLines, char* buf, char* pos) {
         index--;
         if (buf[index] == '\n') {
             numLines--;
-            if (numLines ==0) {
+            if (numLines == 0) {
                 tmp++;
             }
         }
@@ -45,18 +45,18 @@ int main(int argc, char **argv) {
         return 1;
     }
     int lineCount = atoi(argv[3]);
-    char* key = argv[2];
+    char *key = argv[2];
     int keyLength = strlen(key);
     int index = 0;
 
     while (true) {
-        char* pos = strstr(&file_buffer[index], key);
+        char *pos = strstr(&file_buffer[index], key);
         if (!pos) {
             break;
         }
         index = pos - file_buffer + 1;
         //printf("index: %d\n", index);
-        char* output = getContext(lineCount, file_buffer, pos);
+        char *output = getContext(lineCount, file_buffer, pos);
         char tmp = pos[keyLength];
         //printf("char tmp = %c\n", tmp);
         pos[keyLength] = '\0';
