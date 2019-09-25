@@ -14,6 +14,7 @@ typedef struct list {
 } list_t;
 
 list_t *list_create(void) {
+    
 }
 
 void list_push_start(list_t *list, int value) {
