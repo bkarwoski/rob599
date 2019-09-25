@@ -8,18 +8,21 @@ char file_buffer[64*1024];
 char* getContext(int numLines, char* buf, char* pos) {
     char *tmp = pos;
     int index = pos - buf;
-    printf("init numLines == %d\n", numLines);
+    //printf("init numLines == %d\n", numLines);
     while(numLines != 0) {
         //printf("numLines == %d\n", numLines);
         if (index == 0) {
             break;
         }
-        if (buf[index] == '\n') {
-            numLines--;
-        }
-        //printf("decrementing!\n");
+
         tmp--;
         index--;
+        if (buf[index] == '\n') {
+            numLines--;
+            if (numLines ==0) {
+                tmp++;
+            }
+        }
     }
     return tmp;
 }
