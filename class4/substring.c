@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         //printf("index: %d\n", index);
         char* output = getContext(lineCount, file_buffer, pos);
         char tmp = pos[keyLength];
-        printf("char tmp = %c\n", tmp);
+        //printf("char tmp = %c\n", tmp);
         pos[keyLength] = '\0';
         printf("%s\n\n", output);
         pos[keyLength] = tmp;
