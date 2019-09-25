@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     for (int i = 3; i <= maxVal; i++) {
         addCount = vec.data[i-1];
         //printf("addCount = %d\n", addCount);
-        for (int j = 0; j <= addCount; j++) {
+        for (int j = 0; j < addCount; j++) {
             vector_append(&vec, i);
         }
     }
