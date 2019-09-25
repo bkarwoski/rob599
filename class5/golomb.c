@@ -21,10 +21,9 @@ void vector_append(vector_t *vec, int value) {
     if (vec->size >= vec->capacity) {
         //printf("calling realloc\n");
         vec->capacity *= 2;
-        int *newData = realloc(vec->data, sizeof(int)*vec->capacity);
+        int *newData = realloc(vec->data, sizeof(int) * vec->capacity);
         vec->data = newData;
     }
-  
     vec->data[vec->size] = value;
     vec->size++;
 }
@@ -49,7 +48,7 @@ int main(int argc, char *argv[]) {
 
     int addCount = 0;
     for (int i = 3; i <= maxVal; i++) {
-        addCount = vec.data[i-1];
+        addCount = vec.data[i - 1];
         //printf("addCount = %d\n", addCount);
         for (int j = 0; j < addCount; j++) {
             vector_append(&vec, i);
@@ -61,5 +60,6 @@ int main(int argc, char *argv[]) {
     }
 
     //printf("vec[3] = %d\n", vec.data[3]);
+    free(vec.data);
     return 0;
 }
