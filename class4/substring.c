@@ -5,7 +5,7 @@
 
 char file_buffer[64*1024];
 
-char *getContext(int numLines, char *buf, char *pos) {
+char *getContext(int numLines, const char *buf, char *pos) {
     char *tmp = pos;
     int index = pos - buf;
     //printf("init numLines == %d\n", numLines);
