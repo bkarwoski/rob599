@@ -4,8 +4,8 @@
 #include <string.h>
 
 typedef struct vector {
-    size_t size; // number of elements added to vector
-    size_t capacity; // number of elements that can be put in data array
+    size_t size;
+    size_t capacity;
     int *data;
 } vector_t;
 
@@ -13,7 +13,7 @@ vector_t vector_create(void) {
     vector_t v;
     v.size = 0;
     v.capacity = 4;
-    v.data = malloc(sizeof(int)*v.capacity);
+    v.data = malloc(sizeof(int) * v.capacity);
     return v;
 }
 
