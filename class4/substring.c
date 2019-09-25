@@ -5,6 +5,14 @@
 
 char file_buffer[64*1024];
 
+char* getContext(int numLines, char* buf, char* pos) {
+    char *tmp = pos;
+    while(numLines != 0) {
+
+    }
+    return tmp;
+}
+
 int main(int argc, char **argv) {
     if (argc != 4) {
         fprintf(stderr, "usage: %s <file> <key> <lines before>\n", argv[0]);
@@ -25,9 +33,23 @@ int main(int argc, char **argv) {
     int lineCount = atoi(argv[0]);
     char* key = argv[2];
     int keyLength = strlen(key);
-    int pos = 0;
-    char *output = '\0';
+    int index = 0;
 
+    while (true) {
+        char* pos = strstr(&file_buffer[index], key);
+        if (!pos) {
+            break;
+        }
+        index = pos - file_buffer + 1;
+        char* output = getContext(lineCount, file_buffer, pos);
+        char tmp = output[keyLength];
+        output[keyLength] = '\0';
+        printf("%s\n\n", output);
+        output[keyLength] = tmp;
+    }
+
+
+/*
     while (true) {
         if (lineCount == 0) {
             output = strstr(&file_buffer[pos], key);
@@ -41,8 +63,11 @@ int main(int argc, char **argv) {
             printf("%s\n\n", output);
             output[keyLength] = tmp;
         } else {
+
         }
     }
+*/
+    //
 
     fclose(f);
     // we want this to be a null-treminated string,
