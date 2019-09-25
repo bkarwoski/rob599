@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-char file_buffer[64*1024];
+char file_buffer[64 * 1024];
 
 char *getContext(int numLines, const char *buf, char *pos) {
     char *tmp = pos;
