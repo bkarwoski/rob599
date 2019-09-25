@@ -38,6 +38,10 @@ int main(int argc, char *argv[]) {
     if (maxVal == 0) {
         return 0;
     }
+    if (maxVal == 1) {
+        printf("1\n");
+        return 0;
+    }
     vector_t vec = vector_create();
     vector_append(&vec, 1);
     vector_append(&vec, 2);
