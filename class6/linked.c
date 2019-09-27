@@ -56,7 +56,7 @@ int list_pop_start(list_t *list) {
 int list_pop_end(list_t *list) {
     //printf("starting list_pop_end\n");
     int tmp = list->end->value;
-    printf("about to set null\n");
+    //printf("about to set null\n");
     //printf("list->end->prev->next = %ls\n", (int *)list->end->prev->next);
     //list->end->prev->next = NULL;
     node_t *newEnd = list->end->prev;
@@ -68,9 +68,9 @@ int list_pop_end(list_t *list) {
 void list_destroy(list_t *list) {
     int tmp = 0;
     while (list->end != NULL) {
-        printf("About to pop_end\n");
+        //printf("About to pop_end\n");
         tmp = list_pop_end(list);
-        printf("popped end\n");
+        //printf("popped end\n");
     }
     free(list);
 }
