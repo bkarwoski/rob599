@@ -27,7 +27,9 @@ void list_push_start(list_t *list, int value) {
     tmp->next = list->start;
     tmp->prev = NULL;
     list->start = tmp;
-
+    if (list->end == NULL) {
+        list->end = tmp;
+    }
 }
 
 void list_push_end(list_t *list, int value) {
@@ -37,16 +39,40 @@ void list_push_end(list_t *list, int value) {
     tmp->next = NULL;
     tmp->prev = list->end;
     list->end = tmp;
-
+    if (list->start == NULL) {
+        list->start = tmp;
+    }
 }
 
 int list_pop_start(list_t *list) {
+    int tmp = list->start->value;
+    node_t *newStart = list->start->next;
+    list->start->next->prev = NULL;
+    free(list->start);
+    list->start = newStart;
+    return tmp;
 }
 
 int list_pop_end(list_t *list) {
+    //printf("starting list_pop_end\n");
+    int tmp = list->end->value;
+    printf("about to set null\n");
+    //printf("list->end->prev->next = %ls\n", (int *)list->end->prev->next);
+    //list->end->prev->next = NULL;
+    node_t *newEnd = list->end->prev;
+    free(list->end);
+    list->end = newEnd;
+    return tmp;
 }
 
 void list_destroy(list_t *list) {
+    int tmp = 0;
+    while (list->end != NULL) {
+        printf("About to pop_end\n");
+        tmp = list_pop_end(list);
+        printf("popped end\n");
+    }
+    free(list);
 }
 
 int main(int argc, char **argv) {
