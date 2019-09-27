@@ -15,15 +15,29 @@ typedef struct list {
 
 list_t *list_create(void) {
     list_t *l = malloc(sizeof(list_t));
-    l->start->prev = NULL;
-    l->start->prev = NULL;
+    l->start = NULL;
+    l->end = NULL;
     return l;
 }
 
 void list_push_start(list_t *list, int value) {
+    node_t *tmp;
+    tmp = (node_t *)malloc(sizeof(node_t));
+    tmp->value = value;
+    tmp->next = list->start;
+    tmp->prev = NULL;
+    list->start = tmp;
+
 }
 
 void list_push_end(list_t *list, int value) {
+    node_t *tmp;
+    tmp = (node_t *)malloc(sizeof(node_t));
+    tmp->value = value;
+    tmp->next = NULL;
+    tmp->prev = list->end;
+    list->end = tmp;
+
 }
 
 int list_pop_start(list_t *list) {
