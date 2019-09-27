@@ -66,12 +66,13 @@ int list_pop_end(list_t *list) {
 }
 
 void list_destroy(list_t *list) {
-    int tmp = 0;
-    while (list->end != NULL) {
-        //printf("About to pop_end\n");
-        tmp = list_pop_end(list);
-        //printf("popped end\n");
+
+    while ((list->end != NULL) && (list->start != NULL)) {
+    //printf("About to pop_end\n");
+    list_pop_end(list);
+    //printf("popped end\n");
     }
+
     free(list);
 }
 

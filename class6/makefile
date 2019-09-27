@@ -4,4 +4,4 @@ CFLAGS += -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable
 CFLAGS += -fsanitize=address -fsanitize=undefined
 
 linked: linked.c
-	gcc -o $@ $^ -std=c11 -lm
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
