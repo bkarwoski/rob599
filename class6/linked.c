@@ -14,7 +14,10 @@ typedef struct list {
 } list_t;
 
 list_t *list_create(void) {
-    
+    list_t *l = malloc(sizeof(list_t));
+    l->start->prev = NULL;
+    l->start->prev = NULL;
+    return l;
 }
 
 void list_push_start(list_t *list, int value) {
