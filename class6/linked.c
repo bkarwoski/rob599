@@ -21,12 +21,13 @@ list_t *list_create(void) {
 }
 
 void list_push_start(list_t *list, int value) {
-    node_t *tmp;
-    tmp = (node_t *)malloc(sizeof(node_t));
+    node_t *tmp = (node_t *)malloc(sizeof(node_t));
     tmp->value = value;
     tmp->next = list->start;
     tmp->prev = NULL;
-    list->start->next = tmp;
+    if (list->start) {
+        list->start->prev = tmp;
+    }
     list->start = tmp;
     if (list->end == NULL) {
         list->end = tmp;
