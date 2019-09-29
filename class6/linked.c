@@ -26,6 +26,7 @@ void list_push_start(list_t *list, int value) {
     tmp->value = value;
     tmp->next = list->start;
     tmp->prev = NULL;
+    list->start->next = tmp;
     list->start = tmp;
     if (list->end == NULL) {
         list->end = tmp;
@@ -38,6 +39,7 @@ void list_push_end(list_t *list, int value) {
     tmp->value = value;
     tmp->next = NULL;
     tmp->prev = list->end;
+    list->end->next = tmp;
     list->end = tmp;
     if (list->start == NULL) {
         list->start = tmp;
