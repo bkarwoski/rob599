@@ -12,7 +12,7 @@ size_t bmp_calculate_size(bitmap_t *bmp) {
 void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
     BITMAPFILEHEADER file_header = { 0 }; // start out as all zero values
     file_header.bfType = 'BM';
-    file_header.bfSize = bmp_calculate_size(&bmp); //is this right?
+    file_header.bfSize = bmp_calculate_size(bmp);
     file_header.bfOffBits = 
     file_header.bfReserved1 = 0;
     file_header.bfReserved1 = 0;
@@ -44,7 +44,7 @@ void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
         data_out += size of row of pixels in bytes;
     }*/
     for (int i = bmp->height -1; i >= 0; i--) {
-        memcpy(data_out, &bmp.data[], sizeof(bgr)* bmp->width);
+        memcpy(data_out, bmp[i*(bmp->width)-1], sizeof(color_bgr_t)* bmp->width);
 
     }
 }
