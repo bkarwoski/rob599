@@ -35,16 +35,16 @@ void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
 
     memcpy(data_out, &file_header, sizeof(file_header)); // write X number of bytes
     data_out += sizeof(file_header); // and then move data_out forward X bytes
-
+    printf("size of file_header: %ld\n", sizeof(file_header));
     memcpy(data_out, &info_header, sizeof(info_header));
     data_out += sizeof(info_header);
-
+    printf("size of info_header: %ld\n", sizeof(info_header));
     /*for each row of pixel data, going from the bottom to the top {
         memcpy(data_out, &bmp.data[beginning of row], size of row of pixels in bytes));
         data_out += size of row of pixels in bytes;
     }*/
-    for (int i = bmp->height -1; i >= 0; i--) {
-        memcpy(data_out, &bmp->data[i*(bmp->width)-1], sizeof(color_bgr_t)* bmp->width);
+    for (int i = bmp->height - 1; i >= 0; i--) {
+        memcpy(data_out, &bmp->data[i*(bmp->width)], sizeof(color_bgr_t)* bmp->width);
 
     }
 }
