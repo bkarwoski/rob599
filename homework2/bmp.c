@@ -11,7 +11,7 @@ size_t bmp_calculate_size(bitmap_t *bmp) {
 // bmp_calculate_size large.
 void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
     BITMAPFILEHEADER file_header = { 0 }; // start out as all zero values
-    file_header.bfType = 'BM';
+    file_header.bfType = 0x424d;
     file_header.bfSize = bmp_calculate_size(bmp);
     file_header.bfOffBits = 
     file_header.bfReserved1 = 0;
@@ -44,7 +44,7 @@ void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
         data_out += size of row of pixels in bytes;
     }*/
     for (int i = bmp->height -1; i >= 0; i--) {
-        memcpy(data_out, bmp[i*(bmp->width)-1], sizeof(color_bgr_t)* bmp->width);
+        memcpy(data_out, &bmp->data[i*(bmp->width)-1], sizeof(color_bgr_t)* bmp->width);
 
     }
 }
@@ -57,6 +57,16 @@ int main(void) {
     // calloc gives enough space for width*height of these pixels
     // and calloc also sets the initial values of all of these to zero (black)
     bmp.data = calloc(bmp.width * bmp.height, sizeof(color_bgr_t));
+
+    size_t bmp_size = bmp_calculate_size(&bmp);
+    uint8_t *serialized_bmp = malloc(bmp_size);
+    bmp_serialize(&bmp, serialized_bmp);
+    // serialized_bmp now has the full bmp formatted image
+
+    // write to a file so we can check if it is a valid image
+    FILE *f = fopen("my_image.bmp", "wb");
+    fwrite(serialized_bmp, bmp_size, 1, f);
+    fclose(f);
     
     // if we wanted to make the first pixel white
     // bmp.data[0].r = 255;

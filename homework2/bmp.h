@@ -2,6 +2,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define DWORD uint32_t
 #define WORD uint16_t
