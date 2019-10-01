@@ -4,15 +4,15 @@
 #include <stdio.h>
 
 int int_compare(const void *a, const void *b) {
-    int val_a = *(int*)a;
-    int val_b = *(int*)b;
+    int val_a = *(int *)a;
+    int val_b = *(int *)b;
     return val_a - val_b;
 }
- 
-int main (int argc, char **argv) {
+
+int main(int argc, char **argv) {
     int target = atoi(argv[1]);
     int n = 1000;
-    int *randArray = (int*) malloc(n * sizeof(int));
+    int *randArray = (int *) malloc(n * sizeof(int));
 
     for (int i = 0; i < n; i++) {
         randArray[i] = rand() % 1000;
