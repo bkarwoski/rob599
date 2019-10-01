@@ -1,0 +1,9 @@
+Code review comments for Blake Karwoski
+functions for redundant Code
+well modulated
+C-idioms
+use of CONST
+poly struct
+remove inital 0's values
+initialize values outside of if statements
+use comments
