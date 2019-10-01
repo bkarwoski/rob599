@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 double y (double x) {
-    return (2*x - 20*x*x + 20*x*x*x - 4*x*x*x*x);
+    return (2 * x - 20 * x * x + 20 * x * x * x - 4 * x * x * x * x);
 }
 
 int main(int argc, char **argv) {
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     double y_mid = 0;
     double threshold = 1e-6;
 
-    while (x1-x0 > threshold) {
+    while (x1 - x0 > threshold) {
         x_mid = (x0 + x1) / 2;
         printf("x_mid: %11.4e ", x_mid);
         y_mid = y(x_mid);
