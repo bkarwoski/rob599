@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-double y (double x) {
+double y(double x) {
     return (2 * x - 20 * x * x + 20 * x * x * x - 4 * x * x * x * x);
 }
 
