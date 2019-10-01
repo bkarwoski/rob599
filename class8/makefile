@@ -5,3 +5,6 @@ CFLAGS += -fsanitize=address -fsanitize=undefined
 
 bisection: bisection.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
+
+binarysearch: binarysearch.c
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
