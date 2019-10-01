@@ -26,17 +26,15 @@ int main(int argc, char **argv) {
     while (left < right) {
         mid_i = (left + right) / 2;
         printf("mid_i: %d\n", mid_i);
-        if (randArray[mid_i] == target) {
-            //printf("value = %d\n", randArray[mid_i]);
-            printf("%d\n", mid_i);
-            //break;
-        }
         if (randArray[mid_i] < target) {
             left = mid_i + 1;
         } else {
             right = mid_i;
         }
     }
+    if (randArray[mid_i] == target) {
+        printf("%d\n", mid_i);
+        }
     free(randArray);
     return 0;
 }
