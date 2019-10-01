@@ -27,9 +27,9 @@ int main(int argc, char **argv) {
         mid_i = (left + right) / 2;
         printf("mid_i: %d\n", mid_i);
         if (randArray[mid_i] == target) {
-            printf("value = %d\n", randArray[mid_i]);
+            //printf("value = %d\n", randArray[mid_i]);
             printf("%d\n", mid_i);
-            break;
+            //break;
         }
         if (randArray[mid_i] < target) {
             left = mid_i + 1;
