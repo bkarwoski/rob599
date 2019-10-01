@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
     }
     if (randArray[mid_i] == target) {
         printf("%d\n", mid_i);
-        }
+    }
     free(randArray);
     return 0;
 }
