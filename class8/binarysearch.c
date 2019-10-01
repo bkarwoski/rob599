@@ -32,8 +32,8 @@ int main(int argc, char **argv) {
             right = mid_i;
         }
     }
-    if (randArray[mid_i] == target) {
-        printf("%d\n", mid_i);
+    if (randArray[left] == target) {
+        printf("%d\n", left);
     }
     free(randArray);
     return 0;
