@@ -38,7 +38,8 @@ uint64_t fib2(uint64_t index) {
 uint64_t fib3(uint64_t index, uint64_t *fibVals) {
     if (index == 0) {
         return 0;
-    } else if (index == 1) {
+    }
+    if (index == 1) {
         return 1;
     }
     fibVals[1] = 1;
