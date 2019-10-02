@@ -56,7 +56,6 @@ uint64_t fib3 (uint64_t index, uint64_t *fibVals) {
 }
 
 int main(void) {
-    //uint64_t index = atoi(argv[1]);
     uint64_t fib1index = 38;
     uint64_t fib2index = 90;
     uint64_t fib3index = 90;
@@ -64,7 +63,7 @@ int main(void) {
     clock_t start = clock();
     uint64_t ans1 = fib1(fib1index);
     double elapsed = (clock() - start) / (double)CLOCKS_PER_SEC;
-    printf("fib1(38) got %ld and took %.6f ms per iteration\n", ans1, elapsed);
+    printf("fib1(38) got %ld and took %.6f ms per iteration\n", ans1, elapsed*1000);
     
     start = clock();
     uint64_t count = 0;
@@ -76,7 +75,7 @@ int main(void) {
         count += 100;
     }
     elapsed = (clock() - start) / (double)CLOCKS_PER_SEC;
-    printf("fib2(90) got %ld and took %.6f ms per iteration\n", ans2, elapsed);
+    printf("fib2(90) got %ld and took %.6f ms per iteration\n", ans2, elapsed*1000);
 
     start = clock();
     count = 0;
@@ -92,7 +91,7 @@ int main(void) {
         count += 100;
     }
     elapsed = (clock() - start) / (double)CLOCKS_PER_SEC;
-    printf("fib3(90) got %ld and took %.6f ms per iteration\n", ans3, elapsed);
+    printf("fib3(90) got %ld and took %.6f ms per iteration\n", ans3, elapsed*1000);
 
 
     /*
