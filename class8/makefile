@@ -8,3 +8,6 @@ bisection: bisection.c
 
 binarysearch: binarysearch.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
+
+fibonacci: fibonacci.c
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
