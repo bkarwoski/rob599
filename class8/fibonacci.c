@@ -64,10 +64,10 @@ int main(void) {
     uint64_t count = 0;
     uint64_t ans1 = 0;
     while (clock() - start < (0.5*(double)CLOCKS_PER_SEC)) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             ans1 = fib1(fib1index);
         }
-        count += 100;
+        count += 10;
     }
     double elapsed = (clock() - start) / ((double)CLOCKS_PER_SEC * count);
     printf("fib1(38) got %ld and took %.6f ms per iteration\n", ans1, elapsed*1000);
