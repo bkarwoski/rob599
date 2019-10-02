@@ -66,7 +66,7 @@ int main(void) {
         count += 10;
     }
     double elapsed = (clock() - start) / ((double)CLOCKS_PER_SEC * count);
-    printf("fib1(38) got %ld and took %.6f ms per iteration\n", ans1, elapsed*1000);
+    printf("fib1(38) got %ld and took %.6f ms per iteration\n", ans1, elapsed * 1000);
 
     start = clock();
     count = 0;
@@ -78,7 +78,7 @@ int main(void) {
         count += 100;
     }
     elapsed = (clock() - start) / ((double)CLOCKS_PER_SEC * count);
-    printf("fib2(90) got %ld and took %.6f ms per iteration\n", ans2, elapsed*1000);
+    printf("fib2(90) got %ld and took %.6f ms per iteration\n", ans2, elapsed * 1000);
 
     start = clock();
     count = 0;
@@ -94,7 +94,7 @@ int main(void) {
         count += 100;
     }
     elapsed = (clock() - start) / ((double)CLOCKS_PER_SEC * count);
-    printf("fib3(90) got %ld and took %.6f ms per iteration\n", ans3, elapsed*1000);
+    printf("fib3(90) got %ld and took %.6f ms per iteration\n", ans3, elapsed * 1000);
 
     return 0;
 }
