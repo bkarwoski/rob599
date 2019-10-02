@@ -26,8 +26,7 @@ uint64_t fib2(uint64_t index) {
     uint64_t prev = 1;
     uint64_t result = 0;
 
-    for (uint64_t i = 2; i <= index; i++)
-    {
+    for (uint64_t i = 2; i <= index; i++) {
         result = prev + prevPrev;
         prevPrev = prev;
         prev = result;
