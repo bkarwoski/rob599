@@ -6,11 +6,8 @@
 #include <stdint.h>
 
 uint32_t fib1(uint32_t index) {
-    if (index == 0) {
-        return 0;
-    }
-    if (index == 1) {
-        return 1;
+    if (index < 2) {
+        return index;
     }
     return fib1(index - 1) + fib1(index - 2);
 }
