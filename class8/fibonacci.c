@@ -5,7 +5,7 @@
 #include <time.h>
 #include <stdint.h>
 
-int fib1 (int index) {
+uint64_t fib1 (uint64_t index) {
     if (index == 0) {
         return 0;
     }
@@ -57,17 +57,45 @@ uint64_t fib3 (uint64_t index, uint64_t *fibVals) {
 
 int main(void) {
     //uint64_t index = atoi(argv[1]);
-    int fib1index = 38;
-    int fib2index = 90;
-    int fib3index = 90;
+    uint64_t fib1index = 38;
+    uint64_t fib2index = 90;
+    uint64_t fib3index = 90;
+
     clock_t start = clock();
-    int ans1 = fib1(fib1index);
+    uint64_t ans1 = fib1(fib1index);
     double elapsed = (clock() - start) / (double)CLOCKS_PER_SEC;
-    printf("fib1(38) got %d and took %.6f ms per iteration\n", ans1, elapsed);
-    /*uint64_t fibVals [fib3index +1];
+    printf("fib1(38) got %ld and took %.6f ms per iteration\n", ans1, elapsed);
+    
+    start = clock();
+    uint64_t count = 0;
+    uint64_t ans2 = 0;
+    while (clock() - start < (0.5*(double)CLOCKS_PER_SEC)) {
+        for (int i = 0; i < 100; i++) {
+            ans2 = fib2(fib2index);
+        }
+        count += 100;
+    }
+    elapsed = (clock() - start) / (double)CLOCKS_PER_SEC;
+    printf("fib2(90) got %ld and took %.6f ms per iteration\n", ans2, elapsed);
+
+    start = clock();
+    count = 0;
+    uint64_t ans3 = 0;
+    uint64_t fibVals [fib3index +1];
     for (int i = 0; i < fib3index + 1; i++) {
         fibVals[i] = 0;
     }
+    while (clock() - start < (0.5*(double)CLOCKS_PER_SEC)) {
+        for (int i = 0; i < 100; i++) {
+            ans3 = fib3(fib3index,fibVals);
+        }
+        count += 100;
+    }
+    elapsed = (clock() - start) / (double)CLOCKS_PER_SEC;
+    printf("fib3(90) got %ld and took %.6f ms per iteration\n", ans3, elapsed);
+
+
+    /*
     uint64_t ans = fib3(fib3index, fibVals);
     printf("%lu\n", ans);*/
 
