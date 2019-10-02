@@ -11,9 +11,8 @@ uint32_t fib1 (uint32_t index) {
     }
     else if (index == 1) {
         return 1;
-    } else {
+    } 
     return fib1(index - 1) + fib1(index - 2);
-    }
 }
 
 uint64_t fib2 (uint64_t index) {
@@ -48,10 +47,10 @@ uint64_t fib3 (uint64_t index, uint64_t *fibVals) {
     if (fibVals[index]) {
         //printf("fibVals[%ld] already in index. value is %d\n", index, fibVals[index]);
         return fibVals[index];
-    } else {
+    }
     fibVals[index] = fib3(index - 1, fibVals) + fib3(index - 2, fibVals);
     return fibVals[index];
-    }
+
     
 }
 
