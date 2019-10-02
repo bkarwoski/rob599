@@ -10,4 +10,4 @@ binarysearch: binarysearch.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
 
 fibonacci: fibonacci.c
-	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -O3
