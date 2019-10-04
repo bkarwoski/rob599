@@ -1,4 +1,7 @@
-vector_xy_i32_t *gx_rasterize_line(int x0, int y0, int x1, int y1);
+#include "bmp.h"
+void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp);
+
+/*vector_xy_i32_t *gx_rasterize_line(int x0, int y0, int x1, int y1);
 
 void gx_draw_line(bitmap_t *bmp, color_bgr_t color, int x0, int y0, int x1, int y1);
 
@@ -15,3 +18,4 @@ vector_xy_t *gx_robot(double dim);
 vector_xy_t *gx_rot(double theta, vector_xy_t *points);
 
 vector_xy_t *gx_trans(double x, double y, vector_xy_t *points);
+*/

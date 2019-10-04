@@ -1,17 +1,30 @@
-
-
-
 #include <unistd.h>
+#include <stdbool.h>
+#include <math.h>
+#include "bmp.h"
 #include "image_server.h"
 
-int main(void) {
-    size_t image_size = // calculate the size of the image
-    uint8_t *image_data = malloc(image_size);
-    // make image_data a valid bmp image file
-
-    image_server_set_data(image_size, image_data);
-    image_server_start("8000"); // you can change the port number
-    sleep(1);
-    return 0;
+void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color) {
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -1*abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int err = dx + dy;
+    int e2 = 0;
+    while (true) {
+    bmp->data[y0*640+x0].g = 255;
+        if (x0 == x1 && y0 == y1) {
+            break;
+        }
+    e2 = 2 * err;
+    if (e2 >= dy) {
+        err += dy;
+        x0 += sx;
+    }
+    if (e2 <= dx) {
+        err += dx;
+        y0 += sy;
+    }
+        
+    }
 }
-

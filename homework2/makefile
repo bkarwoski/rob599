@@ -6,5 +6,5 @@ CFLAGS += -fsanitize=address -fsanitize=undefined
 bmp: bmp.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm
 
-rasterize: rasterize.c bmp.c image_server.c
+rasterize: rasterize.c bmp.c image_server.c graphics.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
