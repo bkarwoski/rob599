@@ -63,10 +63,10 @@ int main(void) {
     size_t bmp_size = bmp_calculate_size(&bmp);
     uint8_t *serialized_bmp = malloc(bmp_size);
     bmp_serialize(&bmp, serialized_bmp);
-    for (int i = 0; i < 16; i++) {
-    printf("%x ", serialized_bmp[i]); // %x is for hexadecimal
-    }
-    printf("\n");
+    //for (int i = 0; i < 16; i++) {
+    //printf("%x ", serialized_bmp[i]); // %x is for hexadecimal
+    //}
+    //printf("\n");
     // serialized_bmp now has the full bmp formatted image
 
     // write to a file so we can check if it is a valid image
