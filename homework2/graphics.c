@@ -12,7 +12,7 @@ void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t colo
     int err = dx + dy;
     int e2 = 0;
     while (true) {
-    bmp->data[y0*640+x0].g = 255;
+    bmp->data[y0*640+x0] = color;
         if (x0 == x1 && y0 == y1) {
             break;
         }

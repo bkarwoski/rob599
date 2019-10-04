@@ -1,5 +1,5 @@
 #include "bmp.h"
-void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp);
+void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color);
 
 /*vector_xy_i32_t *gx_rasterize_line(int x0, int y0, int x1, int y1);
 
