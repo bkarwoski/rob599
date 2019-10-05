@@ -33,20 +33,49 @@ void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t colo
     }
 }
 
+void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter) {
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -1*abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int err = dx + dy;
+    int e2 = 0;
+    while (true) {
+    //bmp->data[y0*640+x0] = color;
+    double x0d = x0;
+    double y0d = y0;
+    vector_append(perimeter, x0d, y0d);
+        if (x0 == x1 && y0 == y1) {
+            break;
+        }
+    e2 = 2 * err;
+    if (e2 >= dy) {
+        err += dy;
+        x0 += sx;
+    }
+    if (e2 <= dx) {
+        err += dx;
+        y0 += sy;
+    }
+        
+    }
+}
 
-void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_i32_t *points) {
+void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
     printf("starting gx_draw\n");
     printf("points->size: %ld\n", points->size);
+    int index = 0;
     for (int i = 0; i < points->size; i++) {
         printf("looping, i = %d\n", i);
         if (points->xData[i] >= 0 && points->yData[i] >= 0) {
             printf("non negative value printing\n");
-            bmp->data[points->xData[i] + points->yData[i]*640] = color;
+            index = points->xData[i] + points->yData[i]*640;
+            bmp->data[index] = color;
         }
     }
 }
 
-void roundC(vector_xy_t *doubles, vector_xy_i32_t *ints) {
+void roundC(vector_xy_t *doubles) {
     double xMin = doubles->xData[0];
     double yMin = doubles->yData[0];
     double epsilon = 1e-6;
@@ -71,7 +100,8 @@ void roundC(vector_xy_t *doubles, vector_xy_i32_t *ints) {
         } else {
             newY = floor(doubles->yData[i] - epsilon);
         }
-        vector_i32_append(ints, newX, newY);
+        doubles->xData[i] = newX;
+        doubles->yData[i] = newY;
     }
 
 }
