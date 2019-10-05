@@ -1,12 +1,12 @@
 #include "bmp.h"
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
-
-void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color);
+  
+void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color); //Use ONLY for test case 2!
 
 void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_i32_t *points);
 
-//void round(vector_xy_t *doubles, vector_xy_i32_t *ints);
+void roundC(vector_xy_t *doubles, vector_xy_i32_t *ints);
 //vector_xy_i32_t *gx_rasterize_line(int x0, int y0, int x1, int y1);
 
 /*
