@@ -51,7 +51,7 @@ void case_2 (void) {
     uint8_t *serialized_bmp = malloc(bmp_size);
     color_bgr_t white = {255, 255, 255};
     gx_plotLine(10, 10, 200, 200, &bmp, white);
-    gx_draw(&bmp, white, &coords);
+    //gx_draw(&bmp, white, &coords);
 
     bmp_serialize(&bmp, serialized_bmp);
     FILE *f = fopen("my_image.bmp", "wb");
