@@ -2,7 +2,7 @@
 #include "vector_xy_i32_t.h"
 #include <stdint.h>
 
-vector_xy_i32_t vector_create(void) {
+vector_xy_i32_t vector_i32_create(void) {
     vector_xy_i32_t v;
     v.size = 0;
     v.capacity = 8;
@@ -11,7 +11,7 @@ vector_xy_i32_t vector_create(void) {
     return v;
 }
 
-void vector_append(vector_xy_i32_t *vec, uint32_t x, uint32_t y) {
+void vector_i32_append(vector_xy_i32_t *vec, uint32_t x, uint32_t y) {
     if (vec->size >= vec->capacity) {
         vec->capacity *= 2;
         uint32_t *newxData = realloc(vec->xData, sizeof(uint32_t) * vec->capacity);
@@ -26,7 +26,7 @@ void vector_append(vector_xy_i32_t *vec, uint32_t x, uint32_t y) {
     vec->size++;
 }
 
-void vector_delete(vector_xy_i32_t *vec) {
+void vector_i32_delete(vector_xy_i32_t *vec) {
     free(vec->xData);
     free(vec->yData);
 

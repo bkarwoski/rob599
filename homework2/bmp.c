@@ -12,14 +12,14 @@ size_t bmp_calculate_size(bitmap_t *bmp) {
 // write the bmp file to memory at data, which must be at least
 // bmp_calculate_size large.
 void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
-    BITMAPFILEHEADER file_header = { 0 }; // start out as all zero values
+    BITMAPFILEHEADER file_header = {0}; // start out as all zero values
     file_header.bfType = 0x4d42;
     file_header.bfSize = bmp_calculate_size(bmp);
     file_header.bfReserved1 = 0;
     file_header.bfReserved2 = 0;
     file_header.bfOffBits = sizeof(BITMAPINFOHEADER) + sizeof(BITMAPFILEHEADER);
 
-    BITMAPINFOHEADER info_header = { 0 };
+    BITMAPINFOHEADER info_header = {0};
     info_header.biSize = sizeof(BITMAPINFOHEADER);
     info_header.biWidth = bmp->width;
     info_header.biHeight = bmp->height;
@@ -46,8 +46,7 @@ void bmp_serialize(bitmap_t *bmp, uint8_t *data) {
         data_out += size of row of pixels in bytes;
     }*/
     for (int i = bmp->height - 1; i >= 0; i--) {
-        memcpy(data_out, &bmp->data[i*(bmp->width)], sizeof(color_bgr_t)* bmp->width);
-        data_out += (sizeof(color_bgr_t)* bmp->width);
+        memcpy(data_out, &bmp->data[i * (bmp->width)], sizeof(color_bgr_t)* bmp->width);
+        data_out += (sizeof(color_bgr_t) * bmp->width);
     }
 }
-

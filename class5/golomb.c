@@ -28,6 +28,10 @@ void vector_append(vector_t *vec, int value) {
     vec->size++;
 }
 
+void vector_delete(vector_t *vec) {
+    free(vec->data);
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("usage: ./golomb <max golomb number>\n");
@@ -60,6 +64,6 @@ int main(int argc, char *argv[]) {
     }
 
     //printf("vec[3] = %d\n", vec.data[3]);
-    free(vec.data);
+    vector_delete(&vec);
     return 0;
 }

@@ -3,6 +3,9 @@
 #include <math.h>
 #include "bmp.h"
 #include "image_server.h"
+#include "vector_xy_t.h"
+#include "vector_xy_i32_t.h"
+
 
 void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color) {
     int dx = abs(x1 - x0);
@@ -28,3 +31,12 @@ void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t colo
         
     }
 }
+
+
+void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_i32_t *points) {
+    for (int i = 0; i < points->size; i++) {
+        
+        bmp->data[points->xData[i] + points->yData[i]*640] = color;
+    }
+}
+
