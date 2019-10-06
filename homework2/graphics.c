@@ -62,13 +62,13 @@ void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter) {
 }
 
 void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
-    printf("starting gx_draw\n");
-    printf("points->size: %ld\n", points->size);
+    //printf("starting gx_draw\n");
+    //printf("points->size: %ld\n", points->size);
     int index = 0;
     for (int i = 0; i < points->size; i++) {
-        printf("looping, i = %d\n", i);
+        //printf("looping, i = %d\n", i);
         if (points->xData[i] >= 0 && points->yData[i] >= 0) {
-            printf("non negative value printing\n");
+            //printf("non negative value printing\n");
             index = points->xData[i] + points->yData[i]*640;
             bmp->data[index] = color;
         }

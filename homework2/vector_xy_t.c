@@ -5,8 +5,8 @@ vector_xy_t vector_create(void) {
     vector_xy_t v;
     v.size = 0;
     v.capacity = 8;
-    v.xData = malloc(sizeof(int) * v.capacity);
-    v.yData = malloc(sizeof(int) * v.capacity);
+    v.xData = malloc(sizeof(double) * v.capacity);
+    v.yData = malloc(sizeof(double) * v.capacity);
     return v;
 }
 

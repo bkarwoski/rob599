@@ -76,9 +76,10 @@ void case_3 (void) {
     vector_append(&sqCoords, 2, 2);
     vector_append(&sqCoords, -2, 2);
     */
-    vector_append(&sqPoints, 10, 10);
+    vector_append(&sqPoints, 50, 10);
     vector_append(&sqPoints, 200, 200);
     roundC(&sqPoints);
+
 
 
     bitmap_t bmp = { 0 };
@@ -90,7 +91,11 @@ void case_3 (void) {
     color_bgr_t white = {255, 255, 255};
 
     vector_xy_t perimeter = vector_create();
-    gx_rasterize_line(10, 10, 200, 200, &perimeter);
+    gx_rasterize_line(sqPoints.xData[0], sqPoints.yData[0], sqPoints.xData[1], sqPoints.yData[1], &perimeter);
+    //gx_rasterize_line(40, 20, 180, 300, &perimeter);
+
+
+
 
     gx_draw(&bmp, white, &perimeter);
 
@@ -104,8 +109,10 @@ void case_3 (void) {
     sleep(1);
 
     vector_delete(&sqPoints);
+    vector_delete(&perimeter);
     free(bmp.data);
     free(serialized_bmp);
+
 }
 
 int main(int argc, char*argv[]) {
