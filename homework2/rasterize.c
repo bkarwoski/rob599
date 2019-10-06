@@ -33,7 +33,7 @@ void case_1(void) {
     free(serialized_bmp);
 }
 
-void case_2 (void) {
+void case_2(void) {
     vector_xy_i32_t coords = vector_i32_create();
     vector_i32_append(&coords, 250, 250);
     printf("coords: x: %d  y: %d\n", coords.xData[0], coords.yData[0]);
@@ -69,7 +69,7 @@ void case_2 (void) {
 void case_3(void) {
     //draw a 4 by 4 pixel white square centered at (0, 0)
     vector_xy_t sqPoints = vector_create();
-    
+
     vector_append(&sqPoints, 2, -2);
     vector_append(&sqPoints, 2, 2);
     vector_append(&sqPoints, -2, 2);
@@ -85,8 +85,16 @@ void case_3(void) {
     color_bgr_t white = {255, 255, 255};
 
     vector_xy_t perimeter = vector_create();
+    int x0 = 0;
+    int y0 = 0;
+    int x1 = 0;
+    int y1 = 0;
     for (int i = 0; i < sqPoints.size; i++) {
-        gx_rasterize_line(sqPoints.xData[i], sqPoints.yData[i], sqPoints.xData[i + 1], sqPoints.yData[i + 1], &perimeter);
+        x0 = sqPoints.xData[i];
+        y0 = sqPoints.yData[i];
+        x1 = sqPoints.xData[i + 1];
+        y1 = sqPoints.yData[i + 1];
+        gx_rasterize_line(x0, y0, x1, y1, &perimeter);
         //printf("perimeter [%d]: %f, %f\n", i, )
     }
 
