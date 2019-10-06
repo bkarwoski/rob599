@@ -16,9 +16,9 @@ void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t colo
     int e2 = 0;
     while (true) {
         bmp->data[y0 * 640 + x0] = color;
-            if (x0 == x1 && y0 == y1) {
-                break;
-            }
+        if (x0 == x1 && y0 == y1) {
+            break;
+        }
         e2 = 2 * err;
         if (e2 >= dy) {
             err += dy;
@@ -66,7 +66,7 @@ void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
         //printf("looping, i = %d\n", i);
         if (points->xData[i] >= 0 && points->yData[i] >= 0) {
             //printf("non negative value printing\n");
-            index = points->xData[i] + points->yData[i]*640;
+            index = points->xData[i] + points->yData[i] * 640;
             bmp->data[index] = color;
         }
     }
