@@ -10,7 +10,7 @@
 
 void case_1(void) {
     //all black
-    bitmap_t bmp = { 0 };
+    bitmap_t bmp = {0};
     bmp.width = 640;
     bmp.height = 480;
     // color_bgr_t represents the color for each pixel
@@ -39,7 +39,7 @@ void case_2(void) {
     printf("coords: x: %d  y: %d\n", coords.xData[0], coords.yData[0]);
 
     //draw a white line from (10, 10) to (200, 200) on a black background of size 640 by 480
-    bitmap_t bmp = { 0 };
+    bitmap_t bmp = {0};
     bmp.width = 640;
     bmp.height = 480;
     // color_bgr_t represents the color for each pixel
@@ -76,7 +76,7 @@ void case_3(void) {
 
     roundC(&sqPoints);
 
-    bitmap_t bmp = { 0 };
+    bitmap_t bmp = {0};
     bmp.width = 640;
     bmp.height = 480;
     bmp.data = calloc(bmp.width * bmp.height, sizeof(color_bgr_t));
