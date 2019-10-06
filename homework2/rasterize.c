@@ -161,6 +161,45 @@ void case_4(void) {
     free(serialized_bmp);
 }
 
+void case_5(void) {
+    // draw a 5 by 5 pixel white square centered at (2, 2)
+    vector_xy_t sqPoints = vector_create();
+
+    vector_append(&sqPoints, 2.5, -2.5);
+    vector_append(&sqPoints, 2.5, 2.5);
+    vector_append(&sqPoints, -2.5, 2.5);
+    vector_append(&sqPoints, -2.5, -2.5);
+
+    roundC(&sqPoints);
+
+    bitmap_t bmp = {0};
+    bmp.width = 640;
+    bmp.height = 480;
+    bmp.data = calloc(bmp.width * bmp.height, sizeof(color_bgr_t));
+    size_t bmp_size = bmp_calculate_size(&bmp);
+    uint8_t *serialized_bmp = malloc(bmp_size);
+    color_bgr_t white = {255, 255, 255};
+
+    vector_xy_t perimeter = vector_create();
+    gx_perimeter(&sqPoints, &perimeter);
+    gx_trans(2, 2, &perimeter, &perimeter);
+    gx_draw(&bmp, white, &perimeter);
+
+    bmp_serialize(&bmp, serialized_bmp);
+    FILE *f = fopen("my_image.bmp", "wb");
+    fwrite(serialized_bmp, bmp_size, 1, f);
+    fclose(f);
+
+    image_server_set_data(bmp_size, serialized_bmp);
+    image_server_start("8000");
+    sleep(1);
+
+    vector_delete(&sqPoints);
+    vector_delete(&perimeter);
+    free(bmp.data);
+    free(serialized_bmp);
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("usage: ./rasterize <test case>\n");
@@ -180,6 +219,26 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     if (i == 4) {
+        case_4();
+        return 0;
+    }
+    if (i == 5) {
+        case_4();
+        return 0;
+    }
+    if (i == 6) {
+        case_4();
+        return 0;
+    }
+    if (i == 7) {
+        case_4();
+        return 0;
+    }
+    if (i == 8) {
+        case_4();
+        return 0;
+    }
+    if (i == 9) {
         case_4();
         return 0;
     }
