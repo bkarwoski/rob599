@@ -205,7 +205,7 @@ void case_6(void) {
     // white border centered at the center of the image (640 / 2, 480 / 2)
     vector_xy_t sqPoints = vector_create();
     int width = 600;
-    int height = 400;
+    int height = 440;
     vector_append(&sqPoints, width / 2, -1 * height/2);
     vector_append(&sqPoints, width / 2, height / 2);
     vector_append(&sqPoints, -1 * width / 2, height / 2);
