@@ -11,6 +11,10 @@ void roundC(vector_xy_t *doubles);
 
 void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter);
 
+void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter);
+
+void gx_trans(double x, double y, vector_xy_t *orig, vector_xy_t *shifted);
+
 //vector_xy_t *gx_rect(double width, double height);
 /*
 

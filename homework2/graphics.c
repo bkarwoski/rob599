@@ -102,6 +102,13 @@ void roundC(vector_xy_t *doubles) {
     }
 }
 
+void gx_trans(double x, double y, vector_xy_t *orig, vector_xy_t *shifted){
+    for (int i = 0; i < orig->size; i++){
+        shifted->xData[i] = orig->xData[i] + x;
+        shifted->yData[i] = orig->yData[i] + y;
+    }
+}
+
 /*
 vector_xy_t *gx_rect(double width, double height) {
     vector_xy_t rect = vector_create();
@@ -112,3 +119,16 @@ vector_xy_t *gx_rect(double width, double height) {
     return &rect;
 }
 */
+void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter){
+    int x0 = 0;
+    int y0 = 0;
+    int x1 = 0;
+    int y1 = 0;
+    for (int i = 0; i < shape->size; i++) {
+        x0 = shape->xData[i];
+        y0 = shape->yData[i];
+        x1 = shape->xData[(i + 1) % shape->size];
+        y1 = shape->yData[(i + 1) % shape->size];
+        gx_rasterize_line(x0, y0, x1, y1, perimeter);
+    }
+}
