@@ -223,25 +223,25 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     if (i == 5) {
-        case_4();
+        case_5();
         return 0;
     }
-    if (i == 6) {
-        case_4();
+    /*if (i == 6) {
+        case_6();
         return 0;
     }
     if (i == 7) {
-        case_4();
+        case_7();
         return 0;
     }
     if (i == 8) {
-        case_4();
+        case_8();
         return 0;
     }
     if (i == 9) {
-        case_4();
+        case_9();
         return 0;
-    }
+    }*/
 
     printf("usage: ./rasterize <test case>\n");
     return 1;
