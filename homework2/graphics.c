@@ -105,3 +105,14 @@ void roundC(vector_xy_t *doubles) {
     }
 
 }
+
+/*
+vector_xy_t *gx_rect(double width, double height) {
+    vector_xy_t rect = vector_create();
+    vector_append(&rect, width, height);
+    vector_append(&rect, -1*width, height);
+    vector_append(&rect, -1*width, -1*height);
+    vector_append(&rect, width, -1*height);
+    return &rect;
+}
+*/

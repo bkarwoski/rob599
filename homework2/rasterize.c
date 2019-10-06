@@ -70,17 +70,13 @@ void case_2 (void) {
 void case_3 (void) {
     //draw a 4 by 4 pixel white square centered at (0, 0)
     vector_xy_t sqPoints = vector_create();
-    /*
-    vector_append(&sqCoords, -2, -2);
-    vector_append(&sqCoords, 2, -2);
-    vector_append(&sqCoords, 2, 2);
-    vector_append(&sqCoords, -2, 2);
-    */
-    vector_append(&sqPoints, 50, 10);
-    vector_append(&sqPoints, 200, 200);
+    
+
+    vector_append(&sqPoints, 2, -2);
+    vector_append(&sqPoints, 2, 2);
+    vector_append(&sqPoints, -2, 2);
+
     roundC(&sqPoints);
-
-
 
     bitmap_t bmp = { 0 };
     bmp.width = 640;
@@ -91,11 +87,10 @@ void case_3 (void) {
     color_bgr_t white = {255, 255, 255};
 
     vector_xy_t perimeter = vector_create();
-    gx_rasterize_line(sqPoints.xData[0], sqPoints.yData[0], sqPoints.xData[1], sqPoints.yData[1], &perimeter);
-    //gx_rasterize_line(40, 20, 180, 300, &perimeter);
-
-
-
+    for (int i = 0; i < sqPoints.size; i++) {
+        gx_rasterize_line(sqPoints.xData[i], sqPoints.yData[i], sqPoints.xData[i+1], sqPoints.yData[i+1], &perimeter);
+        //printf("perimeter [%d]: %f, %f\n", i, )
+    }
 
     gx_draw(&bmp, white, &perimeter);
 

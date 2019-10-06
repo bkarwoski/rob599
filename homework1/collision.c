@@ -14,14 +14,6 @@ typedef struct poly {
 
 } poly_t;
 
-/*bool isZero (double *vec) {
-    if ((vec[0] == 0) && vec[1] == 0) {
-        return true;
-    } else
-        { return false;
-    }
-}*/
-
 void shift(poly_t *polyX) {
     float c = cos(polyX->rot);
     float s = sin(polyX->rot);

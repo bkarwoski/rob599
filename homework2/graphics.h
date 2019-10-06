@@ -10,6 +10,7 @@ void roundC(vector_xy_t *doubles);
 
 void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter);
 
+//vector_xy_t *gx_rect(double width, double height);
 /*
 
 void gx_fill(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points);
