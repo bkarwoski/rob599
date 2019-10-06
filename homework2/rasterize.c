@@ -73,6 +73,7 @@ void case_3(void) {
     vector_append(&sqPoints, 2, -2);
     vector_append(&sqPoints, 2, 2);
     vector_append(&sqPoints, -2, 2);
+    vector_append(&sqPoints, -2, -2);
 
     roundC(&sqPoints);
 
@@ -90,14 +91,17 @@ void case_3(void) {
     int x1 = 0;
     int y1 = 0;
     for (int i = 0; i < sqPoints.size; i++) {
+        printf("i = %d\n", i);
         x0 = sqPoints.xData[i];
         y0 = sqPoints.yData[i];
-        x1 = sqPoints.xData[i + 1];
-        y1 = sqPoints.yData[i + 1];
+        x1 = sqPoints.xData[(i + 1) % sqPoints.size];
+        y1 = sqPoints.yData[(i + 1) % sqPoints.size];
+        printf("[(i + 1) mod sqPoints.size] = %ld\n", ((i + 1) % sqPoints.size));
         gx_rasterize_line(x0, y0, x1, y1, &perimeter);
-        //printf("perimeter [%d]: %f, %f\n", i, )
     }
-
+    
+    printf("sqPoints.xData[3]: %f\n", sqPoints.xData[3]);
+    printf("sqPoints.yData[3]: %f\n", sqPoints.yData[3]);
     gx_draw(&bmp, white, &perimeter);
 
     bmp_serialize(&bmp, serialized_bmp);
