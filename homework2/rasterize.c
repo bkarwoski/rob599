@@ -8,8 +8,7 @@
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
 
-
-void case_1 (void) {
+void case_1(void) {
     //all black
     bitmap_t bmp = { 0 };
     bmp.width = 640;
@@ -21,7 +20,7 @@ void case_1 (void) {
     size_t bmp_size = bmp_calculate_size(&bmp);
     uint8_t *serialized_bmp = malloc(bmp_size);
     bmp_serialize(&bmp, serialized_bmp);
-    
+
     FILE *f = fopen("my_image.bmp", "wb");
     fwrite(serialized_bmp, bmp_size, 1, f);
     fclose(f);
@@ -67,11 +66,10 @@ void case_2 (void) {
     free(serialized_bmp);
 }
 
-void case_3 (void) {
+void case_3(void) {
     //draw a 4 by 4 pixel white square centered at (0, 0)
     vector_xy_t sqPoints = vector_create();
     
-
     vector_append(&sqPoints, 2, -2);
     vector_append(&sqPoints, 2, 2);
     vector_append(&sqPoints, -2, 2);
@@ -88,7 +86,7 @@ void case_3 (void) {
 
     vector_xy_t perimeter = vector_create();
     for (int i = 0; i < sqPoints.size; i++) {
-        gx_rasterize_line(sqPoints.xData[i], sqPoints.yData[i], sqPoints.xData[i+1], sqPoints.yData[i+1], &perimeter);
+        gx_rasterize_line(sqPoints.xData[i], sqPoints.yData[i], sqPoints.xData[i + 1], sqPoints.yData[i + 1], &perimeter);
         //printf("perimeter [%d]: %f, %f\n", i, )
     }
 
@@ -107,10 +105,9 @@ void case_3 (void) {
     vector_delete(&perimeter);
     free(bmp.data);
     free(serialized_bmp);
-
 }
 
-int main(int argc, char*argv[]) {
+int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("usage: ./rasterize <test case>\n");
         return 1;

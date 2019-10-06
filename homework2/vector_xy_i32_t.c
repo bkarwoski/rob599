@@ -19,7 +19,6 @@ void vector_i32_append(vector_xy_i32_t *vec, int32_t x, int32_t y) {
 
         vec->xData = newxData;
         vec->yData = newyData;
-
     }
     vec->xData[vec->size] = x;
     vec->yData[vec->size] = y;
@@ -29,5 +28,4 @@ void vector_i32_append(vector_xy_i32_t *vec, int32_t x, int32_t y) {
 void vector_i32_delete(vector_xy_i32_t *vec) {
     free(vec->xData);
     free(vec->yData);
-
 }

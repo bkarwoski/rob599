@@ -6,58 +6,55 @@
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
 
-
 void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color) {
     //Use ONLY for test case 2!
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
-    int dy = -1*abs(y1 - y0);
+    int dy = -1 * abs(y1 - y0);
     int sy = y0 < y1 ? 1 : -1;
     int err = dx + dy;
     int e2 = 0;
     while (true) {
-    bmp->data[y0*640+x0] = color;
-        if (x0 == x1 && y0 == y1) {
-            break;
+        bmp->data[y0 * 640 + x0] = color;
+            if (x0 == x1 && y0 == y1) {
+                break;
+            }
+        e2 = 2 * err;
+        if (e2 >= dy) {
+            err += dy;
+            x0 += sx;
         }
-    e2 = 2 * err;
-    if (e2 >= dy) {
-        err += dy;
-        x0 += sx;
-    }
-    if (e2 <= dx) {
-        err += dx;
-        y0 += sy;
-    }
-        
+        if (e2 <= dx) {
+            err += dx;
+            y0 += sy;
+        }
     }
 }
 
 void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter) {
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
-    int dy = -1*abs(y1 - y0);
+    int dy = -1 * abs(y1 - y0);
     int sy = y0 < y1 ? 1 : -1;
     int err = dx + dy;
     int e2 = 0;
     while (true) {
-    //bmp->data[y0*640+x0] = color;
-    double x0d = x0;
-    double y0d = y0;
-    vector_append(perimeter, x0d, y0d);
+        //bmp->data[y0*640+x0] = color;
+        double x0d = x0;
+        double y0d = y0;
+        vector_append(perimeter, x0d, y0d);
         if (x0 == x1 && y0 == y1) {
             break;
         }
-    e2 = 2 * err;
-    if (e2 >= dy) {
-        err += dy;
-        x0 += sx;
-    }
-    if (e2 <= dx) {
-        err += dx;
-        y0 += sy;
-    }
-        
+        e2 = 2 * err;
+        if (e2 >= dy) {
+            err += dy;
+            x0 += sx;
+        }
+        if (e2 <= dx) {
+            err += dx;
+            y0 += sy;
+        }
     }
 }
 
@@ -103,7 +100,6 @@ void roundC(vector_xy_t *doubles) {
         doubles->xData[i] = newX;
         doubles->yData[i] = newY;
     }
-
 }
 
 /*

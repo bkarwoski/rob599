@@ -18,7 +18,6 @@ void vector_append(vector_xy_t *vec, double x, double y) {
 
         vec->xData = newxData;
         vec->yData = newyData;
-
     }
     vec->xData[vec->size] = x;
     vec->yData[vec->size] = y;
@@ -28,5 +27,4 @@ void vector_append(vector_xy_t *vec, double x, double y) {
 void vector_delete(vector_xy_t *vec) {
     free(vec->xData);
     free(vec->yData);
-
 }
