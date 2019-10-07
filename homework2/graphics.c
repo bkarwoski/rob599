@@ -173,7 +173,7 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
     }
     for (int y = 0; y < height; y++){
         if(xmin[y] != -1) {
-            for (int x = xmin[y]; x <= xmax[y]; x++) {
+            for (int x = xmin[y]; x < xmax[y]; x++) {
                 bmp->data[x + y * bmp->width] = color;
             }
         }
