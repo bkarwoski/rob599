@@ -283,6 +283,50 @@ void case_7(void) {
     free(serialized_bmp);
 }
 
+void case_8(void) {
+    //fill in a robot shape, translated to/centered at (400, 400).
+    //It should end up 21 pixels wide on the y-axis 
+    //and then 28 long on the x-axis
+    vector_xy_t tPoints = vector_create();
+    double height = 21;
+    //double width = height * 4 / 3;
+    double width = 28;
+    vector_append(&tPoints, width, 0);
+    vector_append(&tPoints, 0, height/2);
+    vector_append(&tPoints, 0, -1 * height/2);
+
+    roundC(&tPoints);
+
+    bitmap_t bmp = {0};
+    bmp.width = 640;
+    bmp.height = 480;
+    bmp.data = calloc(bmp.width * bmp.height, sizeof(color_bgr_t));
+    size_t bmp_size = bmp_calculate_size(&bmp);
+    uint8_t *serialized_bmp = malloc(bmp_size);
+    color_bgr_t white = {255, 255, 255};
+
+    vector_xy_t perimeter = vector_create();
+    gx_perimeter(&tPoints, &perimeter);
+    gx_trans(400, 400, &perimeter, &perimeter);
+    //gx_fill(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points)
+    gx_fill(&perimeter);
+    gx_draw(&bmp, white, &perimeter);
+
+    bmp_serialize(&bmp, serialized_bmp);
+    FILE *f = fopen("my_image.bmp", "wb");
+    fwrite(serialized_bmp, bmp_size, 1, f);
+    fclose(f);
+
+    image_server_set_data(bmp_size, serialized_bmp);
+    image_server_start("8000");
+    sleep(1);
+
+    vector_delete(&tPoints);
+    vector_delete(&perimeter);
+    free(bmp.data);
+    free(serialized_bmp);
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("usage: ./rasterize <test case>\n");
@@ -316,11 +360,11 @@ int main(int argc, char *argv[]) {
     if (i == 7) {
         case_7();
         return 0;
-    }/*
+    }
     if (i == 8) {
         case_8();
         return 0;
-    }
+    }/*
     if (i == 9) {
         case_9();
         return 0;
