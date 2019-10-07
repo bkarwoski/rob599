@@ -125,6 +125,17 @@ void gx_trans(double x, double y, vector_xy_t *vec){
     }
 }
 
+void gx_rot(double theta, vector_xy_t *vec){
+    double c = cos(theta);
+    double s = sin(theta);
+    for (int i = 0; i < vec->size; i++){
+        double newX = c * vec->xData[i] - s * vec->yData[i];
+        double newY = s * vec->xData[i] - s * vec->yData[i];
+        vec->xData[i] = newX;
+        vec->yData[i] = newY;
+    }
+}
+
 vector_xy_t gx_rect(double width, double height) {
     vector_xy_t rect = vector_create();
     vector_append(&rect, width / 2, height / 2);
@@ -158,7 +169,7 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
         int x1 = shape->xData[(i + 1) % shape->size];
         int y1 = shape->yData[(i + 1) % shape->size];
         vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
-        roundC(&line);
+        //roundC(&line);
         for(int j = 0; j < line.size; j++){
             int x = line.xData[j];
             int y = line.yData[j];
@@ -180,3 +191,4 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
         }
     } 
 }
+
