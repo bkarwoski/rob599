@@ -2,8 +2,10 @@
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
 
-void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color);
+//void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color);
 //Use ONLY for test case 2!
+
+void gx_draw_line(bitmap_t *bmp, color_bgr_t color,int x0, int y0, int x1, int y1);
 
 void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points);
 

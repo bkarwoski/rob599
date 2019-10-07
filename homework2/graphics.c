@@ -10,7 +10,7 @@ void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t colo
     //Use ONLY for test case 2!
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
-    int dy = -1 * abs(y1 - y0);
+    int dy = -abs(y1 - y0);
     int sy = y0 < y1 ? 1 : -1;
     int err = dx + dy;
     int e2 = 0;
@@ -31,18 +31,17 @@ void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t colo
     }
 }
 
-void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter) {
+vector_xy_t gx_rasterize_line(int x0, int y0, int x1, int y1) {
+    vector_xy_t perimeter = vector_create();
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
-    int dy = -1 * abs(y1 - y0);
+    int dy = -abs(y1 - y0);
     int sy = y0 < y1 ? 1 : -1;
     int err = dx + dy;
     int e2 = 0;
     while (true) {
         //bmp->data[y0*640+x0] = color;
-        double x0d = x0;
-        double y0d = y0;
-        vector_append(perimeter, x0d, y0d);
+        vector_append(&perimeter, x0, y0);
         if (x0 == x1 && y0 == y1) {
             break;
         }
@@ -56,6 +55,7 @@ void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter) {
             y0 += sy;
         }
     }
+    return perimeter;
 }
 
 void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
@@ -69,6 +69,22 @@ void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
             index = points->xData[i] + points->yData[i] * 640;
             bmp->data[index] = color;
         }
+    }
+}
+
+void gx_draw_line(bitmap_t *bmp, color_bgr_t color,int x0, int y0, int x1, int y1) {
+    vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
+    gx_draw(bmp, color, &line);
+    vector_delete(&line);
+}
+
+void gx_draw_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
+    for (int i = 0; i < shape->size; i++) {
+        int x0 = shape->xData[i];
+        int y0 = shape->yData[i];
+        int x1 = shape->xData[(i + 1) % shape->size];
+        int y1 = shape->yData[(i + 1) % shape->size];
+        gx_draw_line(bmp, color, x0, y0, x1, y1);
     }
 }
 
@@ -102,61 +118,64 @@ void roundC(vector_xy_t *doubles) {
     }
 }
 
-void gx_trans(double x, double y, vector_xy_t *orig, vector_xy_t *shifted){
-    for (int i = 0; i < orig->size; i++){
-        shifted->xData[i] = orig->xData[i] + x;
-        shifted->yData[i] = orig->yData[i] + y;
+void gx_trans(double x, double y, vector_xy_t *vec){
+    for (int i = 0; i < vec->size; i++){
+        vec->xData[i] = vec->xData[i] + x;
+        vec->yData[i] = vec->yData[i] + y;
     }
 }
 
-/*
-vector_xy_t *gx_rect(double width, double height) {
+vector_xy_t gx_rect(double width, double height) {
     vector_xy_t rect = vector_create();
-    vector_append(&rect, width, height);
-    vector_append(&rect, -1*width, height);
-    vector_append(&rect, -1*width, -1*height);
-    vector_append(&rect, width, -1*height);
-    return &rect;
-}
-*/
-void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter){
-    int x0 = 0;
-    int y0 = 0;
-    int x1 = 0;
-    int y1 = 0;
-    for (int i = 0; i < shape->size; i++) {
-        x0 = shape->xData[i];
-        y0 = shape->yData[i];
-        x1 = shape->xData[(i + 1) % shape->size];
-        y1 = shape->yData[(i + 1) % shape->size];
-        gx_rasterize_line(x0, y0, x1, y1, perimeter);
-    }
+    vector_append(&rect, width / 2, height / 2);
+    vector_append(&rect, -width / 2, height / 2);
+    vector_append(&rect, -width / 2, -height / 2);
+    vector_append(&rect, width / 2, -height / 2);
+    return rect;
 }
 
-void gx_fill(vector_xy_t *points){
+vector_xy_t gx_rob(void) {
+    double width = 28;
+    double height = 21;
+    vector_xy_t tri = vector_create();
+    vector_append(&tri, width, 0);
+    vector_append(&tri, 0, height / 2);
+    vector_append(&tri, 0, -height / 2);
+    return tri;
+}
+/*
+void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
     int height = 480;
-    double x0[height];
-    double x1[height];
+    int xmin[height];
+    int xmax[height];
     for (int i = 0; i < height; i++) {
         x0[i] = -1;
         x1[i] = -1;
     }
-    int x = 0;
-    int y = 0;
-    for (int i = 0; i < points->size; i++) {
-        x = points->xData[i];
-        y = points->yData[i];
-        if(x0[y] == -1) {
-            x0[y] = x;
-            x1[y] = x;
-        } else {
-            x0[y] = fmin(x0[y], x);
-            x1[y] = fmax(x1[y], x);
+    for (int i = 0; i < shape->size; i++) {
+        int x0 = shape->xData[i];
+        int y0 = shape->yData[i];
+        int x1 = shape->xData[(i + 1) % shape->size];
+        int y1 = shape->yData[(i + 1) % shape->size];
+        vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
+        for(int j = 0; j < line.size; j++){
+            int x = line.xData[i];
+            int y = line.yData[i];
+            if(x0[y] == -1) {
+                x0[y] = x;
+                x1[y] = x;
+            } else {
+                x0[y] = fmin(x0[y], x);
+                x1[y] = fmax(x1[y], x);
+            }
         }
+
     }
-    for (int i = 0; i < height; i++){
-        if(x0[i] != -1) {
-        gx_rasterize_line(x0[i], i, x1[i], i, points);
+    for (int y = 0; y < height; y++){
+        if(x0[y] != -1) {
+            for (int x = x0[y]; x <= x1[y]; x++) {
+                bmp->data[x + y * bmp->width] = color;
+            }
         }
     } 
-}
+}*/
