@@ -15,6 +15,8 @@ void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter);
 
 void gx_trans(double x, double y, vector_xy_t *orig, vector_xy_t *shifted);
 
+void gx_fill(vector_xy_t *points);
+
 //vector_xy_t *gx_rect(double width, double height);
 /*
 

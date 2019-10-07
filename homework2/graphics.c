@@ -132,3 +132,31 @@ void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter){
         gx_rasterize_line(x0, y0, x1, y1, perimeter);
     }
 }
+
+void gx_fill(vector_xy_t *points){
+    int height = 480;
+    double x0[height];
+    double x1[height];
+    for (int i = 0; i < height; i++) {
+        x0[i] = -1;
+        x1[i] = -1;
+    }
+    int x = 0;
+    int y = 0;
+    for (int i = 0; i < points->size; i++) {
+        x = points->xData[i];
+        y = points->yData[i];
+        if(x0[y] == -1) {
+            x0[y] = x;
+            x1[y] = x;
+        } else {
+            x0[y] = fmin(x0[y], x);
+            x1[y] = fmax(x1[y], x);
+        }
+    }
+    for (int i = 0; i < height; i++){
+        if(x0[i] != -1) {
+        gx_rasterize_line(x0[i], i, x1[i], i, points);
+        }
+    } 
+}
