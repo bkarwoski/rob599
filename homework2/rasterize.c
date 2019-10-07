@@ -280,11 +280,13 @@ int main(int argc, char *argv[]) {
         gx_draw_line(&bmp, white, 10, 10, 200, 200);
     } else if (caseNum == 3) {
         vector_xy_t rect = gx_rect(4, 4);
+        roundC(&rect);
         gx_draw_poly(&bmp, white, &rect);
         vector_delete(&rect);
     } else if (caseNum == 4) {
         vector_xy_t rect = gx_rect(4, 4);
         gx_trans(2, 2, &rect);
+        roundC(&rect);
         gx_draw_poly(&bmp, white, &rect);
         vector_delete(&rect);
     }
