@@ -145,13 +145,13 @@ int main(int argc, char *argv[]) {
     } else if (caseNum == 8) {
         vector_xy_t rob = gx_rob();
         gx_trans(400, 400, &rob);
-        gx_fill_poly(&rob, white, &rob);
+        gx_fill_poly(&bmp, white, &rob);
         vector_delete(&rob);
     } else if (caseNum == 9) {
         vector_xy_t rob = gx_rob();
         gx_trans(400, 400, &rob);
         //gx_rotate here
-        gx_fill_poly(&rob, white, &rob);
+        gx_fill_poly(&bmp, white, &rob);
         vector_delete(&rob);
     }
     //make the bmp
