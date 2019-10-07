@@ -206,6 +206,11 @@ int main(int argc, char *argv[]) {
         roundC(&rect);
         gx_draw_poly(&bmp, white, &rect);
         vector_delete(&rect);
+    } else if (caseNum == 7) {
+        vector_xy_t rect = gx_rect(600, 440);
+        gx_trans(640 / 2, 480 / 2, &rect);
+        gx_fill_poly(&bmp, white, &rect);
+        vector_delete(&rect);
     }
     //make the bmp
 

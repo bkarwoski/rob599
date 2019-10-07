@@ -143,14 +143,14 @@ vector_xy_t gx_rob(void) {
     vector_append(&tri, 0, -height / 2);
     return tri;
 }
-/*
+
 void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
     int height = 480;
     int xmin[height];
     int xmax[height];
     for (int i = 0; i < height; i++) {
-        x0[i] = -1;
-        x1[i] = -1;
+        xmin[i] = -1;
+        xmax[i] = -1;
     }
     for (int i = 0; i < shape->size; i++) {
         int x0 = shape->xData[i];
@@ -159,23 +159,23 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
         int y1 = shape->yData[(i + 1) % shape->size];
         vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
         for(int j = 0; j < line.size; j++){
-            int x = line.xData[i];
-            int y = line.yData[i];
-            if(x0[y] == -1) {
-                x0[y] = x;
-                x1[y] = x;
+            int x = line.xData[j];
+            int y = line.yData[j];
+            if(xmin[y] == -1) {
+                xmin[y] = x;
+                xmax[y] = x;
             } else {
-                x0[y] = fmin(x0[y], x);
-                x1[y] = fmax(x1[y], x);
+                xmin[y] = fmin(xmin[y], x);
+                xmax[y] = fmax(xmax[y], x);
             }
         }
-
+        vector_delete(&line);
     }
     for (int y = 0; y < height; y++){
-        if(x0[y] != -1) {
-            for (int x = x0[y]; x <= x1[y]; x++) {
+        if(xmin[y] != -1) {
+            for (int x = xmin[y]; x <= xmax[y]; x++) {
                 bmp->data[x + y * bmp->width] = color;
             }
         }
     } 
-}*/
+}

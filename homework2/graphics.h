@@ -19,6 +19,8 @@ void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter);
 
 void gx_trans(double x, double y, vector_xy_t *vec);
 
+void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape);
+
 void gx_fill(vector_xy_t *points);
 
 vector_xy_t gx_rect(double width, double height);
