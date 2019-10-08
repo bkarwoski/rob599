@@ -40,7 +40,6 @@ void updateGraphics(bitmap_t *bmp, double x, double y, double theta) {
     gx_rot(theta, &rob);
     gx_trans(x, y, &rob);
     color_bgr_t green = {0, 255, 0};
-    roundC(&rob);
     gx_fill_poly(bmp, green, &rob);
     vector_delete(&rob);
 }
