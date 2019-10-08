@@ -1,3 +1,4 @@
+#pragma once
 #include "bmp.h"
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
@@ -13,7 +14,7 @@ void gx_draw_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape);
 
 void roundC(vector_xy_t *doubles);
 
-void gx_rasterize_line(int x0, int y0, int x1, int y1, vector_xy_t *perimeter);
+vector_xy_t gx_rasterize_line(int x0, int y0, int x1, int y1);
 
 void gx_perimeter(vector_xy_t *shape, vector_xy_t *perimeter);
 

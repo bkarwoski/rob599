@@ -5,6 +5,7 @@
 #include "image_server.h"
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
+#include "graphics.h"
 
 void gx_plotLine(int x0, int y0, int x1, int y1, bitmap_t *bmp, color_bgr_t color) {
     //Use ONLY for test case 2!
