@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 #include "graphics.h"
 #include "image_server.h"
 #define M_PI 3.14159265358979323846
@@ -31,7 +32,59 @@ void drawBck(bitmap_t *bmp) {
     roundC(&border);
     gx_draw_poly(bmp, white, &border);
     vector_delete(&border);
+}
 
+double dp(double v[], double u[]) {
+    double result = 0;
+    //printf("v[0] = %f\n", v[0]);
+    //printf("v[1] = %f\n", v[1]);
+    for (int i = 0; i < 2; i++) {
+        result += v[i] * u[i];
+    }
+    return result;
+}
+
+void updatePos(double *x, double *y, double *theta) {
+    //printf("updating\n");
+    double c = cos(*theta);
+    double s = sin(*theta);
+    double move_l = 0;
+    double move_r = 0;
+    double lamp_power = 100000;
+    double max_move = 12;
+    double wheelbase = 80;
+    for (int i = 0; i < LAMP_N; i++) {
+        //printf("i = %d\n", i);
+        double xd = LAMP_XS[i] - *x;
+        double yd = LAMP_YS[i] - *y;
+        double dist_sq = xd * xd + yd * yd;
+        double dir[] = {xd / sqrt(dist_sq), yd / sqrt(dist_sq)};
+
+        double cl = cos(*theta + M_PI / 3);
+        double sl = sin(*theta + M_PI / 3);
+        double eye_l[] = {cos(*theta + M_PI / 3), -sin(*theta + M_PI / 3)};
+        
+        double cr = cos(*theta + -M_PI / 3);
+        double sr = sin(*theta + -M_PI / 3);
+        double eye_r[] = {cos(*theta - M_PI / 3), -sin(*theta - M_PI / 3)};
+        //printf("eye_r[0] = %f\n", eye_r[0]);
+        //printf("eye_r[1] = %f\n", eye_r[1]);
+        //printf("eye_l[0] = %f\n", eye_l[0]);
+        //printf("eye_l[1] = %f\n", eye_l[1]);
+        
+        move_l += fmax(0.0, dp(dir, eye_r)) * lamp_power / dist_sq;
+        move_r += fmax(0.0, dp(dir, eye_l)) * lamp_power / dist_sq;
+        //printf("dp(dir, eye_r)) = %f\n", dp(dir, eye_r));
+        //printf("dp(dir, eye_l)) = %f\n", dp(dir, eye_l));
+    }
+    move_l = fmin(max_move, move_l);
+    move_r = fmin(max_move, move_r);
+
+    *theta += (move_r - move_l) / wheelbase;
+    //printf("new theta = %f\n", *theta);
+    double forward_dist = (move_l + move_r) / 2;
+    *x += forward_dist * cos(*theta);
+    *y += forward_dist * -sin(*theta);
 }
 
 void updateGraphics(bitmap_t *bmp, double x, double y, double theta) {
@@ -43,8 +96,6 @@ void updateGraphics(bitmap_t *bmp, double x, double y, double theta) {
     gx_fill_poly(bmp, green, &rob);
     vector_delete(&rob);
 }
-
-
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
@@ -63,7 +114,14 @@ int main(int argc, char *argv[]) {
     color_bgr_t white = {255, 255, 255};
 
     //make bmp
-    updateGraphics(&bmp,640 / 2, 480 / 2, 0);
+    double rob_x = 640 / 2;
+    double rob_y = 480 / 2;
+    double rob_theta = 0;
+    for(int i = 0; i <= numSteps; i++) {
+        drawBck(&bmp);
+        updateGraphics(&bmp,rob_x, rob_y, rob_theta);
+        updatePos(&rob_x, &rob_y, &rob_theta);
+    }
 
     bmp_serialize(&bmp, serialized_bmp);
     FILE *f = fopen("my_image.bmp", "wb");
