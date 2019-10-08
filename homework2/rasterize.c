@@ -7,6 +7,7 @@
 #include "graphics.h"
 #include "vector_xy_t.h"
 #include "vector_xy_i32_t.h"
+#define M_PI 3.14159265358979323846
 
 /*
 
@@ -149,8 +150,8 @@ int main(int argc, char *argv[]) {
         vector_delete(&rob);
     } else if (caseNum == 9) {
         vector_xy_t rob = gx_rob();
+        gx_rot(M_PI / 6, &rob);
         gx_trans(400, 400, &rob);
-        //gx_rotate here
         gx_fill_poly(&bmp, white, &rob);
         vector_delete(&rob);
     }

@@ -129,8 +129,8 @@ void gx_rot(double theta, vector_xy_t *vec){
     double c = cos(theta);
     double s = sin(theta);
     for (int i = 0; i < vec->size; i++){
-        double newX = c * vec->xData[i] - s * vec->yData[i];
-        double newY = s * vec->xData[i] - s * vec->yData[i];
+        double newX = c * vec->xData[i] + s * vec->yData[i];
+        double newY = -s * vec->xData[i] + c * vec->yData[i];
         vec->xData[i] = newX;
         vec->yData[i] = newY;
     }
