@@ -149,9 +149,9 @@ vector_xy_t gx_rob(void) {
     double width = 28;
     double height = 21;
     vector_xy_t tri = vector_create();
-    vector_append(&tri, width, 0);
-    vector_append(&tri, 0, height / 2);
-    vector_append(&tri, 0, -height / 2);
+    vector_append(&tri, width / 2, 0);
+    vector_append(&tri, -width / 2 , height / 2);
+    vector_append(&tri, -width / 2, -height / 2);
     return tri;
 }
 
