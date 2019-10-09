@@ -51,7 +51,6 @@ bool intersects(double x1, double y1, double x2, double y2,
 }
 
 bool contains(double x, double y, poly_t *polyX) {
-    /*
     int x1 = 0;
     int y1 = 0;
     int x2 = 0;
@@ -60,7 +59,7 @@ bool contains(double x, double y, poly_t *polyX) {
     double crossInit = 0;
     bool assigned = false;
     for (int i = 0; i < polyX->numPoints; i++) {
-        x1 = polyX->xPoints[i];
+        int x1 = polyX->xPoints[i];
         y1 = polyX->yPoints[i];
         if (i + 1 == polyX->numPoints) {
             x2 = polyX->xPoints[0];
@@ -80,8 +79,8 @@ bool contains(double x, double y, poly_t *polyX) {
             return false;
         }
     }
-    return true;*/
-    return false;
+    return true;
+    //return false;
 }
 
 int main(void) {
@@ -106,6 +105,7 @@ int main(void) {
         printf("no intersection (correct)\n");
     }*/
     
+
 
     char tmp[100];
     poly_t poly1 = {0};
@@ -162,6 +162,26 @@ int main(void) {
     shift(&poly1);
     shift(&poly2);
 
+    /*
+    if (contains(0.5, 0.5, &poly1)) {
+        printf("containment(correct)\n");
+    } else {
+        printf("no containment\n");
+    }
+
+    if (contains(1.5, 0.5, &poly1)) {
+        printf("containment\n");
+    } else {
+        printf("no containment (correct)\n");
+    }
+
+    if (contains(1.0, 1.0, &poly1)) {
+        printf("containment (correct)\n");
+    } else {
+        printf("no containment\n");
+    }
+    */
+
     double x1 = 0;
     double y1 = 0;
     double x2 = 0;
@@ -197,10 +217,22 @@ int main(void) {
             }
         }
     }
-    /*if (!collides) {
+    if (!collides) {
         collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
                     contains(poly2.xPoints[0], poly2.yPoints[0], &poly1));
-    }*/
+
+        // if(contains(1, 1, &poly2)) {
+        //     printf("(1,1) is in poly2 (correct)");
+        // } else {
+        //     printf("(1,1) not in poly2 ");
+        // }
+
+        // if(contains(1, 1, &poly1)) {
+        //     printf("(1,1) is in poly1 (correct)");
+        // } else {
+        //     printf("(1,1) not in poly1 ");
+        // }
+    }
 
     if (collides) {
         printf("collision!\n");
