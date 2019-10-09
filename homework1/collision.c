@@ -86,7 +86,8 @@ bool contains(double x, double y, poly_t *polyX) {
 
 int main(void) {
 
-    /*test cases
+    /*test cases*/
+   /*
     if (intersects(0, 0, 6, 4, 6, 2, 10,1)) {
         printf("intersects\n");
     } else {
@@ -98,7 +99,13 @@ int main(void) {
     } else {
         printf("no intersection\n");
     }
-    */
+
+    if (intersects(0, 2, 3, 2, 4, 2, 6, 2)) {
+        printf("intersects\n");
+    } else {
+        printf("no intersection (correct)\n");
+    }*/
+    
 
     char tmp[100];
     poly_t poly1 = {0};
@@ -190,10 +197,10 @@ int main(void) {
             }
         }
     }
-    if (!collides) {
+    /*if (!collides) {
         collides = (contains(poly1.xPoints[0], poly1.yPoints[0], &poly2) ||
                     contains(poly2.xPoints[0], poly2.yPoints[0], &poly1));
-    }
+    }*/
 
     if (collides) {
         printf("collision!\n");
