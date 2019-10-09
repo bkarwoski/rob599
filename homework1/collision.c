@@ -47,16 +47,11 @@ bool intersects(double x1, double y1, double x2, double y2,
     double cv2t22 = vec2[0] * t22[1] - vec2[1] * t22[0];
     bool neg2 = (cv2t21 * cv2t22 <= 0);
 
-    if (neg1 && neg2) {
-        //return true;
-    } else if (!((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0)) &&
-                   ((cv1t11 * cv1t12 == 0) || (cv2t21 * cv2t22 == 0))) {
-        //return true;
-    }
-   return false;
+    return (neg1 && neg2) && !((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0));
 }
 
 bool contains(double x, double y, poly_t *polyX) {
+    /*
     int x1 = 0;
     int y1 = 0;
     int x2 = 0;
@@ -85,11 +80,26 @@ bool contains(double x, double y, poly_t *polyX) {
             return false;
         }
     }
-    return true;
-    //return false;
+    return true;*/
+    return false;
 }
 
 int main(void) {
+
+    /*test cases
+    if (intersects(0, 0, 6, 4, 6, 2, 10,1)) {
+        printf("intersects\n");
+    } else {
+        printf("no intersection (correct)\n");
+    }
+
+    if (intersects(0, 0, 6, 4, 0, 2, 10,1)) {
+        printf("intersects(correct)\n");
+    } else {
+        printf("no intersection\n");
+    }
+    */
+
     char tmp[100];
     poly_t poly1 = {0};
     poly_t poly2 = {0};
@@ -190,6 +200,5 @@ int main(void) {
     } else {
         printf("no collision\n");
     }
-
     return 0;
 }
