@@ -116,14 +116,14 @@ bool contains(double x, double y, vector_xy_t *polyX) {
     int posCount = 0;
     int negCount = 0;
     for (int i = 0; i < polyX->size; i++) {
-        int x1 = polyX->xData[i];
-        int y1 = polyX->yData[i];
-        int x2 = polyX->xData[(i + 1) % polyX->size];
-        int y2 = polyX->yData[(i + 1) % polyX->size];
+        double x1 = polyX->xData[i];
+        double y1 = polyX->yData[i];
+        double x2 = polyX->xData[(i + 1) % polyX->size];
+        double y2 = polyX->yData[(i + 1) % polyX->size];
         double vec1[2] = {x2 - x1, y2 - y1};
         double t1[2] = {x - x1, y - y1};
         double cross = vec1[0] * t1[1] - vec1[1] * t1[0];
-        printf("cross: %f x1: %d y1: %d x2: %d y2: %d\n", cross, x1, y1, x2, y2);
+        printf("cross: %f x1: %f y1: %f x2: %f y2: %f\n", cross, x1, y1, x2, y2);
         if (cross < 0){
             negCount++;
         } else if (cross > 0) {
@@ -133,7 +133,7 @@ bool contains(double x, double y, vector_xy_t *polyX) {
     if (negCount > 0 && posCount > 0) {
         return false;
     }
-    return false;
+    return true;
 }
 
 bool collision(vector_xy_t *poly1, vector_xy_t *poly2) {
