@@ -106,9 +106,9 @@ bool intersects(double x1, double y1, double x2, double y2,
     bool neg2 = (cv2t21 * cv2t22 <= 0);
 
     bool intersected = (neg1 && neg2) && !((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0));
-    // if (intersected) {
-    //     printf("intersected\n");
-    // }
+    if (intersected) {
+        printf("intersected\n");
+    }
     return intersected;
 }
 
@@ -162,18 +162,17 @@ bool collision(vector_xy_t *poly1, vector_xy_t *poly2) {
            contains(poly2->xData[0], poly2->yData[0], poly1);
 }
 
-bool robcollision(double x, double y, double theta) {
-    for(int i = 0; i < LAMP_N; i++) {
+bool robcollision(double x, double y, double theta, int lampN) {
 
         double lampLen = 12;
         vector_xy_t lamp = gx_rect(lampLen, lampLen);
         gx_rot(M_PI / 4, &lamp);
-        gx_trans(LAMP_XS[i], LAMP_YS[i], &lamp);
+        gx_trans(LAMP_XS[lampN], LAMP_YS[lampN], &lamp);
 
         vector_xy_t rob = gx_rob();
         gx_rot(theta, &rob);
         gx_trans(x, y, &rob);
-        
+        // printf("x = %f, y = %f, theta = %f\n", x, y, theta);
         bool collides = collision(&lamp, &rob);
 
         vector_delete(&rob);
@@ -182,7 +181,7 @@ bool robcollision(double x, double y, double theta) {
         if (collides) {
             return true;
         }
-    }
+
     return false;
 }
 
@@ -191,14 +190,18 @@ void handleCollision(double *rob_x, double *rob_y, double *rob_theta) {
     //while a collision occurs
     //if there is a collision, calculate the vector from robot to lamp
     //move robot coordinates 0.5 units along this vector
+    printf("position: x = %f, y = %f\n", *rob_x, *rob_y);
     for (int i = 0; i < LAMP_N; i++) {
-        while (robcollision(*rob_x, *rob_y, *rob_theta)) {
+        while (robcollision(*rob_x, *rob_y, *rob_theta, i)) {
             double dx = *rob_x - LAMP_XS[i];
             double dy = *rob_y - LAMP_YS[i];
             double dist = sqrt(dx * dx + dy * dy);
-            double obj_to_rob[2] = {dx/dist, dy/dist};
-            *rob_x += obj_to_rob[0] * 0.5;
-            *rob_y += obj_to_rob[1] * 0.5;
+            *rob_x += dx / dist * 0.5;
+            *rob_y += dy / dist * 0.5;
+            printf("moving 0.5\n");
+            printf("rob_x = %f\n", *rob_x);
+            printf("rob_y = %f\n", *rob_y);
+
         }
     }
 
@@ -219,6 +222,7 @@ int main(int argc, char *argv[]) {
     long nanoseconds = 40 * 1000 * 1000;
     struct timespec interval = { seconds, nanoseconds };
     for(int i = 0; i <= numSteps; i++) {
+        printf("step %d\n", i);
         bitmap_t bmp = {0};
         bmp.width = 640;
         bmp.height = 480;
@@ -226,8 +230,6 @@ int main(int argc, char *argv[]) {
         size_t bmp_size = bmp_calculate_size(&bmp);
         uint8_t *serialized_bmp = malloc(bmp_size);
         color_bgr_t white = {255, 255, 255};
-
-        
 
         if (!isFast || i == numSteps) {
         drawBck(&bmp);
