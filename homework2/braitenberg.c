@@ -212,11 +212,12 @@ int main(int argc, char *argv[]) {
     bool isFast = atoi(argv[2]);
     int numSteps = atoi(argv[1]);
 
-    
-
     double rob_x = 640 / 2;
     double rob_y = 480 / 2;
     double rob_theta = 0;
+    int seconds = 0;
+    long nanoseconds = 40 * 1000 * 1000;
+    struct timespec interval = { seconds, nanoseconds };
     for(int i = 0; i <= numSteps; i++) {
         bitmap_t bmp = {0};
         bmp.width = 640;
@@ -226,25 +227,25 @@ int main(int argc, char *argv[]) {
         uint8_t *serialized_bmp = malloc(bmp_size);
         color_bgr_t white = {255, 255, 255};
 
-        drawBck(&bmp);
-        updateGraphics(&bmp,rob_x, rob_y, rob_theta);
         updatePos(&rob_x, &rob_y, &rob_theta);
         handleCollision(&rob_x, &rob_y, &rob_theta);
 
-        if (!isFast) {
-            int seconds = 0;
-            long nanoseconds = 40 * 1000 * 1000;
-            struct timespec interval = { seconds, nanoseconds };
-            nanosleep(&interval, NULL);
-        }
+        if (!isFast || i == numSteps) {
+        drawBck(&bmp);
+        updateGraphics(&bmp,rob_x, rob_y, rob_theta);
+        nanosleep(&interval, NULL);
+
         bmp_serialize(&bmp, serialized_bmp);
         FILE *f = fopen("my_image.bmp", "wb");
         fwrite(serialized_bmp, bmp_size, 1, f);
         fclose(f);
-
         image_server_set_data(bmp_size, serialized_bmp);
         image_server_start("8000");
-        //sleep(1);
+        }
+
+        if (isFast && i == numSteps) {
+            sleep(1);
+        }
         free(bmp.data);
         free(serialized_bmp); 
     }
