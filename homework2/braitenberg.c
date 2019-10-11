@@ -113,23 +113,17 @@ bool intersects(double x1, double y1, double x2, double y2,
 }
 
 bool contains(double x, double y, vector_xy_t *polyX) {
-    int x2 = 0;
-    int y2 = 0;
     int posCount = 0;
     int negCount = 0;
     for (int i = 0; i < polyX->size; i++) {
         int x1 = polyX->xData[i];
         int y1 = polyX->yData[i];
-        if (i + 1 == polyX->size) {
-            x2 = polyX->xData[0];
-            y2 = polyX->yData[0];
-        } else {
-            x2 = polyX->xData[i + 1];
-            y2 = polyX->yData[i + 1];
-        }
+        int x2 = polyX->xData[(i + 1) % polyX->size];
+        int y2 = polyX->yData[(i + 1) % polyX->size];
         double vec1[2] = {x2 - x1, y2 - y1};
         double t1[2] = {x - x1, y - y1};
         double cross = vec1[0] * t1[1] - vec1[1] * t1[0];
+        printf("cross: %f x1: %d y1: %d x2: %d y2: %d\n", cross, x1, y1, x2, y2);
         if (cross < 0){
             negCount++;
         } else if (cross > 0) {
@@ -139,7 +133,7 @@ bool contains(double x, double y, vector_xy_t *polyX) {
     if (negCount > 0 && posCount > 0) {
         return false;
     }
-    return true;
+    return false;
 }
 
 bool collision(vector_xy_t *poly1, vector_xy_t *poly2) {
@@ -163,24 +157,23 @@ bool collision(vector_xy_t *poly1, vector_xy_t *poly2) {
 }
 
 bool robcollision(double x, double y, double theta, int lampN) {
+    double lampLen = 12;
+    vector_xy_t lamp = gx_rect(lampLen, lampLen);
+    gx_rot(M_PI / 4, &lamp);
+    gx_trans(LAMP_XS[lampN], LAMP_YS[lampN], &lamp);
 
-        double lampLen = 12;
-        vector_xy_t lamp = gx_rect(lampLen, lampLen);
-        gx_rot(M_PI / 4, &lamp);
-        gx_trans(LAMP_XS[lampN], LAMP_YS[lampN], &lamp);
+    vector_xy_t rob = gx_rob();
+    gx_rot(theta, &rob);
+    gx_trans(x, y, &rob);
+    // printf("x = %f, y = %f, theta = %f\n", x, y, theta);
+    bool collides = collision(&lamp, &rob);
 
-        vector_xy_t rob = gx_rob();
-        gx_rot(theta, &rob);
-        gx_trans(x, y, &rob);
-        // printf("x = %f, y = %f, theta = %f\n", x, y, theta);
-        bool collides = collision(&lamp, &rob);
+    vector_delete(&rob);
+    vector_delete(&lamp);
 
-        vector_delete(&rob);
-        vector_delete(&lamp);
-
-        if (collides) {
-            return true;
-        }
+    if (collides) {
+        return true;
+    }
 
     return false;
 }
@@ -192,7 +185,9 @@ void handleCollision(double *rob_x, double *rob_y, double *rob_theta) {
     //move robot coordinates 0.5 units along this vector
     printf("position: x = %f, y = %f\n", *rob_x, *rob_y);
     for (int i = 0; i < LAMP_N; i++) {
+        int count = 0;
         while (robcollision(*rob_x, *rob_y, *rob_theta, i)) {
+            count++;
             double dx = *rob_x - LAMP_XS[i];
             double dy = *rob_y - LAMP_YS[i];
             double dist = sqrt(dx * dx + dy * dy);
@@ -201,6 +196,9 @@ void handleCollision(double *rob_x, double *rob_y, double *rob_theta) {
             printf("moving 0.5\n");
             printf("rob_x = %f\n", *rob_x);
             printf("rob_y = %f\n", *rob_y);
+            if(count == 8) {
+                printf("count is %d\n", count);
+            }
 
         }
     }
@@ -232,16 +230,13 @@ int main(int argc, char *argv[]) {
         color_bgr_t white = {255, 255, 255};
 
         if (!isFast || i == numSteps) {
-        drawBck(&bmp);
-        updateGraphics(&bmp,rob_x, rob_y, rob_theta);
-        nanosleep(&interval, NULL);
+            drawBck(&bmp);
+            updateGraphics(&bmp,rob_x, rob_y, rob_theta);
+            nanosleep(&interval, NULL);
 
-        bmp_serialize(&bmp, serialized_bmp);
-        FILE *f = fopen("my_image.bmp", "wb");
-        fwrite(serialized_bmp, bmp_size, 1, f);
-        fclose(f);
-        image_server_set_data(bmp_size, serialized_bmp);
-        image_server_start("8000");
+            bmp_serialize(&bmp, serialized_bmp);
+            image_server_set_data(bmp_size, serialized_bmp);
+            image_server_start("8000");
         }
 
         updatePos(&rob_x, &rob_y, &rob_theta);
