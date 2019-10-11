@@ -93,7 +93,7 @@ bool intersects(double x1, double y1, double x2, double y2,
                 double x3, double y3, double x4, double y4) {   
     double vec1[2] = {x2 - x1, y2 - y1};
     double t11[2] = {x3 - x1, y3 - y1};
-    double t12[2] = {x2 - x1, y4 - y3};
+    double t12[2] = {x4 - x1, y4 - y1};
     double cv1t11 = vec1[0] * t11[1] - vec1[1] * t11[0];
     double cv1t12 = vec1[0] * t12[1] - vec1[1] * t12[0];
     bool neg1 = (cv1t11 * cv1t12 <= 0);
@@ -106,6 +106,9 @@ bool intersects(double x1, double y1, double x2, double y2,
     bool neg2 = (cv2t21 * cv2t22 <= 0);
 
     bool intersected = (neg1 && neg2) && !((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0));
+    // if (intersected) {
+    //     printf("intersected\n");
+    // }
     return intersected;
 }
 
@@ -139,7 +142,27 @@ bool contains(double x, double y, vector_xy_t *polyX) {
     return true;
 }
 
-bool collision(double x, double y, double theta) {
+bool collision(vector_xy_t *poly1, vector_xy_t *poly2) {
+    for (int k = 0; k < poly1->size; k++) {
+        double x1 = poly1->xData[k];
+        double y1 = poly1->yData[k];
+        double x2 = poly1->xData[(k + 1) % poly1->size];
+        double y2 = poly1->yData[(k + 1) % poly1->size];
+        for (int j = 0; j < poly2->size; j++) {
+            double x3 = poly2->xData[j];
+            double y3 = poly2->yData[j];
+            double x4 = poly2->xData[(j + 1) % poly2->size];
+            double y4 = poly2->yData[(j + 1) % poly2->size];
+            if (intersects(x1, y1, x2, y2, x3, y3, x4, y4)) {
+                return true;
+            }
+        }
+    }
+    return contains(poly1->xData[0], poly1->yData[0], poly2) ||
+           contains(poly2->xData[0], poly2->yData[0], poly1);
+}
+
+bool robcollision(double x, double y, double theta) {
     for(int i = 0; i < LAMP_N; i++) {
 
         double lampLen = 12;
@@ -150,51 +173,15 @@ bool collision(double x, double y, double theta) {
         vector_xy_t rob = gx_rob();
         gx_rot(theta, &rob);
         gx_trans(x, y, &rob);
-
-        // start code copied from collision
-        double x1 = 0;
-        double y1 = 0;
-        double x2 = 0;
-        double y2 = 0;
-        double x3 = 0;
-        double y3 = 0;
-        double x4 = 0;
-        double y4 = 0;
-
-        for (int k = 0; k < lamp.size; k++) {
-            x1 = lamp.xData[k];
-            y1 = lamp.yData[k];
-            if (1 + k == lamp.size) {
-                x2 = lamp.xData[0];
-                y2 = lamp.yData[0];
-            } else {
-                x2 = lamp.xData[k + 1];
-                y2 = lamp.yData[k + 1];
-            }
-            for (int j = 0; j < rob.size; j++) {
-                x3 = rob.xData[j];
-                y3 = rob.yData[j];
-                if (1 + j == rob.size) {
-                    x4 = rob.xData[0];
-                    y4 = rob.yData[0];
-                } else {
-                    x4 = rob.xData[j + 1];
-                    y4 = rob.yData[j + 1];
-                }
-                if (intersects(x1, y1, x2, y2, x3, y3, x4, y4)) {
-                    return true;
-                }
-            }
-        }
-        if (contains(lamp.xData[0], lamp.yData[0], &rob) ||
-             contains(rob.xData[0], rob.yData[0], &lamp)) {
-            return true; 
-        }
-
-    //end copied collision code
+        
+        bool collides = collision(&lamp, &rob);
 
         vector_delete(&rob);
         vector_delete(&lamp);
+
+        if (collides) {
+            return true;
+        }
     }
     return false;
 }
@@ -205,10 +192,9 @@ void handleCollision(double *rob_x, double *rob_y, double *rob_theta) {
     //if there is a collision, calculate the vector from robot to lamp
     //move robot coordinates 0.5 units along this vector
     for (int i = 0; i < LAMP_N; i++) {
-        while (collision(*rob_x, *rob_y, *rob_theta)) {
-            //printf("collision\n");
-            double dx = LAMP_XS[i] - *rob_x;
-            double dy = LAMP_YS[i] - *rob_y;
+        while (robcollision(*rob_x, *rob_y, *rob_theta)) {
+            double dx = *rob_x - LAMP_XS[i];
+            double dy = *rob_y - LAMP_YS[i];
             double dist = sqrt(dx * dx + dy * dy);
             double obj_to_rob[2] = {dx/dist, dy/dist};
             *rob_x += obj_to_rob[0] * 0.5;
