@@ -227,8 +227,7 @@ int main(int argc, char *argv[]) {
         uint8_t *serialized_bmp = malloc(bmp_size);
         color_bgr_t white = {255, 255, 255};
 
-        updatePos(&rob_x, &rob_y, &rob_theta);
-        handleCollision(&rob_x, &rob_y, &rob_theta);
+        
 
         if (!isFast || i == numSteps) {
         drawBck(&bmp);
@@ -242,6 +241,9 @@ int main(int argc, char *argv[]) {
         image_server_set_data(bmp_size, serialized_bmp);
         image_server_start("8000");
         }
+
+        updatePos(&rob_x, &rob_y, &rob_theta);
+        handleCollision(&rob_x, &rob_y, &rob_theta);
 
         if (isFast && i == numSteps) {
             sleep(1);
