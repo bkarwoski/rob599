@@ -27,16 +27,16 @@ tst_node_t *tst_node_create(char c) {
 }
 
 void tst_node_destroy(tst_node_t *node) {
-    if(node->low) {
+    if (node->low) {
         tst_node_destroy(node->low);
     }
-    if(node->equal) {
+    if (node->equal) {
         tst_node_destroy(node->equal);
     }
-    if(node->high) {
+    if (node->high) {
         tst_node_destroy(node->high);
     }
-    if(node) {
+    if (node) {
         free(node);
     }
 }
@@ -60,9 +60,9 @@ void tst_add(tst_t *tst, const char *word) {
         tst->node = tst_node_create(word[0]);
     }
     tst_node_t *currNode = tst->node;
-    
+
     while (1) {
-      //  printf("word[%d]: %c\n", i, word[0]);
+        // printf("word[%d]: %c\n", i, word[0]);
         if (word[0] < currNode->c) {
             if (!currNode->low) {
                 currNode->low = tst_node_create(word[0]);
@@ -88,7 +88,7 @@ void tst_add(tst_t *tst, const char *word) {
 
 void tst_node_search(tst_node_t *node, char *word, char *suggestion, char *sugg_start, int errs) {
     tst_node_t *currNode = node;
-    while(currNode) {
+    while (currNode) {
         if (word[0] < currNode->c) {
             currNode = currNode->low;
         } else if (word[0] > currNode->c) {
@@ -98,9 +98,8 @@ void tst_node_search(tst_node_t *node, char *word, char *suggestion, char *sugg_
             suggestion[0] = word[0];
             word++;
             suggestion++;
-            if(!word[0]) {
+            if (!word[0]) {
                 printf("%s\n", sugg_start);
-               // printf("found it\n");
             }
         }
     }
