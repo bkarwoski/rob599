@@ -49,7 +49,7 @@ void tst_destroy(tst_t *tst) {
 void tst_add(tst_t *tst, const char *word) {
     if (!tst->node) {
         tst->node = tst_node_create(word[0]);
-    } 
+    }
     tst_node_t *currNode = tst->node;
     int i = 0;
     while (1) {
@@ -69,13 +69,14 @@ void tst_add(tst_t *tst, const char *word) {
             }
             if (word[i]) {
                 i++;
+            } else {
+                return;
             }
         }
     }
 }
 
 void tst_node_search(tst_node_t *node, char *word, char *suggestion, char *sugg_start, int errs) {
-
 }
 
 void tst_search(tst_t *tst, char *word) {
