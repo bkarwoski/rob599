@@ -43,6 +43,7 @@ void tst_destroy(tst_t *tst) {
     tst_node_destroy(tst->node->low);
     tst_node_destroy(tst->node->equal);
     tst_node_destroy(tst->node->high);
+    tst_node_destroy(tst->node);
     free(tst);
 }
 
@@ -53,12 +54,13 @@ void tst_add(tst_t *tst, const char *word) {
     tst_node_t *currNode = tst->node;
     int i = 0;
     while (1) {
+        printf("word[%d]: %c\n", i, word[i]);
         if (word[i] < currNode->c) {
             if (!currNode->low) {
                 currNode->low = tst_node_create(word[i]);
             }
             currNode = currNode->low;
-        } else if (word[0] > currNode->c) {
+        } else if (word[i] > currNode->c) {
             if (!currNode->high) {
                 currNode->high = tst_node_create(word[i]);
             }
@@ -70,7 +72,7 @@ void tst_add(tst_t *tst, const char *word) {
             if (word[i]) {
                 i++;
             } else {
-                return;
+                break;
             }
         }
     }
