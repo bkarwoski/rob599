@@ -27,7 +27,7 @@ tst_node_t *tst_node_create(char c) {
 }
 
 void tst_node_destroy(tst_node_t *node) {
-
+    free(node);
 }
 
 tst_t *tst_create(void) {
@@ -35,11 +35,42 @@ tst_t *tst_create(void) {
 }
 
 void tst_destroy(tst_t *tst) {
-
+    //recursively free nodes in tst
+    //base case: if !tst return;
+    if(!tst) return;
+    tst_node_destroy(tst->node->low);
+    tst_node_destroy(tst->node->equal);
+    tst_node_destroy(tst->node->high);
+    free(tst);
 }
 
 void tst_add(tst_t *tst, const char *word) {
+    if (!tst->node){
+        tst->node = tst_node_create(word[0]);
+    } 
+    tst_node_t *currNode = tst->node;
+    int i = 0;
+    while (1) {
+        if (word[i] < currNode->c) {
+            if(!currNode->low) {
+                currNode->low = tst_node_create(word[i]);
+            } 
+            currNode = currNode->low;
+        } else if (word[0] > currNode->c) {
+            if(!currNode->high) {
+                currNode->high = tst_node_create(word[i]);
+            }
+            currNode = currNode->high;
+        } else {
+            if(!currNode->equal) {
+                currNode->equal = tst_node_create(word[i]);
+            }
+            if (word[i]) {
+                i++;
+            }
+        }
 
+    }
 }
 
 void tst_node_search(tst_node_t *node, char *word, char *suggestion, char *sugg_start, int errs) {
@@ -68,21 +99,21 @@ int main(int argc, char **argv) {
 
     tst_t *tst = tst_create();
 
-    char str_buffer[WORD_MAX_LEN];
-    while (1) {
-        int ret = fscanf(f, "%255s", str_buffer);
-        if (ret != 1) {
-            break;
-        }
-        tst_add(tst, str_buffer);
-    }
-    fclose(f);
+    // char str_buffer[WORD_MAX_LEN];
+    // while (1) {
+    //     int ret = fscanf(f, "%255s", str_buffer);
+    //     if (ret != 1) {
+    //         break;
+    //     }
+    //     tst_add(tst, str_buffer);
+    // }
+    // fclose(f);
 
-    // tst_add(tst, "the");
-    // tst_add(tst, "tea");
-    // tst_add(tst, "that");
-    // tst_add(tst, "thee");
-    // tst_add(tst, "hospital");
+    tst_add(tst, "the");
+    tst_add(tst, "tea");
+    tst_add(tst, "that");
+    tst_add(tst, "thee");
+    tst_add(tst, "hospital");
 
     for (int i = 1; i < argc; i++) {
         if (strlen(argv[i]) >= WORD_MAX_LEN) {
