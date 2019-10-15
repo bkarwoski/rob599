@@ -37,7 +37,9 @@ tst_t *tst_create(void) {
 void tst_destroy(tst_t *tst) {
     //recursively free nodes in tst
     //base case: if !tst return;
-    if(!tst) return;
+    if (!tst) {
+        return;
+    }
     tst_node_destroy(tst->node->low);
     tst_node_destroy(tst->node->equal);
     tst_node_destroy(tst->node->high);
@@ -45,31 +47,30 @@ void tst_destroy(tst_t *tst) {
 }
 
 void tst_add(tst_t *tst, const char *word) {
-    if (!tst->node){
+    if (!tst->node) {
         tst->node = tst_node_create(word[0]);
     } 
     tst_node_t *currNode = tst->node;
     int i = 0;
     while (1) {
         if (word[i] < currNode->c) {
-            if(!currNode->low) {
+            if (!currNode->low) {
                 currNode->low = tst_node_create(word[i]);
-            } 
+            }
             currNode = currNode->low;
         } else if (word[0] > currNode->c) {
-            if(!currNode->high) {
+            if (!currNode->high) {
                 currNode->high = tst_node_create(word[i]);
             }
             currNode = currNode->high;
         } else {
-            if(!currNode->equal) {
+            if (!currNode->equal) {
                 currNode->equal = tst_node_create(word[i]);
             }
             if (word[i]) {
                 i++;
             }
         }
-
     }
 }
 
