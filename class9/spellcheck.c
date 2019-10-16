@@ -59,26 +59,26 @@ void tst_add(tst_t *tst, const char *word) {
     if (!tst->node) {
         tst->node = tst_node_create(word[0]);
     }
-    tst_node_t *currNode = tst->node;
+    tst_node_t *node = tst->node;
 
     while (1) {
         // printf("word[%d]: %c\n", i, word[0]);
-        if (word[0] < currNode->c) {
-            if (!currNode->low) {
-                currNode->low = tst_node_create(word[0]);
+        if (word[0] < node->c) {
+            if (!node->low) {
+                node->low = tst_node_create(word[0]);
             }
-            currNode = currNode->low;
-        } else if (word[0] > currNode->c) {
-            if (!currNode->high) {
-                currNode->high = tst_node_create(word[0]);
+            node = node->low;
+        } else if (word[0] > node->c) {
+            if (!node->high) {
+                node->high = tst_node_create(word[0]);
             }
-            currNode = currNode->high;
+            node = node->high;
         } else {
             word++;
-            if (!currNode->equal) {
-                currNode->equal = tst_node_create(word[0]);
+            if (!node->equal) {
+                node->equal = tst_node_create(word[0]);
             }
-            currNode = currNode->equal;
+            node = node->equal;
             if (!word[0]) {
                 break;
             }
@@ -87,20 +87,38 @@ void tst_add(tst_t *tst, const char *word) {
 }
 
 void tst_node_search(tst_node_t *node, char *word, char *suggestion, char *sugg_start, int errs) {
-    tst_node_t *currNode = node;
-    while (currNode) {
-        if (word[0] < currNode->c) {
-            currNode = currNode->low;
-        } else if (word[0] > currNode->c) {
-            currNode = currNode->high;
+    while (node) {
+        if (errs > 0) {
+            //insertion case
+            tst_node_search(node, word + 1, suggestion, sugg_start, errs -1);
+            //deletion case
+            suggestion[0] = node->c;
+            tst_node_search(node->equal, word, suggestion + 1, sugg_start, errs -1);
+            //replacement case
+            tst_node_search(node->equal, word + 1, suggestion + 1, sugg_start, errs -1);
+            //transpose case
+            char tmp = word[0];
+            word[0] = word[1];
+            word[1] = tmp;
+            tst_node_search(node, word, suggestion, sugg_start, errs -1);
+        }
+        if (word[0] < node->c) {
+            tst_node_search(node->high, word, suggestion, sugg_start, errs);
+            node = node->low;
+        } else if (word[0] > node->c) {
+            tst_node_search(node->low, word, suggestion, sugg_start, errs);
+            node = node->high;
         } else {
-            currNode = currNode->equal;
+            tst_node_search(node->low, word, suggestion, sugg_start, errs);
+            tst_node_search(node->high, word, suggestion, sugg_start, errs);
+            node = node->equal;
             suggestion[0] = word[0];
-            word++;
-            suggestion++;
             if (!word[0]) {
                 printf("%s\n", sugg_start);
             }
+            word++;
+            suggestion++;
+
         }
     }
 }
@@ -137,6 +155,7 @@ int main(int argc, char **argv) {
     // }
     // fclose(f);
 
+    //tst_add(tst, "to");
     tst_add(tst, "the");
     tst_add(tst, "tea");
     tst_add(tst, "that");
