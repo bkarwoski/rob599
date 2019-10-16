@@ -90,17 +90,21 @@ void tst_node_search(tst_node_t *node, char *word, char *suggestion, char *sugg_
     while (node) {
         if (errs > 0) {
             //insertion case
-            tst_node_search(node, word + 1, suggestion, sugg_start, errs -1);
+            tst_node_search(node, word + 1, suggestion, sugg_start, errs - 1);
             //deletion case
             suggestion[0] = node->c;
-            tst_node_search(node->equal, word, suggestion + 1, sugg_start, errs -1);
+            tst_node_search(node->equal, word, suggestion + 1, sugg_start, errs - 1);
             //replacement case
-            tst_node_search(node->equal, word + 1, suggestion + 1, sugg_start, errs -1);
+            tst_node_search(node->equal, word + 1, suggestion + 1, sugg_start, errs - 1);
             //transpose case
             char tmp = word[0];
             word[0] = word[1];
             word[1] = tmp;
-            tst_node_search(node, word, suggestion, sugg_start, errs -1);
+            tst_node_search(node, word, suggestion, sugg_start, errs - 1);
+            tmp = word[0];
+            word[0] = word[1];
+            word[1] = tmp;
+
         }
         if (word[0] < node->c) {
             tst_node_search(node->high, word, suggestion, sugg_start, errs);
