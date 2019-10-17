@@ -19,7 +19,7 @@ char parse_token(char **str) {
     skip_whitespace(str);
     char token = *str[0];
     if (!token) {
-        fprintf(stderr, "parsing error. unexpected end of string\n");
+        fprintf( stderr, "parsing error. unexpected end of string\n");
         exit(1);
     }
     (*str)++;
@@ -113,7 +113,7 @@ double add_expression(char **input) {
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf(stderr, "usage: %s <statement>\n", argv[0]);
+        fprintf(stderr, "usage: %s <statement>\n", argv[0]);
         return 1;
     }
     printf("%lf\n", add_expression(&argv[1]));
