@@ -15,6 +15,10 @@ char peek(char **str) {
     return *str[0];
 }
 
+char peek_space(char **str) {
+    return *str[0];
+}
+
 char parse_token(char **str) {
     skip_whitespace(str);
     char token = *str[0];
@@ -40,11 +44,15 @@ double num_literal(char **input) {
     }
     if(peek(input) >= '0' && peek(input) <= '9') {
         hasDigits = true;
-        while(peek(input) >= '0' && peek(input) <= '9') {
+        while(peek_space(input) >= '0' && peek_space(input) <= '9') {
             val = val * 10 + (parse_token(input) - '0');
+            //     if (peek_space(input) == ' ') {
+            //     fprintf(stderr, "parsing error. space between digits\n");
+            //     exit(1);
+            // }
         }
     } else if (peek(input) != '.') {
-        printf("error, expected a num or '.',got a %c\n",
+        printf("error, expected a num or '.',got a '%c'\n",
                parse_token(input));
         exit(1);
     }
@@ -53,10 +61,14 @@ double num_literal(char **input) {
         double decVal = 0;
         double count = 0;
         double decIndex = 1;
-        while(peek(input) >= '0' && peek(input) <= '9') {
+        while(peek_space(input) >= '0' && peek_space(input) <= '9') {
             hasDigits = true;
             decIndex /= 10;
             val += decIndex * (parse_token(input) - '0');
+            // if (peek_space(input) == ' ') {
+            //     fprintf( stderr, "parsing error. space between digits\n");
+            //     exit(1);
+            // }
         }
     }
     if (!hasDigits) {
@@ -72,7 +84,7 @@ double paren_expression(char **input) {
         parse_token(input);
         val = add_expression(input);
         if (peek(input) != ')') {
-            printf("error, expecting closing parenthesis\n");
+            fprintf(stderr, "error, expecting ')', got a '%c'\n", parse_token(input));
             exit(1);
         } else {
             parse_token(input);
@@ -116,7 +128,13 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "usage: %s <statement>\n", argv[0]);
         return 1;
     }
-    printf("%lf\n", add_expression(&argv[1]));
+    double output = add_expression(&argv[1]);
+    if (*argv[1] == '\0') {
+        printf("%lf\n", output);
+    } else {
+        fprintf(stderr, "error, unexpected character '%s' at end\n", argv[1]);
+    }
+    //printf("%s\n", argv[1]);
     //printf("parsed value = %lf\n", num_literal(&argv[1]));
     return 0;
 }
