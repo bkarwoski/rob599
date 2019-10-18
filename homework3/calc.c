@@ -46,10 +46,6 @@ double num_literal(char **input) {
         hasDigits = true;
         while(peek_space(input) >= '0' && peek_space(input) <= '9') {
             val = val * 10 + (parse_token(input) - '0');
-            //     if (peek_space(input) == ' ') {
-            //     fprintf(stderr, "parsing error. space between digits\n");
-            //     exit(1);
-            // }
         }
     } else if (peek(input) != '.') {
         printf("error, expected a num or '.',got a '%c'\n",
@@ -65,10 +61,6 @@ double num_literal(char **input) {
             hasDigits = true;
             decIndex /= 10;
             val += decIndex * (parse_token(input) - '0');
-            // if (peek_space(input) == ' ') {
-            //     fprintf( stderr, "parsing error. space between digits\n");
-            //     exit(1);
-            // }
         }
     }
     if (!hasDigits) {
@@ -128,8 +120,9 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "usage: %s <statement>\n", argv[0]);
         return 1;
     }
-    double output = add_expression(&argv[1]);
-    if (*argv[1] == '\0') {
+    char *input = argv[1];
+    double output = add_expression(&input);
+    if (peek(&input) == '\0') {
         printf("%lf\n", output);
     } else {
         fprintf(stderr, "error, unexpected character '%s' at end\n", argv[1]);
