@@ -23,7 +23,7 @@ char parse_token(char **str) {
     skip_whitespace(str);
     char token = *str[0];
     if (!token) {
-        fprintf( stderr, "parsing error. unexpected end of string\n");
+        fprintf(stderr, "parsing error. unexpected end of string\n");
         exit(1);
     }
     (*str)++;
@@ -42,14 +42,14 @@ double num_literal(char **input) {
         sign = -1;
         parse_token(input);
     }
-    if(peek(input) >= '0' && peek(input) <= '9') {
+    if (peek(input) >= '0' && peek(input) <= '9') {
         hasDigits = true;
-        while(peek_space(input) >= '0' && peek_space(input) <= '9') {
+        while (peek_space(input) >= '0' && peek_space(input) <= '9') {
             val = val * 10 + (parse_token(input) - '0');
         }
     } else if (peek(input) != '.') {
         fprintf(stderr, "error, expected a num or '.',got a '%c'\n",
-               parse_token(input));
+                parse_token(input));
         exit(1);
     }
     if (peek(input) == '.') {
@@ -57,7 +57,7 @@ double num_literal(char **input) {
         double decVal = 0;
         double count = 0;
         double decIndex = 1;
-        while(peek_space(input) >= '0' && peek_space(input) <= '9') {
+        while (peek_space(input) >= '0' && peek_space(input) <= '9') {
             hasDigits = true;
             decIndex /= 10;
             val += decIndex * (parse_token(input) - '0');
@@ -84,7 +84,7 @@ double paren_expression(char **input) {
     } else {
         val = num_literal(input);
     }
-return val;
+    return val;
 }
 
 double mult_expression(char **input) {
@@ -98,7 +98,7 @@ double mult_expression(char **input) {
             val /= paren_expression(input);
         }
     }
-    return val;  
+    return val;
 }
 
 double add_expression(char **input) {
