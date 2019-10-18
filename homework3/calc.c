@@ -126,6 +126,7 @@ int main(int argc, char *argv[]) {
         printf("%lf\n", output);
     } else {
         fprintf(stderr, "error, unexpected character '%s' at end\n", argv[1]);
+        exit(1);
     }
     //printf("%s\n", argv[1]);
     //printf("parsed value = %lf\n", num_literal(&argv[1]));
