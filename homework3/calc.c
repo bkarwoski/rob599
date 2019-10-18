@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
     if (peek(&input) == '\0') {
         printf("%lf\n", output);
     } else {
-        fprintf(stderr, "error, unexpected character '%s' at end\n", argv[1]);
+        fprintf(stderr, "error, unexpected character '%c' at end\n", peek(&input));
         exit(1);
     }
     //printf("%s\n", argv[1]);
