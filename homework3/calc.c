@@ -48,7 +48,7 @@ double num_literal(char **input) {
             val = val * 10 + (parse_token(input) - '0');
         }
     } else if (peek(input) != '.') {
-        printf("error, expected a num or '.',got a '%c'\n",
+        fprintf(stderr, "error, expected a num or '.',got a '%c'\n",
                parse_token(input));
         exit(1);
     }
