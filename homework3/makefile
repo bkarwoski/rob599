@@ -5,3 +5,6 @@ CFLAGS += -fsanitize=address -fsanitize=undefined
 
 calc: calc.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
+
+chase: chase.c
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
