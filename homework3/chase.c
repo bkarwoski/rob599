@@ -59,10 +59,23 @@ void drawMap(bitmap_t *bmp) {
     color_bgr_t black = {0, 0, 0};
     color_bgr_t yellow = {0, 255, 255};
     color_bgr_t white = {255, 255, 255};
-
     for(int i = 0; i < bmp->width * bmp->height; i++){
         bmp->data[i] = white;
+        //printf("i = %d\n", i);
     }
+    for (int i = 0; i < MAP_W * MAP_H; i++) {
+        if (MAP[i] == 'X') {
+            vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
+            double xPos = BLOCK_SIZE / 2 + (i % MAP_W) * BLOCK_SIZE;
+            printf("xPos = %f\n", xPos);
+            double yPos = BLOCK_SIZE / 2 + ((i - i % MAP_W) / MAP_W) * BLOCK_SIZE;
+            printf("yPos = %f\n", yPos);
+            gx_trans(xPos, yPos, &nextBlock);
+            gx_fill_poly(bmp, black, &nextBlock);
+            vector_delete(&nextBlock);
+        }
+    }
+
 }
 
 int main(int argc, char *argv[]) {
@@ -83,13 +96,12 @@ int main(int argc, char *argv[]) {
     size_t bmp_size = bmp_calculate_size(&bmp);
     uint8_t *serialized_bmp = malloc(bmp_size);
     image_server_start("8000");
-
-
     for (int i = 0; i < state.time_step; i++) {
         if (fast == 0) {
             drawMap(&bmp);
             bmp_serialize(&bmp, serialized_bmp);
             image_server_set_data(bmp_size, serialized_bmp);
+            nanosleep(&interval, NULL);
         }
 
     }

@@ -6,5 +6,5 @@ CFLAGS += -fsanitize=address -fsanitize=undefined
 calc: calc.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
 
-chase: chase.c
+chase: chase.c bmp.c image_server.c graphics.c vector_xy_t.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
