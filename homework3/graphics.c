@@ -117,8 +117,8 @@ vector_xy_t gx_rect(double width, double height) {
 }
 
 vector_xy_t gx_rob(void) {
-    double width = 28;
-    double height = 21;
+    double height = 20;
+    double width = height * 4 / 3;
     vector_xy_t tri = vector_create();
     vector_append(&tri, width / 2, 0);
     vector_append(&tri, -width / 2 , height / 2);
@@ -142,14 +142,16 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
         int y1 = shape->yData[(i + 1) % shape->size];
         vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
         for(int j = 0; j < line.size; j++){
-            int x = line.xData[j];
-            int y = line.yData[j];
-            if(xmin[y] == -1) {
-                xmin[y] = x;
-                xmax[y] = x;
-            } else {
-                xmin[y] = fmin(xmin[y], x);
-                xmax[y] = fmax(xmax[y], x);
+            if (line.xData[j] >= 0 && line.yData[j] >= 0) {
+                int x = line.xData[j];
+                int y = line.yData[j];
+                if(xmin[y] == -1) {
+                    xmin[y] = x;
+                    xmax[y] = x;
+                } else {
+                    xmin[y] = fmin(xmin[y], x);
+                    xmax[y] = fmax(xmax[y], x);
+                }
             }
         }
         vector_delete(&line);

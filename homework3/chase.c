@@ -13,7 +13,6 @@
 #define M_PI 3.14159265358979323846
 #define WIDTH 640
 #define HEIGHT 480
-#define BLOCK_SIZE 40
 #define MAP "XXXXXXXXXXXXXXXX" \
             "X              X" \
             "X  XXXX   XXX  X" \
@@ -26,6 +25,7 @@
             "X   X    XX    X" \
             "X      XXX     X" \
             "XXXXXXXXXXXXXXXX"
+#define BLOCK_SIZE 40
 #define MAP_W (WIDTH / BLOCK_SIZE)
 #define MAP_H (HEIGHT / BLOCK_SIZE)
 
@@ -78,19 +78,15 @@ void updateGraphics(state_t *state) {
     color_bgr_t green = {0, 255, 0};
     drawMap(&state->bmp);
     vector_xy_t runPoints = gx_rob();
-    gx_trans(state->runner.x, state->runner.y, &runPoints);
     gx_rot(state->runner.theta, &runPoints);
+    gx_trans(state->runner.x, state->runner.y, &runPoints);
     gx_fill_poly(&state->bmp, green, &runPoints);
     vector_delete(&runPoints);
     vector_xy_t chasePoints = gx_rob();
-    gx_trans(state->chaser.x, state->chaser.y, &chasePoints);
     gx_rot(state->chaser.theta, &chasePoints);
+    gx_trans(state->chaser.x, state->chaser.y, &chasePoints);
     gx_fill_poly(&state->bmp, red, &chasePoints);
     vector_delete(&chasePoints);
-}
-
-void handleCollisions(state_t *state) {
-
 }
 
 int runnerAction(void) {
@@ -120,8 +116,42 @@ void applyAction(agent_t *bot, int action) {
     }
 }
 
-bool resolveCollisions(agent_t *bot) {
+bool resolveWallCollisions(agent_t *bot) {
+    bool collided = false;
+    double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2;
+    double rRadius = sqrt(pow((4 / 3 * 20), 2) + 10 * 10) / 2;
+    double collision_dist_sq = pow((bRadius + rRadius), 2);
+    for (int x = 0; x < MAP_W; x++) {
+        for (int y = 0; y < MAP_H; y++) {
+            int i = x + MAP_W * y;
+            if (MAP[i] == 'X') {
+                double xPos = BLOCK_SIZE * (x + 0.5);
+                double yPos = BLOCK_SIZE * (y + 0.5);
+                double dist_sq = pow(xPos - bot->x, 2) + pow(yPos - bot->y, 2);
+                if (dist_sq <= collision_dist_sq) {
+                    printf("approx collision\n");
+                    vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
+                    gx_trans(xPos, yPos, &nextBlock);
+                    vector_xy_t rob = gx_rob();
+                    if (collision(&nextBlock, &rob)) {
+                        printf("collision\n");
+                        double dx = bot->x - xPos;
+                        double dy = bot->y - yPos;
+                        double dist = sqrt(dx * dx + dy * dy);
+                        bot->x += dx / dist_sq * 0.5;
+                        bot->y += dy / dist_sq * 0.5;
+                        collided = true;
+                    }
+                    vector_delete(&nextBlock);
+                    vector_delete(&rob);
+                }
+            }
+        }
+    }
+    return collided;
+}
 
+bool resolveRobCollisions(state_t *state) {
     return false;
 }
 
@@ -131,8 +161,7 @@ void moveBot(agent_t *bot, int action) {
     bot->ang_vel *= 0.8;
     bot->x += bot->vel * cos(bot->theta);
     bot->y += bot->vel * -sin(bot->theta);
-    //resolveCollisions, and return bool for collides
-    if (resolveCollisions(bot)) {
+    if (resolveWallCollisions(bot)) {
         bot->vel *= 0.25;
     }
 }
@@ -164,7 +193,6 @@ int main(int argc, char *argv[]) {
     state.chaser.theta = 0;
     state.chaser.ang_vel = 0;
 
-
     image_server_start("8000");
     for (int i = 0; i < state.time_step; i++) {
         if (fast == 0) {
@@ -173,6 +201,8 @@ int main(int argc, char *argv[]) {
             image_server_set_data(state.image_size, state.image_data);
             nanosleep(&interval, NULL);
             moveBot(&state.runner, runnerAction());
+            printf("runner x: %f    ", state.runner.x);
+            printf("runner y: %f\n", state.runner.y);
         }
     }
     free(state.image_data); 

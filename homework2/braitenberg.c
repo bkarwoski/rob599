@@ -174,16 +174,10 @@ bool robcollision(double x, double y, double theta, int lampN) {
     if (collides) {
         return true;
     }
-
     return false;
 }
 
 void handleCollision(double *rob_x, double *rob_y, double *rob_theta) {
-    //for each lamp
-    //while a collision occurs
-    //if there is a collision, calculate the vector from robot to lamp
-    //move robot coordinates 0.5 units along this vector
-    printf("position: x = %f, y = %f\n", *rob_x, *rob_y);
     for (int i = 0; i < LAMP_N; i++) {
         int count = 0;
         while (robcollision(*rob_x, *rob_y, *rob_theta, i)) {
@@ -193,16 +187,8 @@ void handleCollision(double *rob_x, double *rob_y, double *rob_theta) {
             double dist = sqrt(dx * dx + dy * dy);
             *rob_x += dx / dist * 0.5;
             *rob_y += dy / dist * 0.5;
-            printf("moving 0.5\n");
-            printf("rob_x = %f\n", *rob_x);
-            printf("rob_y = %f\n", *rob_y);
-            if(count == 8) {
-                printf("count is %d\n", count);
-            }
-
         }
     }
-
 }
 
 int main(int argc, char *argv[]) {
