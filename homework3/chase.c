@@ -90,28 +90,38 @@ void updateGraphics(state_t *state) {
 }
 
 int runnerAction(void) {
-    int action = rand() % 20;
-    if (action == 2 || action == 3) {
-        return action;
-    }
-    return 1;
+    int action = 0;
+    // int action = rand() % 20;
+    // if (action == 2 || action == 3) {
+    //     return action;
+    // }
+    printf("%d ", action);
+    return action;
 }
 
-int chaserAction(void) {
-    return 2;
+int chaserAction(int timestep) {
+    int action = 0;
+    if (timestep == 0) {
+        action = 2;
+    } else if (timestep <= 9) {
+        action = 1;
+    }
+    
+    printf("%d\n", action);
+    return action;
 }
 
 void applyAction(agent_t *bot, int action) {
-    if (action == 2) {
+    if (action == 1) {
         bot->vel += 2;
         if (bot->vel > 12) {
             bot->vel = 12;
         }
     }
-    if (action == 3) {
+    if (action == 2) {
         bot->ang_vel += M_PI / 16;
     }
-    if (action == 4) {
+    if (action == 3) {
         bot->ang_vel -= M_PI / 16;
     }
 }
@@ -129,12 +139,12 @@ bool resolveWallCollisions(agent_t *bot) {
                 double yPos = BLOCK_SIZE * (y + 0.5);
                 double dist_sq = pow(xPos - bot->x, 2) + pow(yPos - bot->y, 2);
                 if (dist_sq <= collision_dist_sq) {
-                    printf("approx collision\n");
+                    //printf("approx collision\n");
                     vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
                     gx_trans(xPos, yPos, &nextBlock);
                     vector_xy_t rob = gx_rob();
                     if (collision(&nextBlock, &rob)) {
-                        printf("collision\n");
+                        printf("Collision w/ tile %d, %d\n", x, y);
                         double dx = bot->x - xPos;
                         double dy = bot->y - yPos;
                         double dist = sqrt(dx * dx + dy * dy);
@@ -199,10 +209,17 @@ int main(int argc, char *argv[]) {
             updateGraphics(&state);
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
+            printf("%d: ", i);
+            printf("x: %.2f ", state.chaser.x);
+            printf("y: %.2f ", state.chaser.y);
+            printf("theta: %.2f ", state.chaser.theta);
+            printf("vel: %.2f ", state.chaser.vel);
+            printf("ang_vel: %.2f\n", state.chaser.ang_vel);
+
             nanosleep(&interval, NULL);
             moveBot(&state.runner, runnerAction());
-            printf("runner x: %f    ", state.runner.x);
-            printf("runner y: %f\n", state.runner.y);
+            moveBot(&state.chaser, chaserAction(i));
+
         }
     }
     free(state.image_data); 
