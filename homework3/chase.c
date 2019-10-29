@@ -220,7 +220,7 @@ double search_actions(search_node_t node, int *best_action) {
 
 int main(int argc, char *argv[]) {
     if (argc != 4) {
-        printf("usage: %s <time steps> <fast=0|1|2> <initial runner index>\n", argv[0]);
+        fprintf(stderr, "usage: %s <time steps> <fast=0|1|2> <initial runner index>\n", argv[0]);
         return 1;
     }
     int seconds = 0;
@@ -251,13 +251,15 @@ int main(int argc, char *argv[]) {
             updateGraphics(&state);
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
-            printf("%d: ", i);
-            printf("x: %.2f ", state.chaser.x);
-            printf("y: %.2f ", state.chaser.y);
-            printf("theta: %.2f ", state.chaser.theta);
-            printf("vel: %.2f ", state.chaser.vel);
-            printf("ang_vel: %.2f\n", state.chaser.ang_vel);
             nanosleep(&interval, NULL);
+        }
+            // printf("%d: ", i);
+            // printf("x: %.2f ", state.chaser.x);
+            // printf("y: %.2f ", state.chaser.y);
+            // printf("theta: %.2f ", state.chaser.theta);
+            // printf("vel: %.2f ", state.chaser.vel);
+            // printf("ang_vel: %.2f\n", state.chaser.ang_vel);
+            
             search_node_t search_node;
             search_node.chaser = state.chaser;
             search_node.runner = state.runner;
@@ -266,10 +268,11 @@ int main(int argc, char *argv[]) {
             search_actions(search_node, &chosen_action);
             moveBot(&state.runner, runnerAction());
             moveBot(&state.chaser, chosen_action);
+            printf("%d\n",chosen_action);
             if (robCollision(state.runner, state.chaser)) {
                 exit(0);
             }
-        }
+        
     }
     free(state.image_data); 
     free(state.bmp.data);
