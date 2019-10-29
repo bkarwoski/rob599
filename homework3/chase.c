@@ -12,8 +12,8 @@
 #include "image_server.h"
 #include "collision.h"
 #define M_PI 3.14159265358979323846
-#define WIDTH 640.0
-#define HEIGHT 480.0
+#define WIDTH 640
+#define HEIGHT 480
 #define MAP "XXXXXXXXXXXXXXXX" \
             "X              X" \
             "X  XXXX   XXX  X" \
