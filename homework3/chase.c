@@ -27,8 +27,8 @@
             "X      XXX     X" \
             "XXXXXXXXXXXXXXXX"
 #define BLOCK_SIZE 40
-#define MAP_W (WIDTH / BLOCK_SIZE)
-#define MAP_H (HEIGHT / BLOCK_SIZE)
+#define MAP_W (1.0 * WIDTH / BLOCK_SIZE)
+#define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
 #define MAX_DEPTH 4
 
 typedef struct agent {
@@ -66,8 +66,8 @@ void drawMap(bitmap_t *bmp) {
     for (int i = 0; i < MAP_W * MAP_H; i++) {
         if (MAP[i] == 'X') {
             vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
-            double xPos = BLOCK_SIZE / 2.0 + (i % MAP_W) * BLOCK_SIZE;
-            double yPos = BLOCK_SIZE / 2.0 + ((i - i % MAP_W)*1.0 / MAP_W) * BLOCK_SIZE;
+            double xPos = BLOCK_SIZE / 2.0 + (i % (int)MAP_W) * BLOCK_SIZE;
+            double yPos = BLOCK_SIZE / 2.0 + ((i - i % (int)MAP_W) * 1.0 / MAP_W) * BLOCK_SIZE;
             gx_trans(xPos, yPos, &nextBlock);
             gx_fill_poly(bmp, black, &nextBlock);
             vector_delete(&nextBlock);
@@ -238,8 +238,8 @@ int main(int argc, char *argv[]) {
     state.bmp.data = calloc(state.bmp.width * state.bmp.height, sizeof(color_bgr_t));
     state.image_size = bmp_calculate_size(&state.bmp);
     state.image_data = malloc(state.image_size);
-    state.runner.x = BLOCK_SIZE / 2.0 + (runnerIndex % MAP_W) * BLOCK_SIZE;
-    state.runner.y = BLOCK_SIZE / 2.0 + ((runnerIndex - runnerIndex % MAP_W) / MAP_W) * BLOCK_SIZE;
+    state.runner.x = BLOCK_SIZE / 2.0 + (runnerIndex % (int)MAP_W) * BLOCK_SIZE;
+    state.runner.y = BLOCK_SIZE / 2.0 + ((runnerIndex - runnerIndex % (int)MAP_W) / MAP_W) * BLOCK_SIZE;
     state.runner.theta = 0;
     state.runner.ang_vel = 0;
     state.chaser.x = WIDTH / 2.0;
