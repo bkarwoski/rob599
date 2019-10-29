@@ -244,8 +244,9 @@ int main(int argc, char *argv[]) {
     state.chaser.y = HEIGHT / 2;
     state.chaser.theta = 0;
     state.chaser.ang_vel = 0;
-
-    image_server_start("8000");
+    if (fast == 0) {
+        image_server_start("8000");
+    }
     for (int i = 0; i < state.time_step; i++) {
         if (fast == 0) {
             updateGraphics(&state);
