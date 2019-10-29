@@ -174,7 +174,10 @@ bool robCollision(agent_t runner, agent_t chaser) {
     vector_xy_t chaserPoints = gx_rob();
     gx_rot(chaser.theta, &chaserPoints);
     gx_trans(chaser.x, chaser.y, &chaserPoints);
-    return collision(&runnerPoints, &chaserPoints);
+    bool doesCollide = collision(&runnerPoints, &chaserPoints);
+    vector_delete(&chaserPoints);
+    vector_delete(&runnerPoints);
+    return doesCollide;
 }
 
 void moveBot(agent_t *bot, int action) {
@@ -229,7 +232,7 @@ int main(int argc, char *argv[]) {
     int fast = atoi(argv[2]);
     int runnerIndex = atoi(argv[3]);
     int chaserIndex = 97;
-    state_t state;
+    state_t state = {0};
     state.time_step = atoi(argv[1]);
     state.bmp.width = WIDTH;
     state.bmp.height = HEIGHT;
@@ -261,7 +264,7 @@ int main(int argc, char *argv[]) {
         // printf("vel: %.2f ", state.chaser.vel);
         // printf("ang_vel: %.2f\n", state.chaser.ang_vel);
         
-        search_node_t search_node;
+        search_node_t search_node = {0};
         search_node.chaser = state.chaser;
         search_node.runner = state.runner;
         search_node.depth = 0;
