@@ -1,7 +1,7 @@
 #include "collision.h"
 #include <stdio.h>
 bool intersects(double x1, double y1, double x2, double y2,
-                double x3, double y3, double x4, double y4) {   
+                double x3, double y3, double x4, double y4) { 
     double vec1[2] = {x2 - x1, y2 - y1};
     double t11[2] = {x3 - x1, y3 - y1};
     double t12[2] = {x4 - x1, y4 - y1};
@@ -35,7 +35,7 @@ bool contains(double x, double y, vector_xy_t *polyX) {
         double t1[2] = {x - x1, y - y1};
         double cross = vec1[0] * t1[1] - vec1[1] * t1[0];
         //printf("cross: %f x1: %f y1: %f x2: %f y2: %f\n", cross, x1, y1, x2, y2);
-        if (cross < 0){
+        if (cross < 0) {
             negCount++;
         } else if (cross > 0) {
             posCount++;
@@ -66,4 +66,3 @@ bool collision(vector_xy_t *poly1, vector_xy_t *poly2) {
     return contains(poly1->xData[0], poly1->yData[0], poly2) ||
            contains(poly2->xData[0], poly2->yData[0], poly1);
 }
-

@@ -60,7 +60,7 @@ void drawMap(bitmap_t *bmp) {
     color_bgr_t black = {0, 0, 0};
     color_bgr_t yellow = {0, 255, 255};
     color_bgr_t white = {255, 255, 255};
-    for(int i = 0; i < bmp->width * bmp->height; i++){
+    for(int i = 0; i < bmp->width * bmp->height; i++) {
         bmp->data[i] = white;
     }
     for (int i = 0; i < MAP_W * MAP_H; i++) {
@@ -102,7 +102,6 @@ int runnerAction(void) {
     return action;
 }
 
-
 void applyAction(agent_t *bot, int action) {
     if (action == 1) {
         bot->vel += 2;
@@ -124,7 +123,7 @@ bool resolveWallCollisions(agent_t *bot) {
     double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2;
     double rRadius = sqrt(pow((4 / 3 * 20), 2) + 10 * 10) / 2;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
-    while(any_collision) {
+    while (any_collision) {
         any_collision = false;
         for (int x = 0; x < MAP_W; x++) {
             for (int y = 0; y < MAP_H; y++) {
@@ -206,13 +205,13 @@ double search_actions(search_node_t node, int *best_action) {
         next_node.depth++;
         moveBot(&next_node.chaser, action);
         int count = 0;
-        while(count < 3 && !robCollision(next_node.runner, next_node.chaser)) {
+        while (count < 3 && !robCollision(next_node.runner, next_node.chaser)) {
             moveBot(&next_node.chaser, 0);
             count++;
         }
         int chosenAction = action;
         double score = search_actions(next_node, &chosenAction);
-        score += 200 / fmin(2,next_node.chaser.vel);
+        score += 200 / fmin(2, next_node.chaser.vel);
         if (score < bestScore) {
             bestScore = score;
             *best_action = action;
@@ -228,7 +227,7 @@ int main(int argc, char *argv[]) {
     }
     int seconds = 0;
     long nanoseconds = 40 * 1000 * 1000;
-    struct timespec interval = { seconds, nanoseconds };
+    struct timespec interval = {seconds, nanoseconds};
     int fast = atoi(argv[2]);
     int runnerIndex = atoi(argv[3]);
     int chaserIndex = 97;
@@ -278,7 +277,7 @@ int main(int argc, char *argv[]) {
         }
         
     }
-    free(state.image_data); 
+    free(state.image_data);
     free(state.bmp.data);
     return 0;
 }

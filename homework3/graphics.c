@@ -145,7 +145,7 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
             if (line.xData[j] >= 0 && line.yData[j] >= 0) {
                 int x = line.xData[j];
                 int y = line.yData[j];
-                if(xmin[y] == -1) {
+                if (xmin[y] == -1) {
                     xmin[y] = x;
                     xmax[y] = x;
                 } else {
