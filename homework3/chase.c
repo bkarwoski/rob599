@@ -238,12 +238,12 @@ int main(int argc, char *argv[]) {
     state.bmp.data = calloc(state.bmp.width * state.bmp.height, sizeof(color_bgr_t));
     state.image_size = bmp_calculate_size(&state.bmp);
     state.image_data = malloc(state.image_size);
-    state.runner.x = BLOCK_SIZE / 2 + (runnerIndex % MAP_W) * BLOCK_SIZE;
-    state.runner.y = BLOCK_SIZE / 2 + ((runnerIndex - runnerIndex % MAP_W) / MAP_W) * BLOCK_SIZE;
+    state.runner.x = BLOCK_SIZE / 2.0 + (runnerIndex % MAP_W) * BLOCK_SIZE;
+    state.runner.y = BLOCK_SIZE / 2.0 + ((runnerIndex - runnerIndex % MAP_W) / MAP_W) * BLOCK_SIZE;
     state.runner.theta = 0;
     state.runner.ang_vel = 0;
-    state.chaser.x = WIDTH / 2;
-    state.chaser.y = HEIGHT / 2;
+    state.chaser.x = WIDTH / 2.0;
+    state.chaser.y = HEIGHT / 2.0;
     state.chaser.theta = 0;
     state.chaser.ang_vel = 0;
     if (fast == 0) {

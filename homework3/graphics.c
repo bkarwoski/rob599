@@ -36,7 +36,7 @@ void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
     int index = 0;
     for (int i = 0; i < points->size; i++) {
         if (points->xData[i] >= 0 && points->yData[i] >= 0) {
-            index = points->xData[i] + points->yData[i] * 640;
+            index = (int)points->xData[i] + (int)points->yData[i] * 640;
             bmp->data[index] = color;
         }
     }
@@ -51,10 +51,10 @@ void gx_draw_line(bitmap_t *bmp, color_bgr_t color, int x0, int y0, int x1, int 
 void gx_draw_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
     roundC(shape);
     for (int i = 0; i < shape->size; i++) {
-        int x0 = shape->xData[i];
-        int y0 = shape->yData[i];
-        int x1 = shape->xData[(i + 1) % shape->size];
-        int y1 = shape->yData[(i + 1) % shape->size];
+        int x0 = (int)shape->xData[i];
+        int y0 = (int)shape->yData[i];
+        int x1 = (int)shape->xData[(i + 1) % shape->size];
+        int y1 = (int)shape->yData[(i + 1) % shape->size];
         gx_draw_line(bmp, color, x0, y0, x1, y1);
     }
 }
