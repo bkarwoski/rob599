@@ -1,7 +1,7 @@
 #include "collision.h"
 #include <stdio.h>
 bool intersects(double x1, double y1, double x2, double y2,
-                double x3, double y3, double x4, double y4) { 
+                double x3, double y3, double x4, double y4) {
     double vec1[2] = {x2 - x1, y2 - y1};
     double t11[2] = {x3 - x1, y3 - y1};
     double t12[2] = {x4 - x1, y4 - y1};

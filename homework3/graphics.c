@@ -149,8 +149,8 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
                     xmin[y] = x;
                     xmax[y] = x;
                 } else {
-                    xmin[y] = fmin(xmin[y], x);
-                    xmax[y] = fmax(xmax[y], x);
+                    xmin[y] = (int)fmin(xmin[y], x);
+                    xmax[y] = (int)fmax(xmax[y], x);
                 }
             }
         }

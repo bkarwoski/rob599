@@ -66,8 +66,8 @@ void drawMap(bitmap_t *bmp) {
     for (int i = 0; i < MAP_W * MAP_H; i++) {
         if (MAP[i] == 'X') {
             vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
-            double xPos = BLOCK_SIZE / 2 + (i % MAP_W) * BLOCK_SIZE;
-            double yPos = BLOCK_SIZE / 2 + ((i - i % MAP_W) / MAP_W) * BLOCK_SIZE;
+            double xPos = BLOCK_SIZE / 2.0 + (i % MAP_W) * BLOCK_SIZE;
+            double yPos = BLOCK_SIZE / 2.0 + ((i - i % MAP_W)*1.0 / MAP_W) * BLOCK_SIZE;
             gx_trans(xPos, yPos, &nextBlock);
             gx_fill_poly(bmp, black, &nextBlock);
             vector_delete(&nextBlock);
@@ -110,18 +110,18 @@ void applyAction(agent_t *bot, int action) {
         }
     }
     if (action == 2) {
-        bot->ang_vel += M_PI / 16;
+        bot->ang_vel += M_PI / 16.0;
     }
     if (action == 3) {
-        bot->ang_vel -= M_PI / 16;
+        bot->ang_vel -= M_PI / 16.0;
     }
 }
 
 bool resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
-    double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2;
-    double rRadius = sqrt(pow((4 / 3 * 20), 2) + 10 * 10) / 2;
+    double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
+    double rRadius = sqrt(pow((4.0 / 3 * 20), 2) + 10 * 10) / 2.0;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
     while (any_collision) {
         any_collision = false;
@@ -269,7 +269,6 @@ int main(int argc, char *argv[]) {
         if (robCollision(state.runner, state.chaser)) {
             exit(0);
         }
-        
     }
     free(state.image_data);
     free(state.bmp.data);
