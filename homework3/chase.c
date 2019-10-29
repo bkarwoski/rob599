@@ -12,8 +12,8 @@
 #include "image_server.h"
 #include "collision.h"
 #define M_PI 3.14159265358979323846
-#define WIDTH 640
-#define HEIGHT 480
+#define WIDTH 640.0
+#define HEIGHT 480.0
 #define MAP "XXXXXXXXXXXXXXXX" \
             "X              X" \
             "X  XXXX   XXX  X" \
@@ -60,7 +60,7 @@ void drawMap(bitmap_t *bmp) {
     color_bgr_t black = {0, 0, 0};
     color_bgr_t yellow = {0, 255, 255};
     color_bgr_t white = {255, 255, 255};
-    for(int i = 0; i < bmp->width * bmp->height; i++) {
+    for (int i = 0; i < bmp->width * bmp->height; i++) {
         bmp->data[i] = white;
     }
     for (int i = 0; i < MAP_W * MAP_H; i++) {
@@ -256,13 +256,7 @@ int main(int argc, char *argv[]) {
             image_server_set_data(state.image_size, state.image_data);
             nanosleep(&interval, NULL);
         }
-        // printf("%d: ", i);
-        // printf("x: %.2f ", state.chaser.x);
-        // printf("y: %.2f ", state.chaser.y);
-        // printf("theta: %.2f ", state.chaser.theta);
-        // printf("vel: %.2f ", state.chaser.vel);
-        // printf("ang_vel: %.2f\n", state.chaser.ang_vel);
-        
+
         search_node_t search_node = {0};
         search_node.chaser = state.chaser;
         search_node.runner = state.runner;
@@ -271,7 +265,7 @@ int main(int argc, char *argv[]) {
         search_actions(search_node, &chosen_action);
         moveBot(&state.runner, runnerAction());
         moveBot(&state.chaser, chosen_action);
-        printf("%d\n",chosen_action);
+        printf("%d\n", chosen_action);
         if (robCollision(state.runner, state.chaser)) {
             exit(0);
         }

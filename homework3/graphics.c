@@ -136,15 +136,15 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
     }
     roundC(shape);
     for (int i = 0; i < shape->size; i++) {
-        int x0 = shape->xData[i];
-        int y0 = shape->yData[i];
-        int x1 = shape->xData[(i + 1) % shape->size];
-        int y1 = shape->yData[(i + 1) % shape->size];
+        int x0 = (int)shape->xData[i];
+        int y0 = (int)shape->yData[i];
+        int x1 = (int)shape->xData[(i + 1) % shape->size];
+        int y1 = (int)shape->yData[(i + 1) % shape->size];
         vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
         for (int j = 0; j < line.size; j++) {
             if (line.xData[j] >= 0 && line.yData[j] >= 0) {
-                int x = line.xData[j];
-                int y = line.yData[j];
+                int x = (int)line.xData[j];
+                int y = (int)line.yData[j];
                 if (xmin[y] == -1) {
                     xmin[y] = x;
                     xmax[y] = x;
