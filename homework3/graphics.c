@@ -42,7 +42,7 @@ void gx_draw(bitmap_t *bmp, color_bgr_t color, vector_xy_t *points) {
     }
 }
 
-void gx_draw_line(bitmap_t *bmp, color_bgr_t color,int x0, int y0, int x1, int y1) {
+void gx_draw_line(bitmap_t *bmp, color_bgr_t color, int x0, int y0, int x1, int y1) {
     vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
     gx_draw(bmp, color, &line);
     vector_delete(&line);
@@ -89,17 +89,17 @@ void roundC(vector_xy_t *doubles) {
     }
 }
 
-void gx_trans(double x, double y, vector_xy_t *vec){
-    for (int i = 0; i < vec->size; i++){
+void gx_trans(double x, double y, vector_xy_t *vec) {
+    for (int i = 0; i < vec->size; i++) {
         vec->xData[i] = vec->xData[i] + x;
         vec->yData[i] = vec->yData[i] + y;
     }
 }
 
-void gx_rot(double theta, vector_xy_t *vec){
+void gx_rot(double theta, vector_xy_t *vec) {
     double c = cos(theta);
     double s = sin(theta);
-    for (int i = 0; i < vec->size; i++){
+    for (int i = 0; i < vec->size; i++) {
         double newX = c * vec->xData[i] + s * vec->yData[i];
         double newY = -s * vec->xData[i] + c * vec->yData[i];
         vec->xData[i] = newX;
@@ -121,7 +121,7 @@ vector_xy_t gx_rob(void) {
     double width = height * 4 / 3;
     vector_xy_t tri = vector_create();
     vector_append(&tri, width / 2, 0);
-    vector_append(&tri, -width / 2 , height / 2);
+    vector_append(&tri, -width / 2, height / 2);
     vector_append(&tri, -width / 2, -height / 2);
     return tri;
 }
@@ -141,7 +141,7 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
         int x1 = shape->xData[(i + 1) % shape->size];
         int y1 = shape->yData[(i + 1) % shape->size];
         vector_xy_t line = gx_rasterize_line(x0, y0, x1, y1);
-        for(int j = 0; j < line.size; j++){
+        for (int j = 0; j < line.size; j++) {
             if (line.xData[j] >= 0 && line.yData[j] >= 0) {
                 int x = line.xData[j];
                 int y = line.yData[j];
@@ -156,11 +156,11 @@ void gx_fill_poly(bitmap_t *bmp, color_bgr_t color, vector_xy_t *shape) {
         }
         vector_delete(&line);
     }
-    for (int y = 0; y < height; y++){
-        if(xmin[y] != -1) {
+    for (int y = 0; y < height; y++) {
+        if (xmin[y] != -1) {
             for (int x = xmin[y]; x <= xmax[y]; x++) {
                 bmp->data[x + y * bmp->width] = color;
             }
         }
-    } 
+    }
 }
