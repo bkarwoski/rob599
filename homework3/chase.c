@@ -254,25 +254,25 @@ int main(int argc, char *argv[]) {
             image_server_set_data(state.image_size, state.image_data);
             nanosleep(&interval, NULL);
         }
-            // printf("%d: ", i);
-            // printf("x: %.2f ", state.chaser.x);
-            // printf("y: %.2f ", state.chaser.y);
-            // printf("theta: %.2f ", state.chaser.theta);
-            // printf("vel: %.2f ", state.chaser.vel);
-            // printf("ang_vel: %.2f\n", state.chaser.ang_vel);
-            
-            search_node_t search_node;
-            search_node.chaser = state.chaser;
-            search_node.runner = state.runner;
-            search_node.depth = 0;
-            int chosen_action = 0;
-            search_actions(search_node, &chosen_action);
-            moveBot(&state.runner, runnerAction());
-            moveBot(&state.chaser, chosen_action);
-            printf("%d\n",chosen_action);
-            if (robCollision(state.runner, state.chaser)) {
-                exit(0);
-            }
+        // printf("%d: ", i);
+        // printf("x: %.2f ", state.chaser.x);
+        // printf("y: %.2f ", state.chaser.y);
+        // printf("theta: %.2f ", state.chaser.theta);
+        // printf("vel: %.2f ", state.chaser.vel);
+        // printf("ang_vel: %.2f\n", state.chaser.ang_vel);
+        
+        search_node_t search_node;
+        search_node.chaser = state.chaser;
+        search_node.runner = state.runner;
+        search_node.depth = 0;
+        int chosen_action = 0;
+        search_actions(search_node, &chosen_action);
+        moveBot(&state.runner, runnerAction());
+        moveBot(&state.chaser, chosen_action);
+        printf("%d\n",chosen_action);
+        if (robCollision(state.runner, state.chaser)) {
+            exit(0);
+        }
         
     }
     free(state.image_data); 
