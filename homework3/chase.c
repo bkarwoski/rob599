@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <stdio.h>
+#include <float.h>
 #include "bmp.h"
 #include "graphics.h"
 #include "image_server.h"
@@ -28,6 +29,7 @@
 #define BLOCK_SIZE 40
 #define MAP_W (WIDTH / BLOCK_SIZE)
 #define MAP_H (HEIGHT / BLOCK_SIZE)
+#define MAX_DEPTH 4
 
 typedef struct agent {
     bool is_runner;
@@ -90,26 +92,16 @@ void updateGraphics(state_t *state) {
 }
 
 int runnerAction(void) {
-    int action = 0;
-    // int action = rand() % 20;
-    // if (action == 2 || action == 3) {
-    //     return action;
-    // }
+    int action = rand() % 20;
+    if (action == 1 || action == 2) {
+        printf("%d ", action);
+        return action;
+    }
+    action = 0;
     printf("%d ", action);
     return action;
 }
 
-int chaserAction(int timestep) {
-    int action = 0;
-    if (timestep == 0) {
-        action = 2;
-    } else if (timestep <= 9) {
-        action = 1;
-    }
-    
-    printf("%d\n", action);
-    return action;
-}
 
 void applyAction(agent_t *bot, int action) {
     if (action == 1) {
@@ -128,32 +120,46 @@ void applyAction(agent_t *bot, int action) {
 
 bool resolveWallCollisions(agent_t *bot) {
     bool collided = false;
+    bool any_collision = true;
     double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2;
     double rRadius = sqrt(pow((4 / 3 * 20), 2) + 10 * 10) / 2;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
-    for (int x = 0; x < MAP_W; x++) {
-        for (int y = 0; y < MAP_H; y++) {
-            int i = x + MAP_W * y;
-            if (MAP[i] == 'X') {
-                double xPos = BLOCK_SIZE * (x + 0.5);
-                double yPos = BLOCK_SIZE * (y + 0.5);
-                double dist_sq = pow(xPos - bot->x, 2) + pow(yPos - bot->y, 2);
-                if (dist_sq <= collision_dist_sq) {
-                    //printf("approx collision\n");
-                    vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
-                    gx_trans(xPos, yPos, &nextBlock);
-                    vector_xy_t rob = gx_rob();
-                    if (collision(&nextBlock, &rob)) {
-                        printf("Collision w/ tile %d, %d\n", x, y);
-                        double dx = bot->x - xPos;
-                        double dy = bot->y - yPos;
-                        double dist = sqrt(dx * dx + dy * dy);
-                        bot->x += dx / dist_sq * 0.5;
-                        bot->y += dy / dist_sq * 0.5;
-                        collided = true;
+    while(any_collision) {
+        any_collision = false;
+        for (int x = 0; x < MAP_W; x++) {
+            for (int y = 0; y < MAP_H; y++) {
+                int i = x + MAP_W * y;
+                if (MAP[i] == 'X') {
+                    double xPos = BLOCK_SIZE * (x + 0.5);
+                    double yPos = BLOCK_SIZE * (y + 0.5);
+                    double dist_sq = pow(xPos - bot->x, 2) + pow(yPos - bot->y, 2);
+                    if (dist_sq <= collision_dist_sq) {
+                        vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
+                        gx_trans(xPos, yPos, &nextBlock);
+                        vector_xy_t rob = gx_rob();
+                        gx_rot(bot->theta, &rob);
+                        gx_trans(bot->x, bot->y, &rob);
+                        bool isCollided = collision(&nextBlock, &rob);
+                        if (isCollided) {
+                            any_collision = true;
+                            //printf("Collision w/ tile %d, %d, ", x, y);
+                            double dx = bot->x - xPos;
+                            double dy = bot->y - yPos;
+                            double dist = sqrt(dx * dx + dy * dy);
+                            //printf("movement from %.2f, %.2f ", bot->x, bot->y);
+                            bot->x += dx / dist * 0.5;
+                            bot->y += dy / dist * 0.5;
+                            collided = true;
+                            //printf("to %.2f, %.2f ", bot->x, bot->y);
+                            //printf("with robot xs: %.2f, %.2f, %.2f ",
+                            //    rob.xData[0], rob.xData[1], rob.xData[2]);
+                            //printf("ys: %.2f, %.2f, %.2f\n",
+                            //    rob.yData[0], rob.yData[1], rob.yData[2]);
+                            isCollided = collision(&nextBlock, &rob);
+                        }
+                        vector_delete(&nextBlock);
+                        vector_delete(&rob);
                     }
-                    vector_delete(&nextBlock);
-                    vector_delete(&rob);
                 }
             }
         }
@@ -161,8 +167,14 @@ bool resolveWallCollisions(agent_t *bot) {
     return collided;
 }
 
-bool resolveRobCollisions(state_t *state) {
-    return false;
+bool robCollision(agent_t runner, agent_t chaser) {
+    vector_xy_t runnerPoints = gx_rob();
+    gx_rot(runner.theta, &runnerPoints);
+    gx_trans(runner.x, runner.y, &runnerPoints);
+    vector_xy_t chaserPoints = gx_rob();
+    gx_rot(chaser.theta, &chaserPoints);
+    gx_trans(chaser.x, chaser.y, &chaserPoints);
+    return collision(&runnerPoints, &chaserPoints);
 }
 
 void moveBot(agent_t *bot, int action) {
@@ -174,6 +186,36 @@ void moveBot(agent_t *bot, int action) {
     if (resolveWallCollisions(bot)) {
         bot->vel *= 0.25;
     }
+}
+
+double search_actions(search_node_t node, int *best_action) {
+    double bestScore = DBL_MAX;
+    if (robCollision(node.runner, node.chaser)) {
+        return 0;
+    }
+    if (node.depth >= MAX_DEPTH) {
+        double dx = node.chaser.x - node.runner.x;
+        double dy = node.chaser.y - node.runner.y;
+        return sqrt(dx * dx + dy * dy);
+    }
+    for (int action = 0; action <= 3; action++) {
+        search_node_t next_node = node;
+        next_node.depth++;
+        moveBot(&next_node.chaser, action);
+        int count = 0;
+        while(count < 3 && !robCollision(next_node.runner, next_node.chaser)) {
+            moveBot(&next_node.chaser, 0);
+            count++;
+        }
+        int chosenAction = action;
+        double score = search_actions(next_node, &chosenAction);
+        score += 200 / fmin(2,next_node.chaser.vel);
+        if (score < bestScore) {
+            bestScore = score;
+            *best_action = action;
+        }
+    }
+    return bestScore;
 }
 
 int main(int argc, char *argv[]) {
@@ -215,11 +257,18 @@ int main(int argc, char *argv[]) {
             printf("theta: %.2f ", state.chaser.theta);
             printf("vel: %.2f ", state.chaser.vel);
             printf("ang_vel: %.2f\n", state.chaser.ang_vel);
-
             nanosleep(&interval, NULL);
+            search_node_t search_node;
+            search_node.chaser = state.chaser;
+            search_node.runner = state.runner;
+            search_node.depth = 0;
+            int chosen_action = 0;
+            search_actions(search_node, &chosen_action);
             moveBot(&state.runner, runnerAction());
-            moveBot(&state.chaser, chaserAction(i));
-
+            moveBot(&state.chaser, chosen_action);
+            if (robCollision(state.runner, state.chaser)) {
+                exit(0);
+            }
         }
     }
     free(state.image_data); 

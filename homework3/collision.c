@@ -17,9 +17,9 @@ bool intersects(double x1, double y1, double x2, double y2,
     bool neg2 = (cv2t21 * cv2t22 <= 0);
 
     bool intersected = (neg1 && neg2) && !((cv1t11 * cv1t12 == 0) && (cv2t21 * cv2t22 == 0));
-    if (intersected) {
-        printf("intersected\n");
-    }
+    // if (intersected) {
+    //     printf("intersected\n");
+    // }
     return intersected;
 }
 
