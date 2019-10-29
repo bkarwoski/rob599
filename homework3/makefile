@@ -7,4 +7,4 @@ calc: calc.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
 
 chase: chase.c bmp.c image_server.c graphics.c vector_xy_t.c collision.c
-	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread -O3
