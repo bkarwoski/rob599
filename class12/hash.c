@@ -40,6 +40,15 @@ uint32_t table_b_hash(uint8_t *data, int n) {
     return hash;
 }
 
+uint32_t djb2a(uint8_t *data, int n) {
+    uint32_t hash = 5381;
+    for (int i = 0; i < n; i++) {
+        hash = ((hash << 5) + hash) ^ *data;
+        data++;
+    }
+    return hash;
+}
+
 int main(int argc, char **argv) {
     char *hashFun = argv[1];
     uint8_t *input = (uint8_t *)argv[2];
@@ -52,6 +61,9 @@ int main(int argc, char **argv) {
     } else if (strcmp(hashFun, "table_b") == 0) {
         setup_table_hash();
         printf("0x%x\n", table_b_hash(input, (int)strlen(argv[2])));
+    } else if (strcmp(hashFun, "djb2a") == 0) {
+        //setup_table_hash();
+        printf("0x%x\n", djb2a(input, (int)strlen(argv[2])));
     }
     return 0;
 }
