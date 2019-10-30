@@ -71,12 +71,12 @@ uint32_t fxhash32_step(uint32_t hash, uint32_t value) {
 
 uint32_t fxhash32(uint8_t *data, int n) {
     uint32_t hash = 0;
-    for (int i = n; i >= 4; i--) {
+    for (int i = n; i >= 4; i -= 4) {
         uint32_t number;
         memcpy(&number, data, sizeof(number));
         hash = fxhash32_step(hash, number);
-        data++;
-        n--;
+        data += 4;
+        n -=4;
     }
 
     for (int i = 0; i < n; i++) {
