@@ -49,6 +49,17 @@ uint32_t djb2a(uint8_t *data, int n) {
     return hash;
 }
 
+uint32_t fnv1a(uint8_t *data, int n) {
+    uint32_t hash = 2166136261;
+    uint32_t fnvPrime = 16777619;
+    for (int i = 0; i < n; i++) {
+        hash = hash ^ *data;
+        hash *= fnvPrime;
+        data++;
+    }
+    return hash;
+}
+
 int main(int argc, char **argv) {
     char *hashFun = argv[1];
     uint8_t *input = (uint8_t *)argv[2];
@@ -62,8 +73,9 @@ int main(int argc, char **argv) {
         setup_table_hash();
         printf("0x%x\n", table_b_hash(input, (int)strlen(argv[2])));
     } else if (strcmp(hashFun, "djb2a") == 0) {
-        //setup_table_hash();
         printf("0x%x\n", djb2a(input, (int)strlen(argv[2])));
+    } else if (strcmp(hashFun, "fnv1a") == 0) {
+        printf("0x%x\n", fnv1a(input, (int)strlen(argv[2])));
     }
     return 0;
 }
