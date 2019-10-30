@@ -31,6 +31,15 @@ uint32_t table_a_hash(uint8_t *data, int n) {
     return hash;
 }
 
+uint32_t table_b_hash(uint8_t *data, int n) {
+    uint32_t hash = 0;
+    for (int i = 0; i < n; i++) {
+        hash = (hash << 3) ^ table_hash_keys[*data];
+        data++;
+    }
+    return hash;
+}
+
 int main(int argc, char **argv) {
     char *hashFun = argv[1];
     uint8_t *input = (uint8_t *)argv[2];
@@ -39,8 +48,10 @@ int main(int argc, char **argv) {
         printf("0x%x\n", add_hash(input, (int)strlen(argv[2])));
     } else if (strcmp(hashFun, "table_a") == 0) {
         setup_table_hash();
-        printf("0x%x\n",table_a_hash(input, strlen(argv[2])));
+        printf("0x%x\n", table_a_hash(input, (int)strlen(argv[2])));
+    } else if (strcmp(hashFun, "table_b") == 0) {
+        setup_table_hash();
+        printf("0x%x\n", table_b_hash(input, (int)strlen(argv[2])));
     }
     return 0;
 }
-
