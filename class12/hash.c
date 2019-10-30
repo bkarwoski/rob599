@@ -76,7 +76,7 @@ uint32_t fxhash32(uint8_t *data, int n) {
         memcpy(&number, data, sizeof(number));
         hash = fxhash32_step(hash, number);
         data += 4;
-        n -=4;
+        n -= 4;
     }
 
     for (int i = 0; i < n; i++) {
