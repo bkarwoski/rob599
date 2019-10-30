@@ -16,8 +16,14 @@ uint32_t add_hash(uint8_t *data, int n) {
 }
 
 int main(int argc, char **argv) {
-    //char *hashFun = argv[1];
+    char *hashFun = argv[1];
     uint8_t *input = (uint8_t*)argv[2];
-    printf("0x%x\n", add_hash(input, strlen(argv[2])));
+    //printf("%d\n", strcmp(hashFun,"add"));
+    if (strcmp(hashFun,"add") == 0) {
+        printf("0x%x\n", add_hash(input, strlen(argv[2])));
+    } //else if (strcmp(hashFun, ) == 0) {
+
+    //}
     return 0;
 }
+
