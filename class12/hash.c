@@ -59,6 +59,33 @@ uint32_t fnv1a(uint8_t *data, int n) {
     }
     return hash;
 }
+uint32_t rotate_left(uint32_t value, uint32_t count) {
+    return value << count | value >> (32 - count);
+}
+
+uint32_t fxhash32_step(uint32_t hash, uint32_t value) {
+    const uint32_t key = 0x27220a95;
+    // const uint64_t key = 0x517cc1b727220a95;
+    return (rotate_left(hash, 5) ^ value) * key;
+}
+
+uint32_t fxhash32(uint8_t *data, int n) {
+    uint32_t hash = 0;
+    for (int i = n; i >= 4; i--) {
+        uint32_t number;
+        memcpy(&number, data, sizeof(number));
+        hash = fxhash32_step(hash, number);
+        data++;
+        n--;
+    }
+
+    for (int i = 0; i < n; i++) {
+        hash = fxhash32_step(hash, *data);
+        data++;
+    }
+
+    return hash;
+}
 
 int main(int argc, char **argv) {
     char *hashFun = argv[1];
@@ -76,6 +103,8 @@ int main(int argc, char **argv) {
         printf("0x%x\n", djb2a(input, (int)strlen(argv[2])));
     } else if (strcmp(hashFun, "fnv1a") == 0) {
         printf("0x%x\n", fnv1a(input, (int)strlen(argv[2])));
+    } else if (strcmp(hashFun, "fxhash32") == 0) {
+        printf("0x%x\n", fxhash32(input, (int)strlen(argv[2])));
     }
     return 0;
 }
