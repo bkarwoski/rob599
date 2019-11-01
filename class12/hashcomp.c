@@ -96,6 +96,10 @@ int main(int argc, char **argv) {
         printf("\n");
     }
     fclose(f);
+    for (int i = 0; i < max_entries; i++) {
+        free(entries[i].data);
+    }
     free(entries);
+
     return 0;
 }
