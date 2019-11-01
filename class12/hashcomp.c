@@ -45,7 +45,8 @@ uint32_t modulo_prime_reduce(uint32_t hash) {
 }
 
 uint32_t fibonacci32_reduce(uint32_t hash) {
-    return 0; //update
+    const uint32_t factor32 = 2654435769;
+    return (uint32_t)(hash * factor32) >> (32 - 13);
 }
 
 int main(int argc, char **argv) {
@@ -84,8 +85,8 @@ int main(int argc, char **argv) {
     // This only works because the hash function array is declared as a literal array with { ... }
     int n_hash_functions = sizeof(hash_functions) / sizeof(hash_functions[0]);
 
-    uint32_t (*reduce_functions[])(uint32_t) = {modulo2_reduce, /*modulo_prime_reduce,
-                                                fibonacci32_reduce*/};
+    uint32_t (*reduce_functions[])(uint32_t) = {modulo2_reduce, modulo_prime_reduce,
+                                                fibonacci32_reduce};
     int n_reduce_functions = sizeof(reduce_functions) / sizeof(reduce_functions[0]);
 
     for (int hash_i = 0; hash_i < n_hash_functions; hash_i++) {
