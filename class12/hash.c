@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
-#define TABLE_SIZE 8192
 uint32_t table_hash_keys[256];
+
 
 uint32_t add_hash(uint8_t *data, int n) {
     uint32_t hash = 0;
@@ -40,7 +40,7 @@ uint32_t table_b_hash(uint8_t *data, int n) {
     return hash;
 }
 
-uint32_t djb2a(uint8_t *data, int n) {
+uint32_t djb2a_hash(uint8_t *data, int n) {
     uint32_t hash = 5381;
     for (int i = 0; i < n; i++) {
         hash = ((hash << 5) + hash) ^ *data;
@@ -49,7 +49,7 @@ uint32_t djb2a(uint8_t *data, int n) {
     return hash;
 }
 
-uint32_t fnv1a(uint8_t *data, int n) {
+uint32_t fnv1a_hash(uint8_t *data, int n) {
     uint32_t hash = 2166136261;
     uint32_t fnvPrime = 16777619;
     for (int i = 0; i < n; i++) {
@@ -69,7 +69,7 @@ uint32_t fxhash32_step(uint32_t hash, uint32_t value) {
     return (rotate_left(hash, 5) ^ value) * key;
 }
 
-uint32_t fxhash32(uint8_t *data, int n) {
+uint32_t fxhash32_hash(uint8_t *data, int n) {
     uint32_t hash = 0;
     for (int i = n; i >= 4; i -= 4) {
         uint32_t number;
@@ -86,11 +86,10 @@ uint32_t fxhash32(uint8_t *data, int n) {
 
     return hash;
 }
-
+/*
 int main(int argc, char **argv) {
     char *hashFun = argv[1];
     uint8_t *input = (uint8_t *)argv[2];
-    //printf("%d\n", strcmp(hashFun,"add"));
     if (strcmp(hashFun, "add") == 0) {
         printf("0x%x\n", add_hash(input, (int)strlen(argv[2])));
     } else if (strcmp(hashFun, "table_a") == 0) {
@@ -108,3 +107,4 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
+*/
