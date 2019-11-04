@@ -22,12 +22,15 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
     }
     clock_t start = clock();
     int collisionCount = 0;
-    int loopCount = 100;
-    for (int i = 0; i < loopCount; i++) {
+    int loopCount = 0;
+    while ((clock() - start) / (double)CLOCKS_PER_SEC < 0.5) {
         for (int j = 0; j < n_entries; j++) {
             uint32_t hash = reduce_f(hash_f(entries[j].data, entries[j].n));
-            hashVals[hash]++;
+            if (loopCount == 0) {
+                hashVals[hash]++;
+            }
         }
+        loopCount++;
     }
     clock_t end = clock();
     for (int i = 0; i < TABLE_SIZE; i++) {
@@ -35,7 +38,7 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
             collisionCount++;
         }
     }
-    double timePerLoop = (end - start) / loopCount;
+    double timePerLoop = (end - start) / (double)CLOCKS_PER_SEC / loopCount * 1e9 / n_entries;
     printf("%.2fns per iteration with %d collisions\n",timePerLoop, collisionCount);
 }
 
@@ -55,9 +58,8 @@ uint32_t fibonacci32_reduce(uint32_t hash) {
 int main(int argc, char **argv) {
     int n_entries = 0;
     bool fast_mode = 0;
-    FILE *f;
-    f = fopen("book.txt", "r");
-
+    FILE *f = fopen("book.txt", "r");
+    setup_table_hash();
     // First we need to collect all the entries/strings/data that we will try to hash
     // This needs to be done up front for the benchmarking later to be valid.
     int max_entries = TABLE_SIZE / 2;
