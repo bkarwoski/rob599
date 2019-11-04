@@ -70,7 +70,9 @@ int main(int argc, char **argv) {
     }
     for (uint16_t i = 1000; i < max_entries; i++) {
         char nextStr[MAX_LINE_LENGTH];
-        fgets(nextStr, MAX_LINE_LENGTH, f);
+        if (*fgets(nextStr, MAX_LINE_LENGTH, f) == '\0') {
+            printf("error, end of line on fgets\n");
+        }
         entries[i].data = (uint8_t *)strdup(nextStr);
         entries[i].n = strlen(nextStr);
         n_entries++;
