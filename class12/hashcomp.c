@@ -26,7 +26,6 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
     while ((clock() - start) / (double)CLOCKS_PER_SEC < 0.5) {
         for (int j = 0; j < n_entries; j++) {
             uint32_t hash = reduce_f(hash_f(entries[j].data, entries[j].n));
-            //printf("%d\n", hash);
             if (loopCount == 0) {
                 hashVals[hash]++;
             }
@@ -37,7 +36,6 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
     for (int i = 0; i < TABLE_SIZE; i++) {
         if (hashVals[i] > 1) {
             collisionCount += hashVals[i] - 1;
-           //printf("collisionCount = %d\n", collisionCount);
         }
     }
     double timePerLoop = (end - start) / (double)CLOCKS_PER_SEC / loopCount * 1e9 / n_entries;
@@ -89,8 +87,7 @@ int main(int argc, char **argv) {
     // show it is an array of function pointers. Everything outside those parentheses
     // work like normal for the function definition, and the arguments don't need names.
     uint32_t (*hash_functions[])(uint8_t *, int) = {add_hash, table_a_hash, table_b_hash,
-                                                      djb2a_hash, fnv1a_hash, fxhash32_hash};
-                                                  //{table_b_hash}
+                                                    djb2a_hash, fnv1a_hash, fxhash32_hash};
     // This is a good idiom to get the number of elements in a static array in C
     // This only works because the hash function array is declared as a literal array with { ... }
     int n_hash_functions = sizeof(hash_functions) / sizeof(hash_functions[0]);

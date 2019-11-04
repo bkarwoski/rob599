@@ -86,25 +86,3 @@ uint32_t fxhash32_hash(uint8_t *data, int n) {
 
     return hash;
 }
-/*
-int main(int argc, char **argv) {
-    char *hashFun = argv[1];
-    uint8_t *input = (uint8_t *)argv[2];
-    if (strcmp(hashFun, "add") == 0) {
-        printf("0x%x\n", add_hash(input, (int)strlen(argv[2])));
-    } else if (strcmp(hashFun, "table_a") == 0) {
-        setup_table_hash();
-        printf("0x%x\n", table_a_hash(input, (int)strlen(argv[2])));
-    } else if (strcmp(hashFun, "table_b") == 0) {
-        setup_table_hash();
-        printf("0x%x\n", table_b_hash(input, (int)strlen(argv[2])));
-    } else if (strcmp(hashFun, "djb2a") == 0) {
-        printf("0x%x\n", djb2a(input, (int)strlen(argv[2])));
-    } else if (strcmp(hashFun, "fnv1a") == 0) {
-        printf("0x%x\n", fnv1a(input, (int)strlen(argv[2])));
-    } else if (strcmp(hashFun, "fxhash32") == 0) {
-        printf("0x%x\n", fxhash32(input, (int)strlen(argv[2])));
-    }
-    return 0;
-}
-*/

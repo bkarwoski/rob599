@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 uint32_t add_hash(uint8_t *data, int n);
 
