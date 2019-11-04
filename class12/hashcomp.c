@@ -38,8 +38,8 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
             collisionCount += hashVals[i] - 1;
         }
     }
-    double timePerLoop = (end - start) / (double)CLOCKS_PER_SEC / loopCount * 1e9 / n_entries;
-    printf("%.2fns per iteration with %d collisions\n",timePerLoop, collisionCount);
+    double timePerLoop = ((double)end - (double)start) / (double)CLOCKS_PER_SEC / loopCount * 1e9 / n_entries;
+    printf("%.2fns per iteration with %d collisions\n", timePerLoop, collisionCount);
 }
 
 uint32_t modulo2_reduce(uint32_t hash) {
@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     setup_table_hash();
     // First we need to collect all the entries/strings/data that we will try to hash
     // This needs to be done up front for the benchmarking later to be valid.
-    int max_entries = TABLE_SIZE / 2;
+    uint16_t max_entries = TABLE_SIZE / 2;
     test_entry_t *entries = calloc(max_entries, sizeof(test_entry_t));
     for (uint16_t i = 0; i < 1000; i++) {
         entries[i].data = malloc(sizeof(i));
@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
             printf("error, end of line on fgets\n");
         }
         entries[i].data = (uint8_t *)strdup(nextStr);
-        entries[i].n = strlen(nextStr);
+        entries[i].n = (int)strlen(nextStr);
         n_entries++;
     }
     // This is an array of function pointers

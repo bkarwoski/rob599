@@ -59,6 +59,7 @@ uint32_t fnv1a_hash(uint8_t *data, int n) {
     }
     return hash;
 }
+
 uint32_t rotate_left(uint32_t value, uint32_t count) {
     return value << count | value >> (32 - count);
 }
