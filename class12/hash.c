@@ -6,7 +6,6 @@
 #include <stdint.h>
 uint32_t table_hash_keys[256];
 
-
 uint32_t add_hash(uint8_t *data, int n) {
     uint32_t hash = 0;
     for (int i = 0; i < n; i++) {

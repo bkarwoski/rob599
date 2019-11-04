@@ -23,7 +23,7 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
     clock_t start = clock();
     int collisionCount = 0;
     int loopCount = 0;
-    while ((clock() - start) / (double)CLOCKS_PER_SEC < 0.5) {
+    while (((double)clock() - (double)start) / (double)CLOCKS_PER_SEC < 0.5) {
         for (int j = 0; j < n_entries; j++) {
             uint32_t hash = reduce_f(hash_f(entries[j].data, entries[j].n));
             if (loopCount == 0) {
