@@ -17,12 +17,15 @@ typedef struct test_entry {
 void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
                           uint32_t (*hash_f)(uint8_t *, int), uint32_t (*reduce_f)(uint32_t)) {
     int hashVals[TABLE_SIZE];
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        hashVals[i] = 0;
+    }
     clock_t start = clock();
     int collisionCount = 0;
     int loopCount = 100;
     for (int i = 0; i < loopCount; i++) {
         for (int j = 0; j < n_entries; j++) {
-            uint32_t hash = reduce_f(hash_f(entries[0].data, entries[0].n));
+            uint32_t hash = reduce_f(hash_f(entries[j].data, entries[j].n));
             hashVals[hash]++;
         }
     }
