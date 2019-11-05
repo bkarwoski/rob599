@@ -1,6 +1,7 @@
 #pragma once
-
 #include <stdbool.h>
+
+typedef struct hashtable_entry hashtable_entry_t;
 
 typedef struct hashtable hashtable_t;
 
@@ -16,6 +17,8 @@ bool hashtable_get(hashtable_t *ht, char *key, int *value);
 
 // The number of entries (distinct keys) in ht
 int hashtable_size(hashtable_t *ht);
+
+void hashtable_grow(hashtable_t *ht);
 
 // Use this alongside hashtable_probe
 // to iterate through the table
