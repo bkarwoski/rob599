@@ -4,4 +4,4 @@ CFLAGS += -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable
 #CFLAGS += -fsanitize=address -fsanitize=undefined
 
 helloworlds: helloworlds.c
-	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread -O3
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
