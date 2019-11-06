@@ -21,5 +21,4 @@ int main(int argc, char *argv[]) {
         pthread_join(thread_infos[i].thread, NULL);
     }
     return 0;
-
 }
