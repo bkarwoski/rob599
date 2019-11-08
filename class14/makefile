@@ -5,3 +5,6 @@ CFLAGS += -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable
 
 helloworlds: helloworlds.c
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
+
+parallelhashcomp: parallelhashcomp.c hash.c
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread
