@@ -5,7 +5,7 @@ typedef struct hashtable_entry hashtable_entry_t;
 
 typedef struct hashtable hashtable_t;
 
-hashtable_t *hashtable_create(void);
+hashtable_t *hashtable_create(int tableSize);
 void hashtable_destroy(hashtable_t *ht);
 
 // Inserts or modifies the value associated with key
