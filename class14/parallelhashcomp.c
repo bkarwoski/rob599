@@ -19,8 +19,8 @@ typedef struct thread_info {
     pthread_t thread;
     int n_entries;
     test_entry_t *entries;
-    uint32_t (*hash_f)(uint8_t *, int);
-    uint32_t (*reduce_f)(uint32_t);
+    uint32_t (*hash_f)(uint8_t *data, int n);
+    uint32_t (*reduce_f)(uint32_t hash);
     double timePerLoop;
     int collisionCount;
 } thread_info_t;
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
                            &thread_infos[activeThreadCount]);
             activeThreadCount++;
             if (activeThreadCount >= nThreads || (hash_i == n_hash_functions - 1 &&
-                reduce_i == n_reduce_functions - 1)) {
+                                                  reduce_i == n_reduce_functions - 1)) {
                 //printf("threads filled\n");
                 for (int z = 0; z < activeThreadCount; z++) {
                     pthread_join(thread_infos[z].thread, NULL);

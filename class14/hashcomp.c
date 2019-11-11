@@ -38,7 +38,8 @@ void evaluate_hash_reduce(int n_entries, test_entry_t *entries,
             collisionCount += hashVals[i] - 1;
         }
     }
-    double timePerLoop = ((double)end - (double)start) / (double)CLOCKS_PER_SEC / loopCount * 1e9 / n_entries;
+    double timePerLoop = ((double)end - (double)start) /
+                          (double)CLOCKS_PER_SEC / loopCount * 1e9 / n_entries;
     printf("%.2fns per iteration with %d collisions\n", timePerLoop, collisionCount);
 }
 
