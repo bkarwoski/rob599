@@ -10,8 +10,6 @@
 #define TABLE_SIZE 8192
 #define MAX_LINE_LENGTH 256
 
-
-
 typedef struct test_entry {
     uint8_t *data;
     int n;
@@ -86,7 +84,6 @@ uint32_t fibonacci32_reduce(uint32_t hash) {
     return (uint32_t)(hash * factor32) >> (32 - 13);
 }
 
-
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         fprintf(stderr, "usage: %s <number of threads>\n", argv[0]);
@@ -136,8 +133,8 @@ int main(int argc, char *argv[]) {
             pthread_create(&thread_infos[activeThreadCount].thread, NULL, thread_start,
                            &thread_infos[activeThreadCount]);
             activeThreadCount++;
-            if (activeThreadCount >= nThreads || (hash_i == n_hash_functions - 1 
-                && reduce_i == n_reduce_functions - 1)) {
+            if (activeThreadCount >= nThreads || (hash_i == n_hash_functions - 1 &&
+                reduce_i == n_reduce_functions - 1)) {
                 //printf("threads filled\n");
                 for (int z = 0; z < activeThreadCount; z++) {
                     pthread_join(thread_infos[z].thread, NULL);
@@ -145,7 +142,7 @@ int main(int argc, char *argv[]) {
                            thread_infos[z].timePerLoop, thread_infos[z].collisionCount);
                 }
                 activeThreadCount = 0;
-            }   
+            }
         }
         printf("\n");
     }
