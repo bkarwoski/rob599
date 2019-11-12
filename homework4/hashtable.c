@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "hashtable.h"
 #include <stdbool.h>
 #include <math.h>
@@ -100,5 +101,4 @@ bool hashtable_probe(hashtable_t *ht, int i, char **key, int *val) {
 void hashtable_destroy(hashtable_t *ht) {
     free(ht->mainTable);
     free(ht);
-    for ()
 }
