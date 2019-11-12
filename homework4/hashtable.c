@@ -58,14 +58,15 @@ int evaluate_collision_count(hashtable_t *ht) {
 }
 
 void hashtable_set(hashtable_t *ht, char *key, int value) {
-    int hashVal = fibonacci32_reduce(fxhash32_hash((uint8_t *)key,
-                                     strlen(key)), (int)log2(ht->tableSize));
+
     if (ht->distinctKeyCount / (double)ht->tableSize >= 0.5) {
         int prevCollisions = evaluate_collision_count(ht);
         hashtable_grow(ht);
         int postCollisions = evaluate_collision_count(ht);
         printf("Rehashing reduced collisions from %d to %d\n", prevCollisions, postCollisions);
     }
+    int hashVal = fibonacci32_reduce(fxhash32_hash((uint8_t *)key,
+                                     strlen(key)), (int)log2(ht->tableSize));
     while (true) {
         //if slot empty
         if (!ht->mainTable[hashVal].key) {
