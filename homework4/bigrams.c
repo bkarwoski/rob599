@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     // hashtable_destroy(ht);
 
 
-    char *file = "book.txt";
+    char *file = "words.txt";
     FILE *f = fopen(file, "r");
     if (!f) {
         fprintf(stderr, "Failed to open %s: ", file);
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
         char *key = " ";
         int val = 0;
         if (hashtable_probe(ht, i, &key, &val)) {
-            printf("Bigram %s has count of %d\n", key, val);
+            printf("Bigram '%s' has count of %d\n", key, val);
         }
     }
     for (int i = 0; i < hashtable_probe_max(ht); i++) {
