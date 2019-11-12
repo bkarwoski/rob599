@@ -12,7 +12,7 @@ bool read_word(FILE *f, char *word, int wordLength) {
     bool isEOF = false;
     char next = ' ';
     int word_i = 0;
-    while(true) {
+    while (true) {
         next = fgetc(f);
         if (next == EOF) {
             //printf("EOF\n");
@@ -35,18 +35,6 @@ bool read_word(FILE *f, char *word, int wordLength) {
 }
 
 int main(int argc, char* argv[]) {
-    
-    //testing set and get
-    // hashtable_t *ht = hashtable_create(128);
-    // char *testBigram = strdup("as we"); // malloc'ed memory for the string literal
-    // hashtable_set(ht, testBigram, 1);
-    // int count = 0;
-    // hashtable_get(ht, testBigram, &count); // count will stay 0 if bigram isn't in ht
-    // printf("Count for bigram '%s' is %d\n", testBigram, count);
-    // free(testBigram);
-    // hashtable_destroy(ht);
-
-
     char *file = "book.txt";
     if (argc > 1) {
         file = argv[1];
@@ -69,7 +57,7 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        snprintf(bigram, 2*MAX_WORD_LENGTH, "%s %s", word, nextWord);
+        snprintf(bigram, 2 * MAX_WORD_LENGTH, "%s %s", word, nextWord);
         //printf("%s\n", bigram);
         int bigramCount = 0;
         hashtable_get(ht, bigram, &bigramCount);
