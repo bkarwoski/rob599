@@ -97,13 +97,16 @@ int main(int argc, char* argv[]) {
             printf("Bigram '%s' has count of %d\n", key, val);
         }
     }
+    int bigramCount = 0;
     for (int i = 0; i < hashtable_probe_max(ht); i++) {
         char *key = " ";
         int val = 0;
         if (hashtable_probe(ht, i, &key, &val)) {
+            bigramCount++;
             free(key);
         }
     }
+    printf("Total of %d different bigrams recorded\n", bigramCount);
     }
     free(word);
     free(nextWord);
