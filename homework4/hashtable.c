@@ -39,7 +39,7 @@ void hashtable_set(hashtable_t *ht, char *key, int value) {
     while (true) {
         //if slot empty
         if (!ht->mainTable[hashVal].key) {
-            ht->mainTable[hashVal].key = key;
+            ht->mainTable[hashVal].key = strdup(key);
             ht->mainTable[hashVal].n = value;
             ht->distinctKeyCount++;
             return;
@@ -89,17 +89,16 @@ int hashtable_probe_max(hashtable_t *ht) {
 }
 
 bool hashtable_probe(hashtable_t *ht, int i, char **key, int *val) {
-    //for (int i = 0; i < hashtable_probe_max(ht); i++) {
     if (!ht->mainTable[i].key) {
         return false;
     }
     *key = ht->mainTable[i].key;
     *val = ht->mainTable[i].n;
-    //}
     return true;
 }
 
 void hashtable_destroy(hashtable_t *ht) {
     free(ht->mainTable);
     free(ht);
+    for ()
 }

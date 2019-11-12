@@ -1,9 +1,12 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include "hashtable.h"
 #define MAX_WORD_LENGTH 256
+#define MAX_KEY_SIZE 256
 
 bool read_word(FILE *f, char *word, int wordLength) {
     bool isEOF = false;
@@ -32,17 +35,22 @@ bool read_word(FILE *f, char *word, int wordLength) {
 }
 
 int main(int argc, char* argv[]) {
+    
+    //testing set and get
+    // hashtable_t *ht = hashtable_create(128);
+    // char *testBigram = strdup("as we"); // malloc'ed memory for the string literal
+    // hashtable_set(ht, testBigram, 1);
+    // int count = 0;
+    // hashtable_get(ht, testBigram, &count); // count will stay 0 if bigram isn't in ht
+    // printf("Count for bigram '%s' is %d\n", testBigram, count);
+    // free(testBigram);
+    // hashtable_destroy(ht);
+
+
     hashtable_t *ht = hashtable_create(128);
-    char *key = "apple";
-    int value = 100;
-    hashtable_set(ht, key, value);
-    value = 99;
-    hashtable_get(ht, key, &value);
-    printf("%d\n", value);
-    hashtable_destroy(ht);
-    FILE *f = fopen("test_book.txt", "r");
+    FILE *f = fopen("words.txt", "r");
     if (!f) {
-        perror("Failed to open words.txt");
+        fprintf(stderr, "Failed to open words.txt: No such file or directory");
         return 1;
     }
     char *word = malloc(MAX_WORD_LENGTH);
@@ -54,14 +62,46 @@ int main(int argc, char* argv[]) {
         if (read_word(f, nextWord, MAX_WORD_LENGTH)) {
             break;
         }
+
         snprintf(bigram, 2*MAX_WORD_LENGTH, "%s %s", word, nextWord);
-        printf("%s\n", bigram);
+        //printf("%s\n", bigram);
+        int bigramCount = 0;
+        hashtable_get(ht, bigram, &bigramCount);
+        bigramCount++;
+        hashtable_set(ht, bigram, bigramCount);
         tmp = word;
         word = nextWord;
         nextWord = tmp;
     }
+    bool exceeds200 = false;
+    for (int i = 0; i < hashtable_probe_max(ht); i++) {
+        char *key = " ";
+        int val = 0;
+        hashtable_probe(ht, i, &key, &val);
+        if (val >= 200) {
+            printf("Bigram %s has count of %d\n", key, val);
+            exceeds200 = true;
+        }
+    }
+    if (!exceeds200) {
+        for (int i = 0; i < hashtable_probe_max(ht); i++) {
+        char *key = " ";
+        int val = 0;
+        if (hashtable_probe(ht, i, &key, &val);) {
+            printf("Bigram %s has count of %d\n", key, val);
+        }
+    }
+    for (int i = 0; i < hashtable_probe_max(ht); i++) {
+        char *key = " ";
+        int val = 0;
+        if (hashtable_probe(ht, i, &key, &val);) {
+            free(ht->mainTable[i].key;
+        }
+    }
+    }
     free(word);
     free(nextWord);
     free(bigram);
+    hashtable_destroy(ht);
     return 0;
 }
