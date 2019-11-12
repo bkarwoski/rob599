@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     // hashtable_destroy(ht);
 
 
-    char *file = "words.txt";
+    char *file = "book.txt";
     FILE *f = fopen(file, "r");
     if (!f) {
         fprintf(stderr, "Failed to open %s: ", file);
