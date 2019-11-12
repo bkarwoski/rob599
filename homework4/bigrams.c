@@ -32,14 +32,14 @@ bool read_word(FILE *f, char *word, int wordLength) {
 }
 
 int main(int argc, char* argv[]) {
-    // hashtable_t *ht = hashtable_create(128);
-    // char *key = "apple";
-    // int value = 100;
-    // hashtable_set(ht, key, value);
-    // value = 99;
-    // hashtable_get(ht, key, &value);
-    // printf("%d\n", value);
-    // hashtable_destroy(ht);
+    hashtable_t *ht = hashtable_create(128);
+    char *key = "apple";
+    int value = 100;
+    hashtable_set(ht, key, value);
+    value = 99;
+    hashtable_get(ht, key, &value);
+    printf("%d\n", value);
+    hashtable_destroy(ht);
     FILE *f = fopen("test_book.txt", "r");
     if (!f) {
         perror("Failed to open words.txt");
