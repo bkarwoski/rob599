@@ -47,12 +47,14 @@ int main(int argc, char* argv[]) {
     // hashtable_destroy(ht);
 
 
-    hashtable_t *ht = hashtable_create(128);
-    FILE *f = fopen("words.txt", "r");
+    char *file = "words.txt";
+    FILE *f = fopen(file, "r");
     if (!f) {
-        fprintf(stderr, "Failed to open words.txt: No such file or directory");
+        fprintf(stderr, "Failed to open %s: ", file);
+        perror("");
         return 1;
     }
+    hashtable_t *ht = hashtable_create(128);
     char *word = malloc(MAX_WORD_LENGTH);
     char *nextWord = malloc(MAX_WORD_LENGTH);
     char *tmp;
