@@ -43,10 +43,11 @@ int evaluate_collision_count(hashtable_t *ht) {
     }
     int collisionCount = 0;
     for (int j = 0; j < ht->tableSize; j++) {
-        char* key = ht->mainTable[j].key;
+        char *key = ht->mainTable[j].key;
         if (key) {
-            uint32_t hash = fibonacci32_reduce(fxhash32_hash((uint8_t *)key, 
-                                               (int)strlen(key)), (int)log2(ht->tableSize));
+            uint32_t hash = fibonacci32_reduce(fxhash32_hash((uint8_t *)key,
+                                                             (int)strlen(key)),
+                                               (int)log2(ht->tableSize));
             hashVals[hash]++;
         }
     }
