@@ -4,4 +4,4 @@ CFLAGS += -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wfloat-c
 #CFLAGS += -fsanitize=address -fsanitize=undefined
 
 buffer: buffer.c
-	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread -O3
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread -O0
