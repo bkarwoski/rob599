@@ -257,12 +257,12 @@ int main(int argc, char *argv[]) {
             nanosleep(&interval, NULL);
         }
 
-        search_node_t search_node = {0};
-        search_node.chaser = state.chaser;
-        search_node.runner = state.runner;
-        search_node.depth = 0;
+        // search_node_t search_node = {0};
+        // search_node.chaser = state.chaser;
+        // search_node.runner = state.runner;
+        // search_node.depth = 0;
         int chosen_action = 0;
-        search_actions(search_node, &chosen_action);
+        //search_actions(search_node, &chosen_action);
         moveBot(&state.runner, runnerAction());
         moveBot(&state.chaser, chosen_action);
         printf("%d\n", chosen_action);
