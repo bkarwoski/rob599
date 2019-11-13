@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
     while (!producerFinished) {
         if (buffer_size > 0) {
             printf("%d\n", buffer[buffer_size-1]);
+            buffer_size--;
         }
     }
     pthread_join(producer, NULL);
