@@ -7,18 +7,14 @@
 #include <string.h>
 #include <time.h>
 #define BUFFER_CAPACITY 8
-int buffer[BUFFER_CAPACITY];
-int buffer_size = 0;
-bool producerFinished = false;
+volatile int buffer[BUFFER_CAPACITY];
+volatile int buffer_size = 0;
+volatile bool producerFinished = false;
 bool usingMutex = false;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
 struct timespec interval = {0, 1};
 
 void *producer_thread(void *user) {
-    // loop over all 30 messages, trying to put them on the stack
-    // only quit and set 'producer_finished = true' once ALL 30 messages
-    // have been sent
     int i = 0;
     while (i < 30) {
         if (buffer_size < 8) {
