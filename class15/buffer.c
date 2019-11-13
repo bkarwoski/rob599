@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     pthread_t producer;
     pthread_create(&producer, NULL, producer_thread, NULL);
     //consumer thread
-    while (!producerFinished) {
+    while (!producerFinished || buffer_size > 0) {
         if (buffer_size > 0) {
             if (usingMutex) {
                 pthread_mutex_lock(&mutex);
