@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
         int val = 0;
         hashtable_probe(ht, i, &key, &val);
         if (val >= 200) {
-            printf("Bigram %s has count of %d\n", key, val);
+            printf("Bigram '%s' has count of %d\n", key, val);
             exceeds200 = true;
         }
     }
