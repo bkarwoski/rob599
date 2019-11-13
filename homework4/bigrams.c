@@ -13,7 +13,7 @@ bool read_word(FILE *f, char *word, int wordLength) {
     char next = ' ';
     int word_i = 0;
     while (true) {
-        next = fgetc(f);
+        next = (char)fgetc(f);
         if (next == EOF) {
             //printf("EOF\n");
             //isEOF = true;
@@ -27,14 +27,14 @@ bool read_word(FILE *f, char *word, int wordLength) {
            word_i < wordLength) {
         word[word_i] = next;
         word_i++;
-        next = fgetc(f);
+        next = (char)fgetc(f);
     }
     word[word_i] = '\0';
     //return isEOF;
     return false;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     char *file = "book.txt";
     if (argc > 1) {
         file = argv[1];

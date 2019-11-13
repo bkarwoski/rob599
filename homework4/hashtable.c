@@ -43,8 +43,10 @@ int evaluate_collision_count(hashtable_t *ht) {
     }
     int collisionCount = 0;
     for (int j = 0; j < ht->tableSize; j++) {
-        if (ht->mainTable[j].key) {
-            uint32_t hash = fibonacci32_reduce(fxhash32_hash((uint8_t *)ht->mainTable[j].key, strlen(ht->mainTable[j].key)), (int)log2(ht->tableSize));
+        char* key = ht->mainTable[j].key;
+        if (key) {
+            uint32_t hash = fibonacci32_reduce(fxhash32_hash((uint8_t *)key, 
+                                               (int)strlen(key)), (int)log2(ht->tableSize));
             hashVals[hash]++;
         }
     }
@@ -57,14 +59,13 @@ int evaluate_collision_count(hashtable_t *ht) {
 }
 
 void hashtable_set(hashtable_t *ht, char *key, int value) {
-
     if (ht->distinctKeyCount / (double)ht->tableSize >= 0.5) {
         int prevCollisions = evaluate_collision_count(ht);
         hashtable_grow(ht);
         int postCollisions = evaluate_collision_count(ht);
         printf("Rehashing reduced collisions from %d to %d\n", prevCollisions, postCollisions);
     }
-    int hashVal = fibonacci32_reduce(fxhash32_hash((uint8_t *)key, strlen(key)),
+    int hashVal = fibonacci32_reduce(fxhash32_hash((uint8_t *)key, (int)strlen(key)),
                                      (int)log2(ht->tableSize));
     while (true) {
         //if slot empty
@@ -84,7 +85,7 @@ void hashtable_set(hashtable_t *ht, char *key, int value) {
 }
 
 bool hashtable_get(hashtable_t *ht, char *key, int *value) {
-    int hashVal = fibonacci32_reduce(fxhash32_hash((uint8_t *)key, strlen(key)),
+    int hashVal = fibonacci32_reduce(fxhash32_hash((uint8_t *)key, (int)strlen(key)),
                                      (int)log2(ht->tableSize));
     int count = 0;
     while (true) {
