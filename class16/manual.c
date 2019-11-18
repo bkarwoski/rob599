@@ -32,6 +32,7 @@
 #define MAP_W (1.0 * WIDTH / BLOCK_SIZE)
 #define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
 #define MAX_DEPTH 4
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct termios original_termios;
 void reset_terminal(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
@@ -93,15 +94,21 @@ void *io_thread(void *user) {
             if (c == 91) {
                 c = getc(stdin);
                 if (c == 65) {
-                    printf("up\n");
+                    //printf("up\n");
+                    pthread_mutex_lock(&mutex);
                     state->user_action = 1;
-                    printf("state->user_action = %d\n", state->user_action);
+                    pthread_mutex_unlock(&mutex);
+                    //printf("state->user_action = %d\n", state->user_action);
                 } else if (c == 68) {
-                    printf("left\n");
+                    //printf("left\n");
+                    pthread_mutex_lock(&mutex);
                     state->user_action = 2;
+                    pthread_mutex_unlock(&mutex);
                 } else if (c == 67) {
-                    printf("right\n");
+                    //printf("right\n");
+                    pthread_mutex_lock(&mutex);
                     state->user_action = 3;
+                    pthread_mutex_unlock(&mutex);
                 }
             }
         }
@@ -304,7 +311,7 @@ int main(int argc, char *argv[]) {
     }
 
     pthread_t userInput;
-    pthread_create(&userInput, NULL, io_thread, &userInput);
+    pthread_create(&userInput, NULL, io_thread, &state);
     while (true) {
         if (argc < 2) {
             updateGraphics(&state);
@@ -319,8 +326,12 @@ int main(int argc, char *argv[]) {
         //int chosen_action = 0;
         //search_actions(search_node, &chosen_action);
         //moveBot(&state.runner, runnerAction());
+        pthread_mutex_lock(&mutex);
         moveBot(&state.chaser, state.user_action);
+        pthread_mutex_unlock(&mutex);
         state.user_action = 0;
+        //printf("user action: %d\n", state.user_action);
+        //state.user_action = 0;
         printf("%.2f %.2f\n", state.chaser.vel, state.chaser.ang_vel);
         // if (robCollision(state.runner, state.chaser)) {
         //     exit(0);
