@@ -97,15 +97,14 @@ void *io_thread(void *user) {
                     state->user_action = 1;
                     printf("state->user_action = %d\n", state->user_action);
                 } else if (c == 68) {
-                    //printf("left\n");
+                    printf("left\n");
                     state->user_action = 2;
                 } else if (c == 67) {
-                    //printf("right\n");
+                    printf("right\n");
                     state->user_action = 3;
                 }
             }
         }
-
         //printf("%c: %d\n", c, c);
     }
 }
@@ -131,13 +130,13 @@ void drawMap(bitmap_t *bmp) {
 
 void updateGraphics(state_t *state) {
     color_bgr_t red = {0, 0, 255};
-    color_bgr_t green = {0, 255, 0};
+    //color_bgr_t green = {0, 255, 0};
     drawMap(&state->bmp);
-    vector_xy_t runPoints = gx_rob();
-    gx_rot(state->runner.theta, &runPoints);
-    gx_trans(state->runner.x, state->runner.y, &runPoints);
-    gx_fill_poly(&state->bmp, green, &runPoints);
-    vector_delete(&runPoints);
+    // vector_xy_t runPoints = gx_rob();
+    // gx_rot(state->runner.theta, &runPoints);
+    // gx_trans(state->runner.x, state->runner.y, &runPoints);
+    // gx_fill_poly(&state->bmp, green, &runPoints);
+    // vector_delete(&runPoints);
     vector_xy_t chasePoints = gx_rob();
     gx_rot(state->chaser.theta, &chasePoints);
     gx_trans(state->chaser.x, state->chaser.y, &chasePoints);
@@ -148,26 +147,26 @@ void updateGraphics(state_t *state) {
 int runnerAction(void) {
     int action = rand() % 20;
     if (action == 1 || action == 2) {
-        printf("%d ", action);
+        //printf("%d ", action);
         return action;
     }
     action = 0;
-    printf("%d ", action);
+    //printf("%d ", action);
     return action;
 }
 
 void applyAction(agent_t *bot, int action) {
     if (action == 1) {
-        bot->vel += 2;
+        bot->vel += 4;
         if (bot->vel > 12) {
             bot->vel = 12;
         }
     }
     if (action == 2) {
-        bot->ang_vel += M_PI / 16.0;
+        bot->ang_vel += M_PI / 32.0;
     }
     if (action == 3) {
-        bot->ang_vel -= M_PI / 16.0;
+        bot->ang_vel -= M_PI / 32.0;
     }
 }
 
@@ -275,57 +274,57 @@ double search_actions(search_node_t node, int *best_action) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 4) {
-        fprintf(stderr, "usage: %s <time steps> <fast=0|1|2> <initial runner index>\n", argv[0]);
-        return 1;
-    }
+    // if (argc != 4) {
+    //     fprintf(stderr, "usage: %s <time steps> <fast=0|1|2> <initial runner index>\n", argv[0]);
+    //     return 1;
+    // }
     int seconds = 0;
     long nanoseconds = 40 * 1000 * 1000;
     struct timespec interval = {seconds, nanoseconds};
-    int fast = atoi(argv[2]);
-    int runnerIndex = atoi(argv[3]);
+    //int fast = atoi(argv[2]);
+    //int runnerIndex = atoi(argv[3]);
     int chaserIndex = 97;
     state_t state = {0};
-    state.time_step = atoi(argv[1]);
+    //state.time_step = atoi(argv[1]);
     state.bmp.width = WIDTH;
     state.bmp.height = HEIGHT;
     state.bmp.data = calloc(state.bmp.width * state.bmp.height, sizeof(color_bgr_t));
     state.image_size = bmp_calculate_size(&state.bmp);
     state.image_data = malloc(state.image_size);
-    state.runner.x = BLOCK_SIZE / 2.0 + (runnerIndex % (int)MAP_W) * BLOCK_SIZE;
-    state.runner.y = BLOCK_SIZE / 2.0 + ((runnerIndex - runnerIndex % (int)MAP_W) / MAP_W) * BLOCK_SIZE;
-    state.runner.theta = 0;
-    state.runner.ang_vel = 0;
+    //state.runner.x = BLOCK_SIZE / 2.0 + (runnerIndex % (int)MAP_W) * BLOCK_SIZE;
+    //state.runner.y = BLOCK_SIZE / 2.0 + ((runnerIndex - runnerIndex % (int)MAP_W) / MAP_W) * BLOCK_SIZE;
+    //state.runner.theta = 0;
+    //state.runner.ang_vel = 0;
     state.chaser.x = WIDTH / 2.0;
     state.chaser.y = HEIGHT / 2.0;
     state.chaser.theta = 0;
     state.chaser.ang_vel = 0;
-    if (fast == 0) {
+    if (argc < 2) {
         image_server_start("8000");
     }
 
     pthread_t userInput;
     pthread_create(&userInput, NULL, io_thread, &userInput);
-    for (int i = 0; i < state.time_step; i++) {
-        if (fast == 0) {
+    while (true) {
+        if (argc < 2) {
             updateGraphics(&state);
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
             nanosleep(&interval, NULL);
         }
-
         // search_node_t search_node = {0};
         // search_node.chaser = state.chaser;
         // search_node.runner = state.runner;
         // search_node.depth = 0;
         //int chosen_action = 0;
         //search_actions(search_node, &chosen_action);
-        moveBot(&state.runner, runnerAction());
+        //moveBot(&state.runner, runnerAction());
         moveBot(&state.chaser, state.user_action);
-        printf("%d\n", state.user_action);
-        if (robCollision(state.runner, state.chaser)) {
-            exit(0);
-        }
+        state.user_action = 0;
+        printf("%.2f %.2f\n", state.chaser.vel, state.chaser.ang_vel);
+        // if (robCollision(state.runner, state.chaser)) {
+        //     exit(0);
+        // }
     }
     free(state.image_data);
     free(state.bmp.data);
