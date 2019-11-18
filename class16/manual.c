@@ -317,8 +317,8 @@ int main(int argc, char *argv[]) {
             updateGraphics(&state);
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
-            nanosleep(&interval, NULL);
         }
+        nanosleep(&interval, NULL);
         // search_node_t search_node = {0};
         // search_node.chaser = state.chaser;
         // search_node.runner = state.runner;
