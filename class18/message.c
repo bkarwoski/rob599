@@ -4,7 +4,7 @@
 
 void on_l2g(const lcm_recv_buf_t *rbuf, const char *channel,
             const l2g_t *msg, void *userdata) {
-                printf("%.2f %.2f %.2f\n", msg->l2g[0], msg->l2g[1], msg->l2g[2]);
+    printf("%.2f %.2f %.2f\n", msg->l2g[0], msg->l2g[1], msg->l2g[2]);
 }
 
 int main(void) {
