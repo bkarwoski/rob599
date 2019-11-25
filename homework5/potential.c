@@ -59,11 +59,11 @@ typedef struct state {
     agent_t chaser;
     int init_runner_idx;
     int delay_every;
-    int to_goal_magnitude;
-    int to_goal_power;
-    int avoid_obs_magnitude;
-    int avoid_obs_power;
-    int max_velocity;
+    double to_goal_magnitude;
+    double to_goal_power;
+    double avoid_obs_magnitude;
+    double avoid_obs_power;
+    double max_velocity;
 } state_t;
 
 void *io_thread(void *user) {
@@ -247,8 +247,8 @@ void field_control(state_t *s) {
     double wall_r = sqrt(BLOCK_SIZE / sqrt(2));
     double fx = 0;
     double fy = 0;
-    double dx = s->chaser.x - s->runner.x;
-    double dy = s->chaser.y - s->runner.y;
+    double dx = s->runner.x - s->chaser.x;
+    double dy = s->runner.y - s->chaser.y;
     double to_goal_dist = sqrt(dx * dx + dy * dy);
     double dx_norm = dx / to_goal_dist;
     double dy_norm = dy / to_goal_dist;
@@ -261,18 +261,18 @@ void field_control(state_t *s) {
             if (MAP[i] == 'X') {
                 double bx = BLOCK_SIZE * (x + 0.5);
                 double by = BLOCK_SIZE * (y + 0.5);
-                double obs_center_dist = sqrt(pow(s->chaser.x - bx, 2) + pow(s->chaser.y -                                                                       by, 2));
+                double obs_center_dist = sqrt(pow(s->chaser.x - bx, 2) + pow(s->chaser.y - by, 2));
                 double to_obs_dist = obs_center_dist - robot_r - wall_r;
                 to_obs_dist = fmax(0.1, to_obs_dist);
                 double to_chaserx = (s->chaser.x - bx) / obs_center_dist;
                 double to_chasery = (s->chaser.y - by) / obs_center_dist;
                 fx += to_chaserx * s->avoid_obs_magnitude * pow(to_obs_dist, s->avoid_obs_power);
-                fx += to_chasery * s->avoid_obs_magnitude * pow(to_obs_dist, s->avoid_obs_power);
+                fy += to_chasery * s->avoid_obs_magnitude * pow(to_obs_dist, s->avoid_obs_power);
             }
         }
     }
-    double target_theta = atan2(fy, fx);
-    double theta_error = target_theta - s->runner.theta;
+    double target_theta = atan2(-fy, fx);
+    double theta_error = target_theta - s->chaser.theta;
     theta_error = fmod(theta_error + M_PI, 2 * M_PI) - M_PI;
     s->chaser.ang_vel = 0.4 * theta_error;
     if (s->chaser.ang_vel > M_PI / 16) {
@@ -288,13 +288,13 @@ int main(int argc, char *argv[]) {
     int seconds = 0;
     long nanoseconds = 40 * 1000 * 1000;
     struct timespec interval = {seconds, nanoseconds};
-    int chaserIndex = 97;
+    //int chaserIndex = 97;
     state_t state = {0};
     state.init_runner_idx = 17;
     state.delay_every = 1;
     state.to_goal_magnitude = 50.0;
     state.to_goal_power = 0;
-    state.avoid_obs_magnitude = 1.0;
+    state.avoid_obs_magnitude = 1;
     state.avoid_obs_power = -2;
     state.max_velocity = 12;
     state.bmp.width = WIDTH;
@@ -322,6 +322,10 @@ int main(int argc, char *argv[]) {
         }
         nanosleep(&interval, NULL);
         moveBot(&state.runner, runnerAction());
+        // if (state.time_step == 4) {
+        //     //for gdb
+        //     printf("time_step = %d\n", state.time_step);
+        // }
         field_control(&state);
         //pthread_mutex_lock(&mutex);
         moveBot(&state.chaser, state.user_action);
