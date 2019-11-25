@@ -144,26 +144,23 @@ void updateGraphics(state_t *state) {
 int runnerAction(void) {
     int action = rand() % 20;
     if (action == 1 || action == 2) {
-        //printf("%d ", action);
         return action;
     }
-    action = 0;
-    //printf("%d ", action);
-    return action;
+    return 0;
 }
 
 void applyAction(agent_t *bot, int action) {
     if (action == 1) {
-        bot->vel += 4;
+        bot->vel += 2;
         if (bot->vel > 12) {
             bot->vel = 12;
         }
     }
     if (action == 2) {
-        bot->ang_vel += M_PI / 32.0;
+        bot->ang_vel += M_PI / 16.0;
     }
     if (action == 3) {
-        bot->ang_vel -= M_PI / 32.0;
+        bot->ang_vel -= M_PI / 16.0;
     }
 }
 
@@ -242,9 +239,9 @@ void moveBot(agent_t *bot, int action) {
 
 void field_control(state_t *s) {
     double height = 20;
-    double width = height * 4 / 3;
+    double width = height * 4 / 3.0;
     double robot_r = sqrt((height / 2) * (height / 2) + (width / 2 * width / 2));
-    double wall_r = sqrt(BLOCK_SIZE / sqrt(2));
+    double wall_r = BLOCK_SIZE / sqrt(2);
     double fx = 0;
     double fy = 0;
     double dx = s->runner.x - s->chaser.x;
@@ -273,7 +270,12 @@ void field_control(state_t *s) {
     }
     double target_theta = atan2(-fy, fx);
     double theta_error = target_theta - s->chaser.theta;
-    theta_error = fmod(theta_error + M_PI, 2 * M_PI) - M_PI;
+    if (theta_error > M_PI) {
+        theta_error -= 2* M_PI;
+    }
+    if (theta_error < -M_PI) {
+        theta_error += 2 * M_PI;
+    }
     s->chaser.ang_vel = 0.4 * theta_error;
     if (s->chaser.ang_vel > M_PI / 16) {
         s->chaser.ang_vel = M_PI / 16;
@@ -285,12 +287,12 @@ void field_control(state_t *s) {
 }
 
 int main(int argc, char *argv[]) {
+    srand(0);
     int seconds = 0;
     long nanoseconds = 40 * 1000 * 1000;
     struct timespec interval = {seconds, nanoseconds};
-    //int chaserIndex = 97;
     state_t state = {0};
-    state.init_runner_idx = 17;
+    state.init_runner_idx = 86;
     state.delay_every = 1;
     state.to_goal_magnitude = 50.0;
     state.to_goal_power = 0;
@@ -321,7 +323,6 @@ int main(int argc, char *argv[]) {
             image_server_set_data(state.image_size, state.image_data);
         }
         nanosleep(&interval, NULL);
-        moveBot(&state.runner, runnerAction());
         // if (state.time_step == 4) {
         //     //for gdb
         //     printf("time_step = %d\n", state.time_step);
@@ -329,8 +330,8 @@ int main(int argc, char *argv[]) {
         field_control(&state);
         //pthread_mutex_lock(&mutex);
         moveBot(&state.chaser, state.user_action);
+        moveBot(&state.runner, runnerAction());
         //pthread_mutex_unlock(&mutex);
-        state.user_action = 0;
         //printf("user action: %d\n", state.user_action);
         //state.user_action = 0;
         printf("%.2f %.2f\n", state.chaser.vel, state.chaser.ang_vel);
