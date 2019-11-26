@@ -66,45 +66,7 @@ typedef struct state {
     double max_velocity;
 } state_t;
 
-void *io_thread(void *user) {
-    state_t *state = user;
-    tcgetattr(0, &original_termios);
-    atexit(reset_terminal);
-    struct termios new_termios;
-    memcpy(&new_termios, &original_termios, sizeof(new_termios));
-    new_termios.c_lflag &= ~(ECHO | ICANON);
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
-    while (true) {
-        int c = getc(stdin);
-        if (c == 'q') {
-            exit(0);
-        }
-        if (c == 27) {
-            c = getc(stdin);
-            if (c == 91) {
-                c = getc(stdin);
-                if (c == 65) {
-                    //printf("up\n");
-                    pthread_mutex_lock(&mutex);
-                    state->user_action = 1;
-                    pthread_mutex_unlock(&mutex);
-                    //printf("state->user_action = %d\n", state->user_action);
-                } else if (c == 68) {
-                    //printf("left\n");
-                    pthread_mutex_lock(&mutex);
-                    state->user_action = 2;
-                    pthread_mutex_unlock(&mutex);
-                } else if (c == 67) {
-                    //printf("right\n");
-                    pthread_mutex_lock(&mutex);
-                    state->user_action = 3;
-                    pthread_mutex_unlock(&mutex);
-                }
-            }
-        }
-        //printf("%c: %d\n", c, c);
-    }
-}
+
 
 void drawMap(bitmap_t *bmp) {
     color_bgr_t black = {0, 0, 0};
@@ -286,33 +248,86 @@ void field_control(state_t *s) {
     s->chaser.vel = fmin(s->max_velocity, s->chaser.vel + 2.0);
 }
 
-int main(int argc, char *argv[]) {
+void reset_sim(state_t *s) {
     srand(0);
+    s->runner.x = BLOCK_SIZE / 2.0 + (s->init_runner_idx % (int)MAP_W) * BLOCK_SIZE;
+    s->runner.y = BLOCK_SIZE / 2.0 + ((s->init_runner_idx - s->init_runner_idx % (int)MAP_W) / MAP_W) * BLOCK_SIZE;
+    s->runner.theta = 0;
+    s->runner.ang_vel = 0;
+    s->chaser.x = WIDTH / 2.0;
+    s->chaser.y = HEIGHT / 2.0;
+    s->chaser.theta = 0;
+    s->chaser.ang_vel = 0;
+    s->time_step = 0;
+}
+
+void setup_sim(state_t *s) {
+    s->init_runner_idx = 17;
+    s->delay_every = 1;
+    s->to_goal_magnitude = 50.0;
+    s->to_goal_power = 0;
+    s->avoid_obs_magnitude = 1;
+    s->avoid_obs_power = -2;
+    s->max_velocity = 12;
+    s->bmp.width = WIDTH;
+    s->bmp.height = HEIGHT;
+    s->bmp.data = calloc(s->bmp.width * s->bmp.height, sizeof(color_bgr_t));
+    s->image_size = bmp_calculate_size(&s->bmp);
+    s->image_data = malloc(s->image_size);
+    reset_sim(s);
+}
+
+void *io_thread(void *user) {
+    state_t *state = user;
+    tcgetattr(0, &original_termios);
+    atexit(reset_terminal);
+    struct termios new_termios;
+    memcpy(&new_termios, &original_termios, sizeof(new_termios));
+    new_termios.c_lflag &= ~(ECHO | ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+    while (true) {
+        int c = getc(stdin);
+        if (c == 'q') {
+            exit(0);
+        }
+        if (c == 'r') {
+            reset_sim(state);
+        }
+        if (c == 27) {
+            c = getc(stdin);
+            if (c == 91) {
+                c = getc(stdin);
+                if (c == 65) {
+                    //printf("up\n");
+                    pthread_mutex_lock(&mutex);
+                    state->user_action = 1;
+                    pthread_mutex_unlock(&mutex);
+                    //printf("state->user_action = %d\n", state->user_action);
+                } else if (c == 68) {
+                    //printf("left\n");
+                    pthread_mutex_lock(&mutex);
+                    state->user_action = 2;
+                    pthread_mutex_unlock(&mutex);
+                } else if (c == 67) {
+                    //printf("right\n");
+                    pthread_mutex_lock(&mutex);
+                    state->user_action = 3;
+                    pthread_mutex_unlock(&mutex);
+                }
+            }
+        }
+        //printf("%c: %d\n", c, c);
+    }
+}
+
+int main(int argc, char *argv[]) {
     int seconds = 0;
     long nanoseconds = 40 * 1000 * 1000;
     struct timespec interval = {seconds, nanoseconds};
     state_t state = {0};
-    state.init_runner_idx = 86;
-    state.delay_every = 1;
-    state.to_goal_magnitude = 50.0;
-    state.to_goal_power = 0;
-    state.avoid_obs_magnitude = 1;
-    state.avoid_obs_power = -2;
-    state.max_velocity = 12;
-    state.bmp.width = WIDTH;
-    state.bmp.height = HEIGHT;
-    state.bmp.data = calloc(state.bmp.width * state.bmp.height, sizeof(color_bgr_t));
-    state.image_size = bmp_calculate_size(&state.bmp);
-    state.image_data = malloc(state.image_size);
-    state.runner.x = BLOCK_SIZE / 2.0 + (state.init_runner_idx % (int)MAP_W) * BLOCK_SIZE;
-    state.runner.y = BLOCK_SIZE / 2.0 + ((state.init_runner_idx - state.init_runner_idx % (int)MAP_W) / MAP_W) * BLOCK_SIZE;
-    state.runner.theta = 0;
-    state.runner.ang_vel = 0;
-    state.chaser.x = WIDTH / 2.0;
-    state.chaser.y = HEIGHT / 2.0;
-    state.chaser.theta = 0;
-    state.chaser.ang_vel = 0;
-    
+    setup_sim(&state);
+    pthread_t userInput;
+    pthread_create(&userInput, NULL, io_thread, &state);
     if (argc < 2) {
         image_server_start("8000");
     }
