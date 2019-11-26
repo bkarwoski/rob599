@@ -32,11 +32,16 @@
 #define MAP_W (1.0 * WIDTH / BLOCK_SIZE)
 #define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
 #define MAX_DEPTH 4
+#define ROB_HEIGHT 20
+#define HL_ON "\e[7m"
+#define HL_OFF "\e[0m"
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct termios original_termios;
 
 void reset_terminal(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
+    //reactivate blinking cursor
+    printf("\e[?25h\n");
 }
 
 typedef struct agent {
@@ -59,18 +64,16 @@ typedef struct state {
     agent_t chaser;
     int init_runner_idx;
     int delay_every;
+    int select_idx;
     double to_goal_magnitude;
-    double to_goal_power;
+    int to_goal_power;
     double avoid_obs_magnitude;
-    double avoid_obs_power;
-    double max_velocity;
+    int avoid_obs_power;
+    int max_velocity;
 } state_t;
-
-
 
 void drawMap(bitmap_t *bmp) {
     color_bgr_t black = {0, 0, 0};
-    color_bgr_t yellow = {0, 255, 255};
     color_bgr_t white = {255, 255, 255};
     for (int i = 0; i < bmp->width * bmp->height; i++) {
         bmp->data[i] = white;
@@ -130,7 +133,7 @@ bool resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
     double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
-    double rRadius = sqrt(pow((4.0 / 3 * 20), 2) + 10 * 10) / 2.0;
+    double rRadius = sqrt(pow((4.0 / 3 * ROB_HEIGHT), 2) + 10 * 10) / 2.0;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
     while (any_collision) {
         any_collision = false;
@@ -163,7 +166,7 @@ bool resolveWallCollisions(agent_t *bot) {
                             //    rob.xData[0], rob.xData[1], rob.xData[2]);
                             //printf("ys: %.2f, %.2f, %.2f\n",
                             //    rob.yData[0], rob.yData[1], rob.yData[2]);
-                            isCollided = collision(&nextBlock, &rob);
+                            //isCollided = collision(&nextBlock, &rob);
                         }
                         vector_delete(&nextBlock);
                         vector_delete(&rob);
@@ -200,7 +203,7 @@ void moveBot(agent_t *bot, int action) {
 }
 
 void field_control(state_t *s) {
-    double height = 20;
+    double height = ROB_HEIGHT;
     double width = height * 4 / 3.0;
     double robot_r = sqrt((height / 2) * (height / 2) + (width / 2 * width / 2));
     double wall_r = BLOCK_SIZE / sqrt(2);
@@ -214,9 +217,9 @@ void field_control(state_t *s) {
     fx += dx_norm * s->to_goal_magnitude * pow(to_goal_dist, s->to_goal_power);
     fy += dy_norm * s->to_goal_magnitude * pow(to_goal_dist, s->to_goal_power);
 
-    for (int x = 0; x < MAP_W; x++) {
-        for (int y = 0; y < MAP_H; y++) {
-            int i = x + MAP_W * y;
+    for (int x = 0; x < (int)MAP_W; x++) {
+        for (int y = 0; y < (int)MAP_H; y++) {
+            int i = x + (int)MAP_W * y;
             if (MAP[i] == 'X') {
                 double bx = BLOCK_SIZE * (x + 0.5);
                 double by = BLOCK_SIZE * (y + 0.5);
@@ -233,7 +236,7 @@ void field_control(state_t *s) {
     double target_theta = atan2(-fy, fx);
     double theta_error = target_theta - s->chaser.theta;
     if (theta_error > M_PI) {
-        theta_error -= 2* M_PI;
+        theta_error -= 2 * M_PI;
     }
     if (theta_error < -M_PI) {
         theta_error += 2 * M_PI;
@@ -251,19 +254,22 @@ void field_control(state_t *s) {
 void reset_sim(state_t *s) {
     srand(0);
     s->runner.x = BLOCK_SIZE / 2.0 + (s->init_runner_idx % (int)MAP_W) * BLOCK_SIZE;
-    s->runner.y = BLOCK_SIZE / 2.0 + ((s->init_runner_idx - s->init_runner_idx % (int)MAP_W) / MAP_W) * BLOCK_SIZE;
+    s->runner.y = BLOCK_SIZE / 2.0 + ((s->init_runner_idx - s->init_runner_idx % (int)MAP_W) /
+                                      MAP_W) * BLOCK_SIZE;
     s->runner.theta = 0;
     s->runner.ang_vel = 0;
+    s->runner.vel = 0;
     s->chaser.x = WIDTH / 2.0;
     s->chaser.y = HEIGHT / 2.0;
     s->chaser.theta = 0;
     s->chaser.ang_vel = 0;
+    s->chaser.vel = 0;
     s->time_step = 0;
 }
 
 void setup_sim(state_t *s) {
     s->init_runner_idx = 17;
-    s->delay_every = 1;
+    s->delay_every = 3;
     s->to_goal_magnitude = 50.0;
     s->to_goal_power = 0;
     s->avoid_obs_magnitude = 1;
@@ -274,10 +280,13 @@ void setup_sim(state_t *s) {
     s->bmp.data = calloc(s->bmp.width * s->bmp.height, sizeof(color_bgr_t));
     s->image_size = bmp_calculate_size(&s->bmp);
     s->image_data = malloc(s->image_size);
+    s->select_idx = 0;
     reset_sim(s);
 }
 
 void *io_thread(void *user) {
+    //deactivate blinking cursor
+    printf("\e[?25l\n"); 
     state_t *state = user;
     tcgetattr(0, &original_termios);
     atexit(reset_terminal);
@@ -297,27 +306,137 @@ void *io_thread(void *user) {
             c = getc(stdin);
             if (c == 91) {
                 c = getc(stdin);
-                if (c == 65) {
-                    //printf("up\n");
-                    pthread_mutex_lock(&mutex);
+                if (c == 'A') {
+                    //up
                     state->user_action = 1;
-                    pthread_mutex_unlock(&mutex);
-                    //printf("state->user_action = %d\n", state->user_action);
-                } else if (c == 68) {
-                    //printf("left\n");
-                    pthread_mutex_lock(&mutex);
+                } else if (c == 'B') {
+                    //down
                     state->user_action = 2;
-                    pthread_mutex_unlock(&mutex);
-                } else if (c == 67) {
-                    //printf("right\n");
-                    pthread_mutex_lock(&mutex);
+                } else if (c == 'C') {
+                    //right
                     state->user_action = 3;
-                    pthread_mutex_unlock(&mutex);
+                } else if (c == 'D') {
+                    //left
+                    state->user_action = 4;
                 }
             }
         }
         //printf("%c: %d\n", c, c);
     }
+}
+
+void disp_interface(state_t *s) {
+    if (s->user_action == 3) {
+        s->select_idx++; //update to wraparound
+        s->user_action = 0;
+    }
+    if (s->user_action == 4) {
+        s->select_idx--;
+        s->user_action = 0;
+    }
+    if (s->user_action == 1) {
+        s->user_action = 0;
+        if (s->select_idx == 0) {
+            s->init_runner_idx++;
+            while (MAP[s->init_runner_idx] == 'X') {
+                s->init_runner_idx++;
+            }
+        }
+        if (s->select_idx == 1) {
+            s->user_action = 0;
+            s->delay_every++;
+        }
+        if (s->select_idx == 2) {
+            s->user_action = 0;
+            s->to_goal_magnitude *= 2;
+        }
+        if (s->select_idx == 3) {
+            s->user_action = 0;
+            if (s->to_goal_power <= 2) {
+                s->to_goal_power++;
+            }
+        }
+        if (s->select_idx == 4) {
+            s->user_action = 0;
+            s->avoid_obs_magnitude *= 2;
+        }
+        if (s->select_idx == 5) {
+            s->user_action = 0;
+            if (s->avoid_obs_power <= 2) {
+                s->avoid_obs_power++;
+            }
+        }
+        if (s->select_idx == 6) {
+            s->user_action = 0;
+            if (s->max_velocity <= 11) {
+                s->max_velocity++;
+            }
+        }
+    }
+
+    if (s->user_action == 2) {
+        s->user_action = 0;
+        if (s->select_idx == 0) {
+            s->init_runner_idx--;
+            while (MAP[s->init_runner_idx] == 'X') {
+                s->init_runner_idx--;
+            }
+        }
+        if (s->select_idx == 1) {
+            s->user_action = 0;
+            if (s->delay_every > 1){
+                s->delay_every--;
+            }
+        }
+        if (s->select_idx == 2) {
+            s->user_action = 0;
+            s->to_goal_magnitude /= 2;
+        }
+        if (s->select_idx == 3) {
+            s->user_action = 0;
+            if (s->to_goal_power >= -2) {
+                s->to_goal_power--;
+            }
+        }
+        if (s->select_idx == 4) {
+            s->user_action = 0;
+            s->avoid_obs_magnitude /= 2;
+        }
+        if (s->select_idx == 5) {
+            s->user_action = 0;
+            if (s->avoid_obs_power >= -2) {
+                s->avoid_obs_power--;
+            }
+        }
+        if (s->select_idx == 6) {
+            s->user_action = 0;
+            if (s->max_velocity > 1) {
+                s->max_velocity--;
+            }
+        }
+    }
+    //printf("\r %stesting%s index = %d", HL_ON, HL_OFF, s->select_idx);
+    printf("\ridx=");
+    printf("%s%d%s", s->select_idx == 0 ? HL_ON : "", s->init_runner_idx, HL_OFF);
+    //printf("%s%8.2f%s", goal_mag_selected ? HIGHLIGHT : "", to_goal_magnitude, CLEAR_HIGHLIGHT);
+    printf(" delay_every=");
+    printf("%s%d%s", s->select_idx == 1 ? HL_ON : "", s->delay_every, HL_OFF);
+
+    printf(" to_goal_mag=");
+    printf("%s%4.2f%s", s->select_idx == 2 ? HL_ON : "", s->to_goal_magnitude, HL_OFF);
+
+    printf(" to_goal_pow=");
+    printf("%s%d%s", s->select_idx == 3 ? HL_ON : "", s->to_goal_power, HL_OFF);   
+
+    printf(" avoid_obs_mag=");
+    printf("%s%4.2f%s", s->select_idx == 4 ? HL_ON : "", s->avoid_obs_magnitude, HL_OFF);
+
+    printf(" avoid_obs_pow=");
+    printf("%s%d%s", s->select_idx == 5 ? HL_ON : "", s->avoid_obs_power, HL_OFF);
+
+    printf(" max_vel=");
+    printf("%s%d%s", s->select_idx == 6 ? HL_ON : "", s->max_velocity, HL_OFF);
+    fflush(stdout);
 }
 
 int main(int argc, char *argv[]) {
@@ -337,24 +456,29 @@ int main(int argc, char *argv[]) {
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
         }
-        nanosleep(&interval, NULL);
+        if (state.time_step % state.delay_every == 0) {
+            nanosleep(&interval, NULL);
+        }
         // if (state.time_step == 4) {
         //     //for gdb
         //     printf("time_step = %d\n", state.time_step);
         // }
         field_control(&state);
-        //pthread_mutex_lock(&mutex);
         moveBot(&state.chaser, state.user_action);
-        moveBot(&state.runner, runnerAction());
-        //pthread_mutex_unlock(&mutex);
-        //printf("user action: %d\n", state.user_action);
-        //state.user_action = 0;
-        printf("%.2f %.2f\n", state.chaser.vel, state.chaser.ang_vel);
+        int runAct = runnerAction();
+        // if (/*state.time_step <= 15 &&*/ runAct) {
+        //     printf(" %d %d\n", runAct, state.time_step);
+        // }
+        moveBot(&state.runner, runAct);
+        //printf("%.2f %.2f\n", state.chaser.vel, state.chaser.ang_vel);
+        disp_interface(&state);
         if (robCollision(state.runner, state.chaser)) {
             printf("\e[2K\rRunner caught on step %d\n", state.time_step);
-            exit(0);
+            reset_sim(&state);
+        } else { 
+            state.time_step++;
         }
-        state.time_step++;
+        
     }
     free(state.image_data);
     free(state.bmp.data);
