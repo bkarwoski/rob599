@@ -354,12 +354,10 @@ void handle_down(state_t *s) {
 
 void disp_interface(state_t *s) {
     if (s->user_action == 3) {
-        s->select_idx++; //update to wraparound
-        s->user_action = 0;
+
     }
     if (s->user_action == 4) {
-        s->select_idx--;
-        s->user_action = 0;
+
     }
 
     //printf("\r %stesting%s index = %d", HL_ON, HL_OFF, s->select_idx);
@@ -413,10 +411,10 @@ void *io_thread(void *user) {
                     handle_down(state);
                 } else if (c == 'C') {
                     //right
-                    state->user_action = 3;
+                    state->select_idx++; //update to wraparound
                 } else if (c == 'D') {
                     //left
-                    state->user_action = 4;
+                    state->select_idx--;;
                 }
             }
         }
