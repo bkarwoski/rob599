@@ -139,7 +139,7 @@ bool resolveWallCollisions(agent_t *bot) {
         any_collision = false;
         for (int x = 0; x < MAP_W; x++) {
             for (int y = 0; y < MAP_H; y++) {
-                int i = x + MAP_W * y;
+                int i = x + (int)MAP_W * y;
                 if (MAP[i] == 'X') {
                     double xPos = BLOCK_SIZE * (x + 0.5);
                     double yPos = BLOCK_SIZE * (y + 0.5);
@@ -255,7 +255,8 @@ void reset_sim(state_t *s) {
     srand(0);
     s->runner.x = BLOCK_SIZE / 2.0 + (s->init_runner_idx % (int)MAP_W) * BLOCK_SIZE;
     s->runner.y = BLOCK_SIZE / 2.0 + ((s->init_runner_idx - s->init_runner_idx % (int)MAP_W) /
-                                      MAP_W) * BLOCK_SIZE;
+                                      MAP_W) *
+                                         BLOCK_SIZE;
     s->runner.theta = 0;
     s->runner.ang_vel = 0;
     s->runner.vel = 0;
@@ -325,7 +326,7 @@ void handle_down(state_t *s) {
         }
     }
     if (s->select_idx == 1) {
-        if (s->delay_every > 1){
+        if (s->delay_every > 1) {
             s->delay_every--;
         }
     }
@@ -353,13 +354,6 @@ void handle_down(state_t *s) {
 }
 
 void disp_interface(state_t *s) {
-    if (s->user_action == 3) {
-
-    }
-    if (s->user_action == 4) {
-
-    }
-
     //printf("\r %stesting%s index = %d", HL_ON, HL_OFF, s->select_idx);
     printf("\ridx=");
     printf("%s%d%s", s->select_idx == 0 ? HL_ON : "", s->init_runner_idx, HL_OFF);
@@ -385,7 +379,7 @@ void disp_interface(state_t *s) {
 }
 void *io_thread(void *user) {
     //deactivate blinking cursor
-    printf("\e[?25l\n"); 
+    printf("\e[?25l\n");
     state_t *state = user;
     tcgetattr(0, &original_termios);
     atexit(reset_terminal);
@@ -414,7 +408,7 @@ void *io_thread(void *user) {
                     state->select_idx++; //update to wraparound
                 } else if (c == 'D') {
                     //left
-                    state->select_idx--;;
+                    state->select_idx--;
                 }
             }
         }
@@ -457,10 +451,9 @@ int main(int argc, char *argv[]) {
         if (robCollision(state.runner, state.chaser)) {
             printf("\e[2K\rRunner caught on step %d\n", state.time_step);
             reset_sim(&state);
-        } else { 
+        } else {
             state.time_step++;
         }
-        
     }
     free(state.image_data);
     free(state.bmp.data);
