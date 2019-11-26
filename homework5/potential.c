@@ -284,6 +284,107 @@ void setup_sim(state_t *s) {
     reset_sim(s);
 }
 
+void handle_up(state_t *s) {
+    if (s->select_idx == 0) {
+        s->init_runner_idx++;
+        while (MAP[s->init_runner_idx] == 'X') {
+            s->init_runner_idx++;
+        }
+    }
+    if (s->select_idx == 1) {
+        s->delay_every++;
+    }
+    if (s->select_idx == 2) {
+        s->to_goal_magnitude *= 2;
+    }
+    if (s->select_idx == 3) {
+        if (s->to_goal_power <= 2) {
+            s->to_goal_power++;
+        }
+    }
+    if (s->select_idx == 4) {
+        s->avoid_obs_magnitude *= 2;
+    }
+    if (s->select_idx == 5) {
+        if (s->avoid_obs_power <= 2) {
+            s->avoid_obs_power++;
+        }
+    }
+    if (s->select_idx == 6) {
+        if (s->max_velocity <= 11) {
+            s->max_velocity++;
+        }
+    }
+}
+
+void handle_down(state_t *s) {
+    if (s->select_idx == 0) {
+        s->init_runner_idx--;
+        while (MAP[s->init_runner_idx] == 'X') {
+            s->init_runner_idx--;
+        }
+    }
+    if (s->select_idx == 1) {
+        if (s->delay_every > 1){
+            s->delay_every--;
+        }
+    }
+    if (s->select_idx == 2) {
+        s->to_goal_magnitude /= 2;
+    }
+    if (s->select_idx == 3) {
+        if (s->to_goal_power >= -2) {
+            s->to_goal_power--;
+        }
+    }
+    if (s->select_idx == 4) {
+        s->avoid_obs_magnitude /= 2;
+    }
+    if (s->select_idx == 5) {
+        if (s->avoid_obs_power >= -2) {
+            s->avoid_obs_power--;
+        }
+    }
+    if (s->select_idx == 6) {
+        if (s->max_velocity > 1) {
+            s->max_velocity--;
+        }
+    }
+}
+
+void disp_interface(state_t *s) {
+    if (s->user_action == 3) {
+        s->select_idx++; //update to wraparound
+        s->user_action = 0;
+    }
+    if (s->user_action == 4) {
+        s->select_idx--;
+        s->user_action = 0;
+    }
+
+    //printf("\r %stesting%s index = %d", HL_ON, HL_OFF, s->select_idx);
+    printf("\ridx=");
+    printf("%s%d%s", s->select_idx == 0 ? HL_ON : "", s->init_runner_idx, HL_OFF);
+    //printf("%s%8.2f%s", goal_mag_selected ? HIGHLIGHT : "", to_goal_magnitude, CLEAR_HIGHLIGHT);
+    printf(" delay_every=");
+    printf("%s%d%s", s->select_idx == 1 ? HL_ON : "", s->delay_every, HL_OFF);
+
+    printf(" to_goal_mag=");
+    printf("%s%4.2f%s", s->select_idx == 2 ? HL_ON : "", s->to_goal_magnitude, HL_OFF);
+
+    printf(" to_goal_pow=");
+    printf("%s%d%s", s->select_idx == 3 ? HL_ON : "", s->to_goal_power, HL_OFF);   
+
+    printf(" avoid_obs_mag=");
+    printf("%s%4.2f%s", s->select_idx == 4 ? HL_ON : "", s->avoid_obs_magnitude, HL_OFF);
+
+    printf(" avoid_obs_pow=");
+    printf("%s%d%s", s->select_idx == 5 ? HL_ON : "", s->avoid_obs_power, HL_OFF);
+
+    printf(" max_vel=");
+    printf("%s%d%s", s->select_idx == 6 ? HL_ON : "", s->max_velocity, HL_OFF);
+    fflush(stdout);
+}
 void *io_thread(void *user) {
     //deactivate blinking cursor
     printf("\e[?25l\n"); 
@@ -307,11 +408,9 @@ void *io_thread(void *user) {
             if (c == 91) {
                 c = getc(stdin);
                 if (c == 'A') {
-                    //up
-                    state->user_action = 1;
+                    handle_up(state);
                 } else if (c == 'B') {
-                    //down
-                    state->user_action = 2;
+                    handle_down(state);
                 } else if (c == 'C') {
                     //right
                     state->user_action = 3;
@@ -321,122 +420,7 @@ void *io_thread(void *user) {
                 }
             }
         }
-        //printf("%c: %d\n", c, c);
     }
-}
-
-void disp_interface(state_t *s) {
-    if (s->user_action == 3) {
-        s->select_idx++; //update to wraparound
-        s->user_action = 0;
-    }
-    if (s->user_action == 4) {
-        s->select_idx--;
-        s->user_action = 0;
-    }
-    if (s->user_action == 1) {
-        s->user_action = 0;
-        if (s->select_idx == 0) {
-            s->init_runner_idx++;
-            while (MAP[s->init_runner_idx] == 'X') {
-                s->init_runner_idx++;
-            }
-        }
-        if (s->select_idx == 1) {
-            s->user_action = 0;
-            s->delay_every++;
-        }
-        if (s->select_idx == 2) {
-            s->user_action = 0;
-            s->to_goal_magnitude *= 2;
-        }
-        if (s->select_idx == 3) {
-            s->user_action = 0;
-            if (s->to_goal_power <= 2) {
-                s->to_goal_power++;
-            }
-        }
-        if (s->select_idx == 4) {
-            s->user_action = 0;
-            s->avoid_obs_magnitude *= 2;
-        }
-        if (s->select_idx == 5) {
-            s->user_action = 0;
-            if (s->avoid_obs_power <= 2) {
-                s->avoid_obs_power++;
-            }
-        }
-        if (s->select_idx == 6) {
-            s->user_action = 0;
-            if (s->max_velocity <= 11) {
-                s->max_velocity++;
-            }
-        }
-    }
-
-    if (s->user_action == 2) {
-        s->user_action = 0;
-        if (s->select_idx == 0) {
-            s->init_runner_idx--;
-            while (MAP[s->init_runner_idx] == 'X') {
-                s->init_runner_idx--;
-            }
-        }
-        if (s->select_idx == 1) {
-            s->user_action = 0;
-            if (s->delay_every > 1){
-                s->delay_every--;
-            }
-        }
-        if (s->select_idx == 2) {
-            s->user_action = 0;
-            s->to_goal_magnitude /= 2;
-        }
-        if (s->select_idx == 3) {
-            s->user_action = 0;
-            if (s->to_goal_power >= -2) {
-                s->to_goal_power--;
-            }
-        }
-        if (s->select_idx == 4) {
-            s->user_action = 0;
-            s->avoid_obs_magnitude /= 2;
-        }
-        if (s->select_idx == 5) {
-            s->user_action = 0;
-            if (s->avoid_obs_power >= -2) {
-                s->avoid_obs_power--;
-            }
-        }
-        if (s->select_idx == 6) {
-            s->user_action = 0;
-            if (s->max_velocity > 1) {
-                s->max_velocity--;
-            }
-        }
-    }
-    //printf("\r %stesting%s index = %d", HL_ON, HL_OFF, s->select_idx);
-    printf("\ridx=");
-    printf("%s%d%s", s->select_idx == 0 ? HL_ON : "", s->init_runner_idx, HL_OFF);
-    //printf("%s%8.2f%s", goal_mag_selected ? HIGHLIGHT : "", to_goal_magnitude, CLEAR_HIGHLIGHT);
-    printf(" delay_every=");
-    printf("%s%d%s", s->select_idx == 1 ? HL_ON : "", s->delay_every, HL_OFF);
-
-    printf(" to_goal_mag=");
-    printf("%s%4.2f%s", s->select_idx == 2 ? HL_ON : "", s->to_goal_magnitude, HL_OFF);
-
-    printf(" to_goal_pow=");
-    printf("%s%d%s", s->select_idx == 3 ? HL_ON : "", s->to_goal_power, HL_OFF);   
-
-    printf(" avoid_obs_mag=");
-    printf("%s%4.2f%s", s->select_idx == 4 ? HL_ON : "", s->avoid_obs_magnitude, HL_OFF);
-
-    printf(" avoid_obs_pow=");
-    printf("%s%d%s", s->select_idx == 5 ? HL_ON : "", s->avoid_obs_power, HL_OFF);
-
-    printf(" max_vel=");
-    printf("%s%d%s", s->select_idx == 6 ? HL_ON : "", s->max_velocity, HL_OFF);
-    fflush(stdout);
 }
 
 int main(int argc, char *argv[]) {
