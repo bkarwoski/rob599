@@ -269,7 +269,7 @@ void reset_sim(state_t *s) {
 
 void setup_sim(state_t *s) {
     s->init_runner_idx = 17;
-    s->delay_every = 3;
+    s->delay_every = 1;
     s->to_goal_magnitude = 50.0;
     s->to_goal_power = 0;
     s->avoid_obs_magnitude = 1;
