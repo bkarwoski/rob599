@@ -365,7 +365,7 @@ void disp_interface(state_t *s) {
     printf("%s%4.2f%s", s->select_idx == 2 ? HL_ON : "", s->to_goal_magnitude, HL_OFF);
 
     printf(" to_goal_pow=");
-    printf("%s%d%s", s->select_idx == 3 ? HL_ON : "", s->to_goal_power, HL_OFF);   
+    printf("%s%d%s", s->select_idx == 3 ? HL_ON : "", s->to_goal_power, HL_OFF);
 
     printf(" avoid_obs_mag=");
     printf("%s%4.2f%s", s->select_idx == 4 ? HL_ON : "", s->avoid_obs_magnitude, HL_OFF);
@@ -377,6 +377,7 @@ void disp_interface(state_t *s) {
     printf("%s%d%s", s->select_idx == 6 ? HL_ON : "", s->max_velocity, HL_OFF);
     fflush(stdout);
 }
+
 void *io_thread(void *user) {
     //deactivate blinking cursor
     printf("\e[?25l\n");

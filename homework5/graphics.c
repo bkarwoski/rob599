@@ -117,8 +117,8 @@ vector_xy_t gx_rect(double width, double height) {
 }
 
 vector_xy_t gx_rob(void) {
-    double height = 20;
-    double width = height * 4 / 3;
+    double height = 40 / 2.0;
+    double width = height * 4 / 3.0;
     vector_xy_t tri = vector_create();
     vector_append(&tri, width / 2, 0);
     vector_append(&tri, -width / 2, height / 2);
