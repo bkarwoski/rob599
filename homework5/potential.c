@@ -33,6 +33,7 @@
 #define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
 #define MAX_DEPTH 4
 #define ROB_HEIGHT 20
+#define ROB_LENGTH (20 * 4 / 3.0)
 #define HL_ON "\e[7m"
 #define HL_OFF "\e[0m"
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -133,7 +134,7 @@ void resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
     double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
-    double rRadius = sqrt(pow((4.0 / 3 * ROB_HEIGHT), 2) + 10 * 10) / 2.0;
+    double rRadius = sqrt(pow(ROB_LENGTH / 2, 2) + pow(ROB_HEIGHT / 2, 2)) / 2.0;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
     while (any_collision) {
         any_collision = false;
