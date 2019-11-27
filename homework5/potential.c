@@ -134,7 +134,7 @@ void resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
     double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
-    double rRadius = sqrt(pow(ROB_LENGTH / 2, 2) + pow(ROB_HEIGHT / 2, 2));
+    double rRadius = sqrt(pow(ROB_LENGTH / 2.0, 2) + pow(ROB_HEIGHT / 2.0, 2));
     double collision_dist_sq = pow((bRadius + rRadius), 2);
     while (any_collision) {
         any_collision = false;
