@@ -13,7 +13,6 @@
 #include "graphics.h"
 #include "image_server.h"
 #include "collision.h"
-#define M_PI 3.14159265358979323846
 #define WIDTH 640
 #define HEIGHT 480
 #define MAP "XXXXXXXXXXXXXXXX" \
@@ -32,7 +31,8 @@
 #define MAP_W (1.0 * WIDTH / BLOCK_SIZE)
 #define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
 #define MAX_DEPTH 4
-#define ROB_HEIGHT 20
+#define ROB_HEIGHT 20.0
+#define ROB_WIDTH (ROB_HEIGHT * 4 / 3.0)
 #define HL_ON "\e[7m"
 #define HL_OFF "\e[0m"
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -133,7 +133,7 @@ void resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
     double bRadius = sqrt(2.0 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
-    double rRadius = sqrt(pow((4.0 / 3.0 * ROB_HEIGHT), 2) + 10 * 10) / 2.0;
+    double rRadius = sqrt(pow(ROB_HEIGHT / 2.0, 2) + pow(ROB_WIDTH / 2.0, 2)) / 2.0;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
     while (any_collision) {
         any_collision = false;
@@ -199,7 +199,7 @@ void moveBot(agent_t *bot, int action) {
 void field_control(state_t *s) {
     double height = ROB_HEIGHT;
     double width = height * 4 / 3.0;
-    double robot_r = sqrt((height / 2) * (height / 2) + (width / 2 * width / 2));
+    double robot_r = sqrt((height / 2.0) * (height / 2.0) + (width / 2.0 * width / 2.0));
     double wall_r = BLOCK_SIZE / sqrt(2);
     double fx = 0;
     double fy = 0;
