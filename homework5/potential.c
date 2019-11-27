@@ -132,8 +132,8 @@ void applyAction(agent_t *bot, int action) {
 void resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
-    double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
-    double rRadius = sqrt(pow((4.0 / 3 * ROB_HEIGHT), 2) + 10 * 10) / 2.0;
+    double bRadius = sqrt(2.0 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
+    double rRadius = sqrt(pow((4.0 / 3.0 * ROB_HEIGHT), 2) + 10 * 10) / 2.0;
     double collision_dist_sq = pow((bRadius + rRadius), 2);
     while (any_collision) {
         any_collision = false;
@@ -143,7 +143,7 @@ void resolveWallCollisions(agent_t *bot) {
                 if (MAP[i] == 'X') {
                     double xPos = BLOCK_SIZE * (x + 0.5);
                     double yPos = BLOCK_SIZE * (y + 0.5);
-                    double dist_sq = pow(xPos - bot->x, 2) + pow(yPos - bot->y, 2);
+                    double dist_sq = pow(xPos - bot->x, 2.0) + pow(yPos - bot->y, 2.0);
                     if (dist_sq <= collision_dist_sq) {
                         vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
                         gx_trans(xPos, yPos, &nextBlock);
@@ -153,20 +153,12 @@ void resolveWallCollisions(agent_t *bot) {
                         bool isCollided = collision(&nextBlock, &rob);
                         if (isCollided) {
                             any_collision = true;
-                            //printf("Collision w/ tile %d, %d, ", x, y);
                             double dx = bot->x - xPos;
                             double dy = bot->y - yPos;
                             double dist = sqrt(dx * dx + dy * dy);
-                            //printf("movement from %.2f, %.2f ", bot->x, bot->y);
                             bot->x += dx / dist * 0.5;
                             bot->y += dy / dist * 0.5;
                             collided = true;
-                            //printf("to %.2f, %.2f ", bot->x, bot->y);
-                            //printf("with robot xs: %.2f, %.2f, %.2f ",
-                            //    rob.xData[0], rob.xData[1], rob.xData[2]);
-                            //printf("ys: %.2f, %.2f, %.2f\n",
-                            //    rob.yData[0], rob.yData[1], rob.yData[2]);
-                            //isCollided = collision(&nextBlock, &rob);
                         }
                         vector_delete(&nextBlock);
                         vector_delete(&rob);
