@@ -33,7 +33,7 @@
 #define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
 #define MAX_DEPTH 4
 #define ROB_HEIGHT 20
-#define ROB_LENGTH (20 * 4 / 3.0)
+#define ROB_LENGTH (ROB_HEIGHT * 4 / 3.0)
 #define HL_ON "\e[7m"
 #define HL_OFF "\e[0m"
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
