@@ -129,7 +129,7 @@ void applyAction(agent_t *bot, int action) {
     }
 }
 
-bool resolveWallCollisions(agent_t *bot) {
+void resolveWallCollisions(agent_t *bot) {
     bool collided = false;
     bool any_collision = true;
     double bRadius = sqrt(2 * BLOCK_SIZE * BLOCK_SIZE) / 2.0;
@@ -175,7 +175,9 @@ bool resolveWallCollisions(agent_t *bot) {
             }
         }
     }
-    return collided;
+    if (collided) {
+        bot->vel *= 0.25;
+    }
 }
 
 bool robCollision(agent_t runner, agent_t chaser) {
@@ -197,9 +199,9 @@ void moveBot(agent_t *bot, int action) {
     bot->ang_vel *= 0.8;
     bot->x += bot->vel * cos(bot->theta);
     bot->y += bot->vel * -sin(bot->theta);
-    if (resolveWallCollisions(bot)) {
-        bot->vel *= 0.25;
-    }
+    // if (resolveWallCollisions(bot)) {
+    //     bot->vel *= 0.25;
+    // }
 }
 
 void field_control(state_t *s) {
@@ -443,10 +445,9 @@ int main(int argc, char *argv[]) {
         field_control(&state);
         moveBot(&state.chaser, state.user_action);
         int runAct = runnerAction();
-        // if (/*state.time_step <= 15 &&*/ runAct) {
-        //     printf(" %d %d\n", runAct, state.time_step);
-        // }
         moveBot(&state.runner, runAct);
+        resolveWallCollisions(&state.chaser);
+        resolveWallCollisions(&state.runner);
         //printf("%.2f %.2f\n", state.chaser.vel, state.chaser.ang_vel);
         disp_interface(&state);
         if (robCollision(state.runner, state.chaser)) {
