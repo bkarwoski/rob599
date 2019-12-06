@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
     state_t state = {0};
     setup_sim(&state);
     int seconds = 0;
-    long nanoseconds = 40 * 1000 * 1000;
+    long nanoseconds = 40000 * 1000;
     pthread_t userInput;
     pthread_create(&userInput, NULL, io_thread, &state);
     settings_t settings = {0};
@@ -281,11 +281,11 @@ int main(int argc, char *argv[]) {
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
         }
-        nanoseconds -= (seconds_now() - start) * 1000 * 1000;
+        nanoseconds -= (long)((seconds_now() - start) * 1000 * 1000);
         struct timespec interval = {seconds, nanoseconds};
         nanosleep(&interval, NULL);
 
-    settings_t_publish(lcm, "SETTINGS_bkarw", &settings);
+        settings_t_publish(lcm, "SETTINGS_bkarw", &settings);
     }
 
     return 0;
