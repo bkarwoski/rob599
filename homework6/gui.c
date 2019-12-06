@@ -1,8 +1,42 @@
 #define _GNU_SOURCE
+#include <lcm/lcm.h>
 #include <termios.h>
+#include <time.h>
+#include "bmp.h"
+#include "graphics.h"
+#include "image_server.h"
 #include "settings.h"
+#include "settings_t.h"
 
 struct termios original_termios;
+
+typedef struct agent {
+    bool is_runner;
+    double x;
+    double y;
+    double theta;
+    double vel;
+    double ang_vel;
+} agent_t;
+
+typedef struct state {
+    int user_action;
+    int time_step;
+    bitmap_t bmp;
+    size_t image_size;
+    uint8_t *image_data;
+    bool runner_caught;
+    agent_t runner;
+    agent_t chaser;
+    int init_runner_idx;
+    int delay_every;
+    int select_idx;
+    double to_goal_magnitude;
+    int to_goal_power;
+    double avoid_obs_magnitude;
+    int avoid_obs_power;
+    int max_velocity;
+} state_t;
 
 void reset_terminal(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
@@ -175,20 +209,82 @@ void *io_thread(void *user) {
     }
 }
 
+void drawMap(bitmap_t *bmp) {
+    color_bgr_t black = {0, 0, 0};
+    color_bgr_t white = {255, 255, 255};
+    for (int i = 0; i < bmp->width * bmp->height; i++) {
+        bmp->data[i] = white;
+    }
+    for (int i = 0; i < MAP_W * MAP_H; i++) {
+        if (MAP[i] == 'X') {
+            vector_xy_t nextBlock = gx_rect(BLOCK_SIZE, BLOCK_SIZE);
+            double xPos = BLOCK_SIZE / 2.0 + (i % (int)MAP_W) * BLOCK_SIZE;
+            double yPos = BLOCK_SIZE / 2.0 + ((i - i % (int)MAP_W) * 1.0 / MAP_W) * BLOCK_SIZE;
+            gx_trans(xPos, yPos, &nextBlock);
+            gx_fill_poly(bmp, black, &nextBlock);
+            vector_delete(&nextBlock);
+        }
+    }
+}
+
+void updateGraphics(state_t *state) {
+    color_bgr_t red = {0, 0, 255};
+    color_bgr_t green = {0, 255, 0};
+    drawMap(&state->bmp);
+    vector_xy_t runPoints = gx_rob();
+    gx_rot(state->runner.theta, &runPoints);
+    gx_trans(state->runner.x, state->runner.y, &runPoints);
+    gx_fill_poly(&state->bmp, green, &runPoints);
+    vector_delete(&runPoints);
+    vector_xy_t chasePoints = gx_rob();
+    gx_rot(state->chaser.theta, &chasePoints);
+    gx_trans(state->chaser.x, state->chaser.y, &chasePoints);
+    gx_fill_poly(&state->bmp, red, &chasePoints);
+    vector_delete(&chasePoints);
+}
+
+double seconds_now(void) {
+    struct timespec now;
+    if (clock_gettime(CLOCK_MONOTONIC, &now)) {
+        fprintf(stderr, "Retrieving system time failed.\n");
+        exit(1);
+    }
+    return now.tv_sec + now.tv_nsec / 1000000000.0;
+}
+
 int main(int argc, char *argv[]) {
+    lcm_t *lcm = lcm_create(NULL);
     state_t state = {0};
     setup_sim(&state);
+    int seconds = 0;
+    long nanoseconds = 40 * 1000 * 1000;
     pthread_t userInput;
     pthread_create(&userInput, NULL, io_thread, &state);
+    settings_t settings = {0};
     if (argc < 2) {
         image_server_start("8000");
     }
     while (true) {
+        double start = seconds_now();
+        //lcm_t *lcm = lcm_create(NULL);
+        //settings_t settings = {0};
+        settings.avoid_obs_magnitude = state.avoid_obs_magnitude;
+        settings.avoid_obs_power = state.avoid_obs_power;
+        settings.delay_every = state.delay_every;
+        settings.initial_runner_idx = state.init_runner_idx;
+        settings.max_vel = state.max_velocity;
+        settings.to_goal_magnitude = state.to_goal_magnitude;
+        settings.to_goal_power = state.to_goal_power;
         if (argc < 2) {
             updateGraphics(&state);
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
         }
+        nanoseconds -= (seconds_now() - start) * 1000 * 1000;
+        struct timespec interval = {seconds, nanoseconds};
+        nanosleep(&interval, NULL);
+
+    settings_t_publish(lcm, "SETTINGS_bkarw", &settings);
     }
 
     return 0;
