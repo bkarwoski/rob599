@@ -1,41 +1,10 @@
 #define _GNU_SOURCE
-#include <time.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <math.h>
-#include <stdio.h>
-#include <float.h>
-#include <pthread.h>
 #include <termios.h>
+#include "settings.h"
 #include "bmp.h"
 #include "graphics.h"
 #include "image_server.h"
 #include "collision.h"
-#define M_PI 3.14159265358979323846
-#define WIDTH 640
-#define HEIGHT 480
-#define MAP "XXXXXXXXXXXXXXXX" \
-            "X              X" \
-            "X  XXXX   XXX  X" \
-            "X   XX      X  X" \
-            "X       XXX    X" \
-            "XXXXXX         X" \
-            "X         XXXXXX" \
-            "X    XXX       X" \
-            "X  XX     XX   X" \
-            "X   X    XX    X" \
-            "X      XXX     X" \
-            "XXXXXXXXXXXXXXXX"
-#define BLOCK_SIZE 40
-#define MAP_W (1.0 * WIDTH / BLOCK_SIZE)
-#define MAP_H (1.0 * HEIGHT / BLOCK_SIZE)
-#define MAX_DEPTH 4
-#define ROB_HEIGHT 20
-#define ROB_LENGTH (ROB_HEIGHT * 4 / 3.0)
-#define HL_ON "\e[7m"
-#define HL_OFF "\e[0m"
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct termios original_termios;
 
@@ -200,9 +169,6 @@ void moveBot(agent_t *bot, int action) {
     bot->ang_vel *= 0.8;
     bot->x += bot->vel * cos(bot->theta);
     bot->y += bot->vel * -sin(bot->theta);
-    // if (resolveWallCollisions(bot)) {
-    //     bot->vel *= 0.25;
-    // }
 }
 
 void field_control(state_t *s) {
