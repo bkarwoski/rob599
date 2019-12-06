@@ -6,7 +6,8 @@
 #include "graphics.h"
 #include "image_server.h"
 #include "settings.h"
-#include "settings_t.h"
+#include "lcmtypes/settings_t.h"
+#include "lcmtypes/reset_t.h"
 
 struct termios original_termios;
 
