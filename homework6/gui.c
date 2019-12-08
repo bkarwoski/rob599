@@ -37,6 +37,7 @@ typedef struct state {
     double avoid_obs_magnitude;
     int avoid_obs_power;
     int max_velocity;
+    bool reset_sim;
 } state_t;
 
 void reset_terminal(void) {
@@ -60,6 +61,7 @@ void reset_sim(state_t *s) {
     s->chaser.ang_vel = 0;
     s->chaser.vel = 0;
     s->time_step = 0;
+    s->reset_sim = true;
 }
 
 void setup_sim(state_t *s) {
@@ -189,6 +191,9 @@ void *io_thread(void *user) {
         }
         if (c == 'r') {
             reset_sim(state);
+            //reset_t reset = {0};
+            //settings_t_publish(lcm, "SETTINGS_bkarw", &settings);
+            //send reset message
         }
         if (c == 27) {
             c = getc(stdin);
@@ -262,13 +267,12 @@ int main(int argc, char *argv[]) {
     pthread_t userInput;
     pthread_create(&userInput, NULL, io_thread, &state);
     settings_t settings = {0};
+    reset_t reset = {0};
     if (argc < 2) {
         image_server_start("8000");
     }
     while (true) {
         double start = seconds_now();
-        //lcm_t *lcm = lcm_create(NULL);
-        //settings_t settings = {0};
         settings.avoid_obs_magnitude = state.avoid_obs_magnitude;
         settings.avoid_obs_power = state.avoid_obs_power;
         settings.delay_every = state.delay_every;
@@ -280,6 +284,11 @@ int main(int argc, char *argv[]) {
             updateGraphics(&state);
             bmp_serialize(&state.bmp, state.image_data);
             image_server_set_data(state.image_size, state.image_data);
+        }
+        if (state.reset_sim) {
+            reset.initial_runner_idx = state.init_runner_idx;
+            reset_t_publish(lcm, "RESET_bkarw", &reset);
+            state.reset_sim = false;
         }
         nanoseconds -= (long)((seconds_now() - start) * 1000 * 1000);
         struct timespec interval = {seconds, nanoseconds};
