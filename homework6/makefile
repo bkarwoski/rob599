@@ -17,3 +17,18 @@ gui: gui.c bmp.c image_server.c graphics.c vector_xy_t.c $(LCMTYPES_SOURCE)
 
 world: world.c vector_xy_t.c collision.c graphics.c $(LCMTYPES_SOURCE)
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread -llcm -O0
+
+controller: controller.c vector_xy_t.c
+	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -llcm -O0
+
+lcm_jar := $(shell dirname $(shell which lcm-gen))/../share/java/lcm.jar
+
+# Just like a C program, we can express how to make the lcmtypes.jar file from a set of .lcm files
+lcmtypes.jar: lcmtypes/*.lcm
+	lcm-gen -j lcmtypes/*.lcm
+	javac lcmtypes/*.java -cp $(value lcm_jar)
+	jar cf lcmtypes.jar lcmtypes/*.class
+
+# Running the tool lcm-spy requires this lcmtypes.jar file to exist and be up to date
+lcm-spy: lcmtypes.jar
+	CLASSPATH=lcmtypes.jar lcm-spy >/dev/null

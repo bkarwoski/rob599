@@ -186,6 +186,7 @@ void reset_sim(state_t *s) {
     s->runner.theta = 0;
     s->runner.ang_vel = 0;
     s->runner.vel = 0;
+    s->runner.is_runner = true;
     s->chaser.x = WIDTH / 2.0;
     s->chaser.y = HEIGHT / 2.0;
     s->chaser.theta = 0;
@@ -269,6 +270,8 @@ int main(int argc, char *argv[]) {
         } else {
             state.time_step++;
         }
+        world.chaser = state.chaser;
+        world.runner = state.runner;
         world_t_publish(lcm, "WORLD_bkarw", &world);
         long nanoseconds = 40 * 1000 * 1000 / (int)state.delay_every;
         nanoseconds -= (long)((seconds_now() - start) * 1000 * 1000);
