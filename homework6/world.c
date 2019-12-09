@@ -238,7 +238,7 @@ void handle_action(const lcm_recv_buf_t *rbuf, const char *channel,
 int main(int argc, char *argv[]) {
     lcm_t *lcm = lcm_create(NULL);
     int seconds = 0;
-    long nanoseconds = 40 * 1000 * 1000;
+    //long nanoseconds = 40 * 1000 * 1000;
     //struct timespec interval = {seconds, nanoseconds};
     state_t state = {0};
     settings_t settings = {0};
@@ -270,6 +270,7 @@ int main(int argc, char *argv[]) {
             state.time_step++;
         }
         world_t_publish(lcm, "WORLD_bkarw", &world);
+        long nanoseconds = 40 * 1000 * 1000 / (int)state.delay_every;
         nanoseconds -= (long)((seconds_now() - start) * 1000 * 1000);
         struct timespec interval = {seconds, nanoseconds};
         nanosleep(&interval, NULL);
