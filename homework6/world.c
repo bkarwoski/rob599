@@ -216,8 +216,23 @@ void handle_reset(const lcm_recv_buf_t *rbuf, const char *channel,
 void handle_action(const lcm_recv_buf_t *rbuf, const char *channel,
                   const action_t *msg, void *userdata) {
     state_t *s = (state_t *)userdata;
-    s->chaser.vel = msg->vel;
-    s->chaser.ang_vel = msg->ang_vel;
+    if (msg->vel - s->chaser.vel > 2) {
+        s->chaser.vel += 2;
+    } else {
+        s->chaser.vel = msg->vel;
+    }
+
+    if (s->chaser.vel > 12) {
+        s->chaser.vel = 12;
+    }
+
+    if (msg->ang_vel > M_PI / 16) {
+        s->chaser.ang_vel = M_PI / 16;
+    } else if (msg->ang_vel < -M_PI / 16) {
+        s->chaser.ang_vel = -M_PI / 16;
+    } else {
+        s->chaser.ang_vel = msg->ang_vel;
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -243,11 +258,10 @@ int main(int argc, char *argv[]) {
         double start = seconds_now();
         lcm_handle_async(state.lcm);
         moveBot(&state.chaser);
+        applyAction(&state.runner, runnerAction());
         moveBot(&state.runner);
         resolveWallCollisions(&state.chaser);
         resolveWallCollisions(&state.runner);
-        //motion
-        //collisions
         if (robCollision(state.runner, state.chaser)) {
             printf("\e[2K\rRunner caught on step %d\n", state.time_step);
             reset_sim(&state);
