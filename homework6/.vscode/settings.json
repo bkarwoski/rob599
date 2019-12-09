@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "l2g_t.h": "c"
+        "l2g_t.h": "c",
+        "lcm.h": "c",
+        "agent_t.h": "c",
+        "lcm_handle_async.h": "c"
     }
 }
