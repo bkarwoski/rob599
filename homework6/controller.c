@@ -85,7 +85,7 @@ void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
                   const world_t *msg, void *userdata) {
     state_t *s = (state_t *)userdata;
     s->chaser = msg->chaser;
-    s->runner = msg->chaser;
+    s->runner = msg->runner;
     field_control(s);
     action_t_publish(s->lcm, "ACTION_bkarw", s->action);
 }
