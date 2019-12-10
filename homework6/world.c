@@ -111,62 +111,11 @@ bool robCollision(agent_t runner, agent_t chaser) {
 }
 
 void moveBot(agent_t *bot) {
-    //applyAction(bot, action);
-    //TODO: check inputs
     bot->theta += bot->ang_vel;
     bot->ang_vel *= 0.8;
     bot->x += bot->vel * cos(bot->theta);
     bot->y += bot->vel * -sin(bot->theta);
 }
-//TODO: split up field control into world / controller
-// void field_control(state_t *s) {
-//     double height = ROB_HEIGHT;
-//     double width = height * 4 / 3.0;
-//     double robot_r = sqrt((height / 2) * (height / 2) + (width / 2 * width / 2));
-//     double wall_r = BLOCK_SIZE / sqrt(2);
-//     double fx = 0;
-//     double fy = 0;
-//     double dx = s->runner.x - s->chaser.x;
-//     double dy = s->runner.y - s->chaser.y;
-//     double to_goal_dist = sqrt(dx * dx + dy * dy);
-//     double dx_norm = dx / to_goal_dist;
-//     double dy_norm = dy / to_goal_dist;
-//     fx += dx_norm * s->to_goal_magnitude * pow(to_goal_dist, s->to_goal_power);
-//     fy += dy_norm * s->to_goal_magnitude * pow(to_goal_dist, s->to_goal_power);
-
-//     for (int x = 0; x < (int)MAP_W; x++) {
-//         for (int y = 0; y < (int)MAP_H; y++) {
-//             int i = x + (int)MAP_W * y;
-//             if (MAP[i] == 'X') {
-//                 double bx = BLOCK_SIZE * (x + 0.5);
-//                 double by = BLOCK_SIZE * (y + 0.5);
-//                 double obs_center_dist = sqrt(pow(s->chaser.x - bx, 2) + pow(s->chaser.y - by, 2));
-//                 double to_obs_dist = obs_center_dist - robot_r - wall_r;
-//                 to_obs_dist = fmax(0.1, to_obs_dist);
-//                 double to_chaserx = (s->chaser.x - bx) / obs_center_dist;
-//                 double to_chasery = (s->chaser.y - by) / obs_center_dist;
-//                 fx += to_chaserx * s->avoid_obs_magnitude * pow(to_obs_dist, s->avoid_obs_power);
-//                 fy += to_chasery * s->avoid_obs_magnitude * pow(to_obs_dist, s->avoid_obs_power);
-//             }
-//         }
-//     }
-//     double target_theta = atan2(-fy, fx);
-//     double theta_error = target_theta - s->chaser.theta;
-//     while (theta_error > M_PI) {
-//         theta_error -= 2 * M_PI;
-//     }
-//     while (theta_error < -M_PI) {
-//         theta_error += 2 * M_PI;
-//     }
-//     s->chaser.ang_vel = 0.4 * theta_error;
-//     if (s->chaser.ang_vel > M_PI / 16) {
-//         s->chaser.ang_vel = M_PI / 16;
-//     }
-//     if (s->chaser.ang_vel < -M_PI / 16) {
-//         s->chaser.ang_vel = -M_PI / 16;
-//     }
-//     s->chaser.vel = fmin(s->max_velocity, s->chaser.vel + 2.0);
-// }
 
 double seconds_now(void) {
     struct timespec now;
@@ -239,8 +188,6 @@ void handle_action(const lcm_recv_buf_t *rbuf, const char *channel,
 int main(int argc, char *argv[]) {
     lcm_t *lcm = lcm_create(NULL);
     int seconds = 0;
-    //long nanoseconds = 40 * 1000 * 1000;
-    //struct timespec interval = {seconds, nanoseconds};
     state_t state = {0};
     settings_t settings = {0};
     reset_t reset = {0};

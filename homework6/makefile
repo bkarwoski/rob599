@@ -18,7 +18,7 @@ gui: gui.c bmp.c image_server.c graphics.c vector_xy_t.c $(LCMTYPES_SOURCE)
 world: world.c vector_xy_t.c collision.c graphics.c $(LCMTYPES_SOURCE)
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -lpthread -llcm -O0
 
-controller: controller.c vector_xy_t.c
+controller: controller.c vector_xy_t.c $(LCMTYPES_SOURCE)
 	gcc -o $@ $^ $(CFLAGS) -std=c11 -lm -llcm -O0
 
 lcm_jar := $(shell dirname $(shell which lcm-gen))/../share/java/lcm.jar
