@@ -24,7 +24,7 @@ typedef struct state {
 } state_t;
 
 int runnerAction(void) {
-    int action = rand() % 20;
+    int action = rand() % (19 + 1);
     if (action == 1 || action == 2) {
         return action;
     }
@@ -151,7 +151,7 @@ void setup_sim(state_t *s) {
 }
 
 void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
-            const settings_t *msg, void *userdata) {
+                     const settings_t *msg, void *userdata) {
     state_t *s = (state_t *)userdata;
     s->delay_every = msg->delay_every;
 }
@@ -164,7 +164,7 @@ void handle_reset(const lcm_recv_buf_t *rbuf, const char *channel,
 }
 
 void handle_action(const lcm_recv_buf_t *rbuf, const char *channel,
-                  const action_t *msg, void *userdata) {
+                   const action_t *msg, void *userdata) {
     state_t *s = (state_t *)userdata;
     if (msg->vel - s->chaser.vel > 2) {
         s->chaser.vel += 2;
@@ -189,12 +189,12 @@ int main(int argc, char *argv[]) {
     lcm_t *lcm = lcm_create(NULL);
     int seconds = 0;
     state_t state = {0};
-    settings_t settings = {0};
+    //settings_t settings = {0};
     reset_t reset = {0};
-    action_t action = {0};
+    //action_t action = {0};
     world_t world = {0};
-    agent_t runner = {0};
-    agent_t chaser = {0};
+    //agent_t runner = {0};
+    //agent_t chaser = {0};
     setup_sim(&state);
     state.lcm = lcm;
     reset_t_subscription_t *reset_sub = reset_t_subscribe(lcm, "RESET_bkarw", handle_reset, &state);
@@ -220,7 +220,7 @@ int main(int argc, char *argv[]) {
         world.chaser = state.chaser;
         world.runner = state.runner;
         world_t_publish(lcm, "WORLD_bkarw", &world);
-        long nanoseconds = 40 * 1000 * 1000 / (int)state.delay_every;
+        long nanoseconds = 40000 * 1000 / state.delay_every;
         nanoseconds -= (long)((seconds_now() - start) * 1000 * 1000);
         struct timespec interval = {seconds, nanoseconds};
         nanosleep(&interval, NULL);

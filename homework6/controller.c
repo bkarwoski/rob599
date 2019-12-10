@@ -112,7 +112,6 @@ int main (int argc, char *argv[]) {
     state.action = &action;
     state.lcm = lcm_create(NULL);
     world_t world = {0};
-    //action_t action = {0};
     settings_t settings = {0};
     settings_t_subscription_t *settings_sub = settings_t_subscribe(state.lcm, "SETTINGS_bkarw",
                                                                    handle_settings, &state);
