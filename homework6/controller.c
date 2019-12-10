@@ -69,12 +69,12 @@ void field_control(state_t *s) {
         theta_error += 2 * M_PI;
     }
     s->chaser.ang_vel = 0.4 * theta_error;
-    // if (s->chaser.ang_vel > M_PI / 16) {
-    //     s->chaser.ang_vel = M_PI / 16;
-    // }
-    // if (s->chaser.ang_vel < -M_PI / 16) {
-    //     s->chaser.ang_vel = -M_PI / 16;
-    // }
+    if (s->chaser.ang_vel > M_PI / 16) {
+        s->chaser.ang_vel = M_PI / 16;
+    }
+    if (s->chaser.ang_vel < -M_PI / 16) {
+        s->chaser.ang_vel = -M_PI / 16;
+    }
     // s->chaser.vel = fmin(s->max_velocity, s->chaser.vel + 2.0);
     s->action->ang_vel = s->chaser.ang_vel;
     s->action->vel = s->chaser.vel;
