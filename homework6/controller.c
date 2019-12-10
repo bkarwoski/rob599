@@ -29,8 +29,6 @@ typedef struct state {
     action_t *action;
 } state_t;
 
-
-
 void field_control(state_t *s) {
     double height = ROB_HEIGHT;
     double width = height * 4 / 3.0;
@@ -84,6 +82,7 @@ void field_control(state_t *s) {
 
 void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
             const settings_t *msg, void *userdata) {
+                //printf("handling settings\n");
     state_t *s = (state_t *)userdata;
     s->avoid_obs_magnitude = msg->avoid_obs_magnitude;
     s->avoid_obs_power = msg->avoid_obs_power;
@@ -94,6 +93,7 @@ void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
 
 void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
             const world_t *msg, void *userdata) {
+                printf("handling world\n");
     state_t *s = (state_t *)userdata;
     s->chaser = msg->chaser;
     s->runner = msg->chaser;
@@ -109,10 +109,11 @@ int main (int argc, char *argv[]) {
     settings_t settings = {0};
     settings_t_subscription_t *settings_sub = settings_t_subscribe(state.lcm, "SETTINGS_bkarw",
                                                                    handle_settings, &state);
-    world_t_subscription_t *world_sub = world_t_subscribe(state.lcm, "WOLRD_bkarw",
+    world_t_subscription_t *world_sub = world_t_subscribe(state.lcm, "WORLD_bkarw",
                                                                    handle_world, &state);
     while (true) {
         lcm_handle(state.lcm);
+        //printf("looping lcm_handle\n");
     }
     return 0;
 }
