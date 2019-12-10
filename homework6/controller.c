@@ -1,25 +1,16 @@
 #define _GNU_SOURCE
 #include <lcm/lcm.h>
-//#include <termios.h>
-//#include <time.h>
-//#include "collision.h"
-//#include "graphics.h" //needed for collision resolution
 #include "settings.h"
 #include "lcmtypes/action_t.h"
 #include "lcmtypes/agent_t.h"
 #include "lcmtypes/reset_t.h"
 #include "lcmtypes/settings_t.h"
 #include "lcmtypes/world_t.h"
-//#include "lcm_handle_async.h"
 
 typedef struct state {
     int user_action;
-    //int time_step;
     agent_t runner;
     agent_t chaser;
-    //int init_runner_idx;
-    //int delay_every;
-    //int select_idx;
     double to_goal_magnitude;
     int to_goal_power;
     double avoid_obs_magnitude;
@@ -75,14 +66,13 @@ void field_control(state_t *s) {
     if (s->chaser.ang_vel < -M_PI / 16) {
         s->chaser.ang_vel = -M_PI / 16;
     }
-    // s->chaser.vel = fmin(s->max_velocity, s->chaser.vel + 2.0);
+    s->chaser.vel = fmin(s->max_velocity, s->chaser.vel + 2.0);
     s->action->ang_vel = s->chaser.ang_vel;
     s->action->vel = s->chaser.vel;
 }
 
 void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
-            const settings_t *msg, void *userdata) {
-                //printf("handling settings\n");
+                     const settings_t *msg, void *userdata) {
     state_t *s = (state_t *)userdata;
     s->avoid_obs_magnitude = msg->avoid_obs_magnitude;
     s->avoid_obs_power = msg->avoid_obs_power;
@@ -92,8 +82,7 @@ void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
 }
 
 void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
-            const world_t *msg, void *userdata) {
-                //printf("handling world\n");
+                  const world_t *msg, void *userdata) {
     state_t *s = (state_t *)userdata;
     s->chaser = msg->chaser;
     s->runner = msg->chaser;
@@ -101,7 +90,7 @@ void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
     action_t_publish(s->lcm, "ACTION_bkarw", s->action);
 }
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     agent_t chaser = {0};
     agent_t runner = {0};
     action_t action = {0};
@@ -113,13 +102,10 @@ int main (int argc, char *argv[]) {
     state.lcm = lcm_create(NULL);
     world_t world = {0};
     settings_t settings = {0};
-    settings_t_subscription_t *settings_sub = settings_t_subscribe(state.lcm, "SETTINGS_bkarw",
-                                                                   handle_settings, &state);
-    world_t_subscription_t *world_sub = world_t_subscribe(state.lcm, "WORLD_bkarw",
-                                                                   handle_world, &state);
+    settings_t_subscribe(state.lcm, "SETTINGS_bkarw", handle_settings, &state);
+    world_t_subscribe(state.lcm, "WORLD_bkarw", handle_world, &state);
     while (true) {
         lcm_handle(state.lcm);
-        //printf("looping lcm_handle\n");
     }
     return 0;
 }
