@@ -197,10 +197,10 @@ int main(int argc, char *argv[]) {
     //agent_t chaser = {0};
     setup_sim(&state);
     state.lcm = lcm;
-    /*reset_t_subscription_t *reset_sub* =*/ reset_t_subscribe(lcm, "RESET_bkarw", handle_reset, &state);
-    /* settings_t_subscription_t *settings_sub = */settings_t_subscribe(lcm, "SETTINGS_bkarw",
+    reset_t_subscription_t *reset_sub = reset_t_subscribe(lcm, "RESET_bkarw", handle_reset, &state);
+    settings_t_subscription_t *settings_sub = settings_t_subscribe(lcm, "SETTINGS_bkarw",
                                                                    handle_settings, &state);
-    /*action_t_subscription_t *action_sub = */action_t_subscribe(lcm, "ACTION_bkarw",
+    action_t_subscription_t *action_sub = action_t_subscribe(lcm, "ACTION_bkarw",
                                                              handle_action, &state);
     while (true) {
         double start = seconds_now();
