@@ -104,13 +104,15 @@ void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
 int main (int argc, char *argv[]) {
     agent_t chaser = {0};
     agent_t runner = {0};
+    action_t action = {0};
     runner.is_runner = true;
     state_t state = {0};
     state.runner = runner;
     state.chaser = chaser;
+    state.action = &action;
     state.lcm = lcm_create(NULL);
     world_t world = {0};
-    action_t action = {0};
+    //action_t action = {0};
     settings_t settings = {0};
     settings_t_subscription_t *settings_sub = settings_t_subscribe(state.lcm, "SETTINGS_bkarw",
                                                                    handle_settings, &state);
