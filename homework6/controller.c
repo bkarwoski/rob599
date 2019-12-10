@@ -76,7 +76,7 @@ void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
     state_t *s = (state_t *)userdata;
     s->avoid_obs_magnitude = msg->avoid_obs_magnitude;
     s->avoid_obs_power = msg->avoid_obs_power;
-    s->max_velocity = msg->max_vel;
+    s->max_velocity = (int)msg->max_vel;
     s->to_goal_magnitude = msg->to_goal_magnitude;
     s->to_goal_power = msg->to_goal_power;
 }
@@ -96,12 +96,15 @@ int main(int argc, char *argv[]) {
     action_t action = {0};
     runner.is_runner = true;
     state_t state = {0};
+    state.to_goal_magnitude = 50.0;
+    state.to_goal_power = 0;
+    state.avoid_obs_magnitude = 1;
+    state.avoid_obs_power = -2;
+    state.max_velocity = 12;
     state.runner = runner;
     state.chaser = chaser;
     state.action = &action;
     state.lcm = lcm_create(NULL);
-    world_t world = {0};
-    settings_t settings = {0};
     settings_t_subscribe(state.lcm, "SETTINGS_bkarw", handle_settings, &state);
     world_t_subscribe(state.lcm, "WORLD_bkarw", handle_world, &state);
     while (true) {
