@@ -102,7 +102,12 @@ void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
 }
 
 int main (int argc, char *argv[]) {
+    agent_t chaser = {0};
+    agent_t runner = {0};
+    runner.is_runner = true;
     state_t state = {0};
+    state.runner = runner;
+    state.chaser = chaser;
     state.lcm = lcm_create(NULL);
     world_t world = {0};
     action_t action = {0};
