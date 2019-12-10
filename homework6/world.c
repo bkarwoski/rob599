@@ -189,19 +189,13 @@ int main(int argc, char *argv[]) {
     lcm_t *lcm = lcm_create(NULL);
     int seconds = 0;
     state_t state = {0};
-    //settings_t settings = {0};
     reset_t reset = {0};
-    //action_t action = {0};
     world_t world = {0};
-    //agent_t runner = {0};
-    //agent_t chaser = {0};
     setup_sim(&state);
     state.lcm = lcm;
-    /*reset_t_subscription_t *reset_sub = */reset_t_subscribe(lcm, "RESET_bkarw", handle_reset, &state);
-    /*settings_t_subscription_t *settings_sub = */settings_t_subscribe(lcm, "SETTINGS_bkarw",
-                                                                   handle_settings, &state);
-    /*action_t_subscription_t *action_sub = */action_t_subscribe(lcm, "ACTION_bkarw",
-                                                             handle_action, &state);
+    reset_t_subscribe(lcm, "RESET_bkarw", handle_reset, &state);
+    settings_t_subscribe(lcm, "SETTINGS_bkarw", handle_settings, &state);
+    action_t_subscribe(lcm, "ACTION_bkarw", handle_action, &state);
     while (true) {
         double start = seconds_now();
         lcm_handle_async(state.lcm);
@@ -225,8 +219,5 @@ int main(int argc, char *argv[]) {
         struct timespec interval = {seconds, nanoseconds};
         nanosleep(&interval, NULL);
     }
-    // reset_t_unsubscribe(lcm, reset_sub);
-    // settings_t_unsubscribe(lcm, settings_sub);
-    // action_t_unsubscribe(lcm, action_sub);
     return 0;
 }
