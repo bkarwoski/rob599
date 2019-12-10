@@ -93,7 +93,7 @@ void handle_settings(const lcm_recv_buf_t *rbuf, const char *channel,
 
 void handle_world(const lcm_recv_buf_t *rbuf, const char *channel,
             const world_t *msg, void *userdata) {
-                printf("handling world\n");
+                //printf("handling world\n");
     state_t *s = (state_t *)userdata;
     s->chaser = msg->chaser;
     s->runner = msg->chaser;
