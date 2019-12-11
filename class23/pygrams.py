@@ -15,7 +15,7 @@ with open("book.txt", "r") as f:
             bigram = bigram.lower()
             for x in bigram:
                 if x != " " and not x.isalpha():
-                    bigram = bigram.replace(x, "")
+                    bigram = bigram.replace(x, " ")
             if hasWord:
                 if bigram in counts.keys():
                     counts[bigram] = counts[bigram] + 1
