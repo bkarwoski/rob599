@@ -8,12 +8,12 @@ print(f'Hashtable started with {countsSize} bytes at length 0')
 word = ""
 nextWord = ""
 hasWord = False
-with open("book.txt", "r") as f:
+with open("test_book.txt", "r") as f:
     for line in f:
         for nextWord in line.split():
             for x in nextWord:
                 if x != " " and not x.isalpha():
-                    bigram = nextWord.replace(x, " ")
+                    nextWord = nextWord.replace(x, " ")
             bigram = word + " " + nextWord
             bigram = bigram.lower()
             if hasWord:
