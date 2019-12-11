@@ -8,7 +8,7 @@ print(f'Hashtable started with {countsSize} bytes at length 0')
 word = ""
 nextWord = ""
 hasWord = False
-with open("book.txt", "r") as f:
+with open("test_book.txt", "r") as f:
     for line in f:
         for nextWord in line.split():
             bigram = word + " " + nextWord
@@ -32,5 +32,5 @@ with open("book.txt", "r") as f:
         exc200 = True
 for x in counts:
     if not exc200 or counts[x] > 200:
-        print(f'Bigram {x} has count of {counts[x]}')
+        print(f"Bigram '{x}' has count of {counts[x]}")
 print(f'Total of {len(counts.keys())} different bigrams recorded')
