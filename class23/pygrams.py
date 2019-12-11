@@ -11,11 +11,11 @@ hasWord = False
 with open("book.txt", "r") as f:
     for line in f:
         for nextWord in line.split():
+            for x in nextWord:
+                if x != " " and not x.isalpha():
+                    bigram = nextWord.replace(x, " ")
             bigram = word + " " + nextWord
             bigram = bigram.lower()
-            for x in bigram:
-                if x != " " and not x.isalpha():
-                    bigram = bigram.replace(x, " ")
             if hasWord:
                 if bigram in counts.keys():
                     counts[bigram] = counts[bigram] + 1
